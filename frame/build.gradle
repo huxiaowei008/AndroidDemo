@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'com.jakewharton.hugo'
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 25
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -19,6 +19,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    //为解决Warning:Conflict with dependency 'com.google.code.findbugs:jsr305'.
+    // Resolved versions for app (3.0.1) and test app (2.0.1) differ.
+    // See http://g.co/androidstudio/app-test-app-conflict for details.
+    //的问题引进的,这是测试包和RxLifecycle引入的jsr305的版本不一样，这里统一成3.0.1
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
+    }
 }
 
 dependencies {
@@ -26,6 +33,106 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
+    compile rootProject.ext.dependencies["appcompat"]
+    compile rootProject.ext.dependencies["design"]
+//    compile rootProject.ext.dependencies["support-v4"]
+    compile rootProject.ext.dependencies["cardview-v7"]
+    compile rootProject.ext.dependencies["recyclerview-v7"]
+    compile rootProject.ext.dependencies["support-annotations"]
+    provided rootProject.ext.dependencies["javax.annotation"]
+    testCompile rootProject.ext.dependencies["junit"]
+
+    //ButterKnife https://github.com/JakeWharton/butterknife
+    compile rootProject.ext.dependencies["butterknife"]
+    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
+
+//retrofit https://github.com/square/retrofit
+    compile rootProject.ext.dependencies["retrofit"]
+//    compile rootProject.ext.dependencies["adapter-rxjava"]
+    compile rootProject.ext.dependencies["adapter-rxjava2"]
+    compile rootProject.ext.dependencies["converter-gson"]
+
+//Gson https://github.com/google/gson
+    compile rootProject.ext.dependencies["gson"]
+
+//okHttp https://github.com/square/okhttp
+    compile rootProject.ext.dependencies["okhttp"]
+
+//timber https://github.com/JakeWharton/timber
+    compile rootProject.ext.dependencies["timber"]
+
+//glide图片加载 https://github.com/bumptech/glide
+    compile rootProject.ext.dependencies["glide"]
+
+/*有关rx的通常都有2两个版本，2个版本独立，规则略有不同，选择一个就行，下面是参考的文章2篇
+http://gank.io/post/560e15be2dca930e00da1083
+http://www.dieyidezui.com/qian-tan-rxjavayu-2-0de-xin-te-xing/
+http://blog.csdn.net/aiynmimi/article/details/53382567
+*/
+//RxJava https://github.com/ReactiveX/RxJava/tree/2.x
+    //1版本的
+//    compile rootProject.ext.dependencies["rxjava"]
+    //2版本的
+    compile rootProject.ext.dependencies["rxjava2"]
+
+//RxAndroid https://github.com/ReactiveX/RxAndroid/tree/2.x
+    //1版本的
+//    compile rootProject.ext.dependencies["rxandroid"]
+    //2版本的
+    compile rootProject.ext.dependencies["rxandroid2"]
+
+//RxLifecycle https://github.com/trello/RxLifecycle/tree/2.x
+    //1版本的
+//    compile rootProject.ext.dependencies["rxlifecycle"]
+//    // If you want to bind to Android-specific lifecycles
+//    compile rootProject.ext.dependencies["rxlifecycle-android"]
+//    // If you want pre-written Activities and Fragments you can subclass as providers
+//    compile rootProject.ext.dependencies["rxlifecycle-components"]
+
+    //2版本的
+    compile rootProject.ext.dependencies["rxlifecycle2"]
+    // If you want to bind to Android-specific lifecycles
+    compile rootProject.ext.dependencies["rxlifecycle-android2"]
+    // If you want pre-written Activities and Fragments you can subclass as providers
+    compile rootProject.ext.dependencies["rxlifecycle-components2"]
+
+//RxPermissions https://github.com/tbruyelle/RxPermissions/tree/2.x
+    //1版本的
+//    compile rootProject.ext.dependencies["rxpermissions"]
+    //2版本的
+    compile rootProject.ext.dependencies["rxpermissions2"]
+
+//RxCache https://github.com/VictorAlbertos/RxCache
+    compile rootProject.ext.dependencies["RxCache-gson"]
+    //1版本的
+//    compile rootProject.ext.dependencies["RxCache"]
+
+    //2版本的
+    compile rootProject.ext.dependencies["RxCache2"]
+
+//RxBinding https://github.com/JakeWharton/RxBinding
+    //1版本的
+//    compile rootProject.ext.dependencies["rxbinding"]
+//    compile rootProject.ext.dependencies["rxbinding-support-v4"]
+//    compile rootProject.ext.dependencies["rxbinding-appcompat-v7"]
+//    compile rootProject.ext.dependencies["rxbinding-design"]
+//    compile rootProject.ext.dependencies["rxbinding-recyclerview-v7"]
+    //2版本的
+    compile rootProject.ext.dependencies["rxbinding2"]
+    compile rootProject.ext.dependencies["rxbinding2-support-v4"]
+    compile rootProject.ext.dependencies["rxbinding2-appcompat-v7"]
+    compile rootProject.ext.dependencies["rxbinding2-design"]
+    compile rootProject.ext.dependencies["rxbinding2-recyclerview-v7"]
+
+//AndroidEventBus https://github.com/hehonghui/AndroidEventBus
+    compile rootProject.ext.dependencies["androideventbus"]
+
+//dagger2 https://github.com/google/dagger
+    compile rootProject.ext.dependencies["dagger"]
+    annotationProcessor rootProject.ext.dependencies["dagger-compiler"]
+
+//leakcanary内存泄露检测工具 https://github.com/square/leakcanary
+    debugCompile rootProject.ext.dependencies["leakcanary-release"]
+    releaseCompile rootProject.ext.dependencies["leakcanary-debug"]
+    testCompile rootProject.ext.dependencies["leakcanary-debug"]
 }
