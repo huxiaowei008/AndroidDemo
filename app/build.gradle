@@ -49,4 +49,7 @@ dependencies {
     //需要编译生成文件)
     annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
     compile project(':frame')
+
+    //轮播图 https://github.com/bingoogolapple/BGABanner-Android
+    compile rootProject.ext.dependencies["BGABanner"]
 }

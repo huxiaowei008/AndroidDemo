@@ -118,17 +118,6 @@ public class UIUtils {
     /**
      * 跳转界面
      *
-     * @param activity       当前activity
-     * @param targetActivity 目标activity
-     */
-    public static void startActivity(Activity activity, Class targetActivity) {
-        Intent intent = new Intent(activity, targetActivity);
-        activity.startActivity(intent);
-    }
-
-    /**
-     * 跳转界面
-     *
      * @param targetActivity 目标activity
      */
     public static void startActivity(Class targetActivity) {

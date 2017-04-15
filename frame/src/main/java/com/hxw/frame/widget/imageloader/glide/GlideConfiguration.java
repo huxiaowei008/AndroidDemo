@@ -19,13 +19,12 @@ import com.hxw.frame.utils.FileUtils;
 import java.io.File;
 import java.io.InputStream;
 
-import static com.hxw.frame.base.Config.IMAGE_DISK_CACHE_MAX_SIZE;
-
 /**
  * Created by hxw on 17/2/13.
  */
 public class GlideConfiguration implements GlideModule {
-
+    //图片缓存文件最大值为100Mb
+    private final int IMAGE_DISK_CACHE_MAX_SIZE = 100 * 1024 * 1024;
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
         final AppComponent appComponent = ((BaseApplication) context

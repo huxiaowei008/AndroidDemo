@@ -48,7 +48,7 @@
 ################common###############
 #实体类不参与混淆
 #自定义控件不参与混淆
--keep class com.app.hxw.frame.** { *; }
+-keep class com.hxw.frame.** { *; }
 #泛型，解决出现类型转换错误的问题
 -keepattributes Signature
 #注解
@@ -250,6 +250,10 @@
 -keep class com.squareup.leakcanary.** { *; }
 
 -dontwarn android.app.Notification
+
+################epresso###############
+-keep class android.support.test.espresso.** { *; }
+-keep interface android.support.test.espresso.** { *; }
 
 ################alipay支付宝钱包###############
 #-dontwarn com.alipay.**

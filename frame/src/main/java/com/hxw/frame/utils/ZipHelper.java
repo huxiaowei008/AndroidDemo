@@ -185,8 +185,8 @@ public class ZipHelper {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            closeQuietly(gos);
-            closeQuietly(os);
+            FileUtils.closeQuietly(gos);
+            FileUtils.closeQuietly(os);
         }
         return null;
     }
@@ -228,20 +228,10 @@ public class ZipHelper {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            closeQuietly(gis);
-            closeQuietly(is);
+            FileUtils.closeQuietly(gis);
+            FileUtils.closeQuietly(is);
         }
         return null;
     }
 
-    public static void closeQuietly(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (RuntimeException rethrown) {
-                throw rethrown;
-            } catch (Exception ignored) {
-            }
-        }
-    }
 }

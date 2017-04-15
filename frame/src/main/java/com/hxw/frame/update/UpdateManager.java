@@ -6,7 +6,6 @@ import android.support.v7.app.AlertDialog;
 
 import com.hxw.frame.R;
 import com.hxw.frame.base.BaseActivity;
-import com.hxw.frame.base.Config;
 import com.hxw.frame.utils.AppUtils;
 import com.hxw.frame.utils.FileUtils;
 import com.hxw.frame.utils.UIUtils;
@@ -44,7 +43,20 @@ import timber.log.Timber;
  */
 
 public class UpdateManager {
-    private static final String TAG = "UpdateManager";
+    /**
+     * 对应远端的键
+     * 能耗原生 93bfe0ea901340a88123fde7c800b0a2
+     * 企业点对点 287d4256a34742d6497f0b68f4824b49
+     * 疲劳管家 9a20953243d779427d3e6a0acee03c9f
+     */
+    private final String APP_CODE = "287d4256a34742d6497f0b68f4824b49";
+    //通用运营系统接口
+    private final String CHECK_VERSION_WIDE_NET_URL =
+            "http://123.159.193.22:7444/yyxt/CommonQueryObject.action";
+    //文件下载路径
+    private final String DOWNLOAD_APK_WIDE_NET_URL =
+            "http://123.159.193.22:1080/userfile/default/attach/";
+    private final String TAG = "UpdateManager";
     private Context mContext;
     private UpdateAPI updateAPI;
     private File cacheFile;//缓存文件
@@ -62,7 +74,7 @@ public class UpdateManager {
     public UpdateManager(Retrofit retrofit, File file) {
         this.updateAPI = retrofit.create(UpdateAPI.class);
         this.cacheFile = file;
-        mDownUrl = Config.DOWNLOAD_APK_WIDE_NET_URL;
+        mDownUrl = DOWNLOAD_APK_WIDE_NET_URL;
     }
 
     /**
@@ -85,7 +97,7 @@ public class UpdateManager {
                 "    {\n" +
                 "      \"sfield\": \"czrjid\",\n" +
                 "      \"scomparison\": \"eqref\",\n" +
-                "      \"svalue\": \"" + Config.APP_CODE + "\"\n" +
+                "      \"svalue\": \"" + APP_CODE + "\"\n" +
                 "    }\n" +
                 "  ],\n" +
                 "  \"curPageNo\": \"0\",\n" +
@@ -112,7 +124,7 @@ public class UpdateManager {
          observeOn(): 指定 Subscriber 所运行在的线程。或者叫做事件消费的线程。
          **/
         updateAPI
-                .checkUpdate(Config.CHECK_VERSION_WIDE_NET_URL, jsonContent)
+                .checkUpdate(CHECK_VERSION_WIDE_NET_URL, jsonContent)
                 //主要改变的是订阅的线程，即call()执行的线程,只执行一次,后面在调用无效
                 .subscribeOn(Schedulers.io())
                 //告诉取消订阅在子线程中

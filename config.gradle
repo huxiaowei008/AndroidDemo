@@ -81,7 +81,29 @@ ext {
             "material-dialogs"          : 'com.afollestad.material-dialogs:core:0.9.3.0',
             //material-dialogs 的共享库,里面的不是每人都需要的,上面的是核心库
             "material-dialogs-commons"  : 'com.afollestad.material-dialogs:commons:0.9.3.0',
-
+            //material风格的控件库 https://github.com/rey5137/material
+            "material"                  : 'com.github.rey5137:material:1.2.4',
+            //BottomNavigation https://github.com/Ashok-Varma/BottomNavigation/wiki/Usage
+            "bottomNavigation"          : 'com.ashokvarma.android:bottom-navigation-bar:1.3.0',
+            //MaterialEditText https://github.com/rengwuxian/MaterialEditText
+            "materialEditText"          : 'com.rengwuxian.materialedittext:library:2.1.4',
+            //zxing-android-embedded https://github.com/journeyapps/zxing-android-embedded
+            //一个Zxing扫码的工具库
+            "zxing-android-embedded"    : 'com.journeyapps:zxing-android-embedded:3.5.0',
+            //SuperTextView  https://github.com/lygttpod/SuperTextView
+            "super-text-view"           : 'com.github.lygttpod:SuperTextView:1.1.1',
+            //BGABanner-Android https://github.com/bingoogolapple/BGABanner-Android
+            "BGABanner"                 : 'cn.bingoogolapple:bga-banner:2.1.7@aar',
+            //AnimationEasingFunctions https://github.com/daimajia/AnimationEasingFunctions
+            //代码家的作品,一个动画的帮助
+            "easing"                    : 'com.daimajia.easing:library:2.0@aar',
+            //AndroidViewAnimations https://github.com/daimajia/AndroidViewAnimations
+            //代码家写的视图动画
+            "androidanimations"         : 'com.daimajia.androidanimations:library:2.2@aar',
+            //BaseRecyclerViewAdapterHelper https://github.com/CymChad/BaseRecyclerViewAdapterHelper
+            "base-recyclerview-adapter" : 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.9',
+            //FlycoTabLayout https://github.com/H07000223/FlycoTabLayout
+            "flyco-tab-layout"          : 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     ]
 
 

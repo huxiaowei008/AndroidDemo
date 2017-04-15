@@ -1,7 +1,6 @@
 package com.hxw.frame.di.module;
 
 import com.google.gson.GsonBuilder;
-import com.hxw.frame.base.Config;
 import com.hxw.frame.http.GlobeHttpHandler;
 import com.hxw.frame.http.RequestInterceptor;
 import com.hxw.frame.utils.FileUtils;
@@ -32,7 +31,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 @Module
 public class ClientModule {
-
+    //超时时间,默认单位为秒
+    private final int TIME_OUT = 10;
     /**
      * 提供retrofit
      *
@@ -66,9 +66,9 @@ public class ClientModule {
     OkHttpClient provideClient(Interceptor intercept, List<Interceptor> interceptors,
                                final GlobeHttpHandler handler) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .readTimeout(Config.TIME_OUT, TimeUnit.SECONDS)//读取超时
-                .writeTimeout(Config.TIME_OUT, TimeUnit.SECONDS)//写入超时
-                .connectTimeout(Config.TIME_OUT, TimeUnit.SECONDS)//连接超时
+                .readTimeout(TIME_OUT, TimeUnit.SECONDS)//读取超时
+                .writeTimeout(TIME_OUT, TimeUnit.SECONDS)//写入超时
+                .connectTimeout(TIME_OUT, TimeUnit.SECONDS)//连接超时
                 .addInterceptor(new Interceptor() {
                     @Override
                     public Response intercept(Chain chain) throws IOException {

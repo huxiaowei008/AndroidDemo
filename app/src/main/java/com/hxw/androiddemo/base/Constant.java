@@ -7,6 +7,7 @@ package com.hxw.androiddemo.base;
 public class Constant {
     //域名
     public final static String BASE_URL="https://api.github.com/";
-    //SharedPreferences的名字
-    public static final String SP_NAME = "frame";
+
+    public final static String INDEX="index";
+
 }
