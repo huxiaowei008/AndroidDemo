@@ -135,4 +135,7 @@ http://blog.csdn.net/aiynmimi/article/details/53382567
     debugCompile rootProject.ext.dependencies["leakcanary-release"]
     releaseCompile rootProject.ext.dependencies["leakcanary-debug"]
     testCompile rootProject.ext.dependencies["leakcanary-debug"]
+
+    //代码家的视图动画 https://github.com/daimajia/AndroidViewAnimations
+    compile rootProject.ext.dependencies["androidanimations"]
 }
