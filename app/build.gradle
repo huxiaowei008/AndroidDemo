@@ -41,6 +41,7 @@ dependencies {
     })
     compile rootProject.ext.dependencies["appcompat"]
     compile rootProject.ext.dependencies["constraint-layout"]
+    compile rootProject.ext.dependencies["support-vector-drawable"]
     testCompile 'junit:junit:4.12'
     //这是编译需要,否则注入不会自动生成文件
     annotationProcessor rootProject.ext.dependencies["dagger-compiler"]

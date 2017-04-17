@@ -268,3 +268,7 @@
 #-keep class com.alipay.sdk.app.AuthTask{ public *;}
 #-keep class com.alipay.mobilesecuritysdk.*
 #-keep class com.ut.*
+
+################zxing###############
+-keep class com.google.zxing.** {*;}
+-dontwarn com.google.zxing.**

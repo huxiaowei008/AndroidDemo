@@ -19,6 +19,7 @@ ext {
             "cardview-v7"               : "com.android.support:cardview-v7:${supportVersion}",
             "recyclerview-v7"           : "com.android.support:recyclerview-v7:${supportVersion}",
             "support-annotations"       : "com.android.support:support-annotations:${supportVersion}",
+            "support-vector-drawable"   : "com.android.support:support-vector-drawable:${supportVersion}",
             //ButterKnife https://github.com/JakeWharton/butterknife
             "butterknife"               : 'com.jakewharton:butterknife:8.5.1',
             "butterknife-compiler"      : 'com.jakewharton:butterknife-compiler:8.5.1',
@@ -50,8 +51,8 @@ ext {
             "rxlifecycle-android2"      : 'com.trello.rxlifecycle2:rxlifecycle-android:2.0.1',
             "rxlifecycle-components2"   : 'com.trello.rxlifecycle2:rxlifecycle-components:2.0.1',
             //RxPermissions https://github.com/tbruyelle/RxPermissions/tree/2.x
-            "rxpermissions"             : 'com.tbruyelle.rxpermissions:rxpermissions:0.9.1@aar',
-            "rxpermissions2"            : 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.1@aar',
+            "rxpermissions"             : 'com.tbruyelle.rxpermissions:rxpermissions:0.9.3@aar',
+            "rxpermissions2"            : 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.3@aar',
             //RxCache https://github.com/VictorAlbertos/RxCache
             "RxCache-gson"              : 'com.github.VictorAlbertos.Jolyglot:gson:0.0.3',
             "RxCache"                   : 'com.github.VictorAlbertos.RxCache:runtime:1.7.0-1.x',
