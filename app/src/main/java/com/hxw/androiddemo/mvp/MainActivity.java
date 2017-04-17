@@ -21,6 +21,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.btn_2)
     Button btn2;
 
+
     /**
      * @return 返回布局资源ID
      */
@@ -47,7 +48,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_1, R.id.btn_2})
+    @OnClick({R.id.btn_1, R.id.btn_2,R.id.btn_3})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_1:
@@ -55,6 +56,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_2:
                 goTo(2, GuideActivity.class);
+                break;
+            case R.id.btn_3:
+                goTo(3,StateActivity.class);
                 break;
         }
     }

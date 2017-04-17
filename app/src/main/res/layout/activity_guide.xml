@@ -37,7 +37,7 @@
     </cn.bingoogolapple.bgabanner.BGAGuideLinkageLayout>
 
     <TextView
-        android:id="@+id/text_cd"
+        android:id="@+id/tv_cd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -60,14 +60,14 @@
         android:text="进入"
         android:textColor="@color/textWhite_text"
         android:textSize="@dimen/button"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:padding="8dp"
-        android:text="@string/gudie_explain"
+        android:text="@string/guide_explain"
         android:textColor="@color/textWhite_text"
         android:textSize="@dimen/body" />
 </RelativeLayout>

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">AndroidDemo</string>
-    <string name="gudie_explain">引导页包含两个逻辑,第一次进去的引导主要是用BGABanner-Android做的,它是一个轮播控件,在github有详细的使用说明,它有自带动画,若想要不同的效果自己换动画</string>
+    <string name="guide_explain">引导页包含两个逻辑,第一次进去的引导主要是用BGABanner-Android做的,它是一个轮播控件,在github有详细的使用说明,它有自带动画,若想要不同的效果自己换动画</string>
+    <string name="state_explain">这个原理就是重写了FrameLayout,自定义各个状态界面,然后加进来,页面显示visible或gone,注意这布局下内容就一个,如果子View很多要自己控制</string>
 </resources>

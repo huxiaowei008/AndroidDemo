@@ -22,8 +22,8 @@ public class GuideActivity extends BaseActivity {
     BGABanner bannerBackground;
     @BindView(R.id.banner_foreground)
     BGABanner bannerForeground;
-    @BindView(R.id.text_cd)
-    TextView textCd;
+    @BindView(R.id.tv_cd)
+    TextView tvCd;
 
     /**
      * @return 返回布局资源ID
@@ -113,7 +113,7 @@ public class GuideActivity extends BaseActivity {
 
                     @Override
                     public void onNext(Integer integer) {
-                        textCd.setText(integer + "s");
+                        tvCd.setText(integer + "s");
                     }
 
                     @Override
