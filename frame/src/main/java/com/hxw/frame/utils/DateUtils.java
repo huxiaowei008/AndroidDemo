@@ -187,7 +187,7 @@ public class DateUtils {
      * @return 时间字符串
      */
     public static String millis2String(long millis) {
-        return new SimpleDateFormat(DEFAULT_PATTERN, Locale.getDefault()).format(new Date(millis));
+        return millis2String(millis, DEFAULT_PATTERN);
     }
 
     /**
@@ -199,7 +199,7 @@ public class DateUtils {
      * @return 时间字符串
      */
     public static String millis2String(long millis, String pattern) {
-        return new SimpleDateFormat(pattern, Locale.getDefault()).format(new Date(millis));
+        return date2String(new Date(millis), pattern);
     }
 
     /**
@@ -277,26 +277,6 @@ public class DateUtils {
     }
 
     /**
-     * 将Date类型转为时间戳
-     *
-     * @param date Date类型时间
-     * @return 毫秒时间戳
-     */
-    public static long date2Millis(Date date) {
-        return date.getTime();
-    }
-
-    /**
-     * 将时间戳转为Date类型
-     *
-     * @param millis 毫秒时间戳
-     * @return Date类型时间
-     */
-    public static Date millis2Date(long millis) {
-        return new Date(millis);
-    }
-
-    /**
      * 获取两个时间差（单位：unit）
      * <p>time0和time1格式都为yyyy-MM-dd HH:mm:ss</p>
      *
@@ -334,7 +314,7 @@ public class DateUtils {
      * @return unit时间戳
      */
     public static long getTimeSpan(String time0, String time1, @TimeConstants.Unit int unit, String pattern) {
-        return ConvertUtils.millis2TimeSpan(Math.abs(string2Millis(time0, pattern) - string2Millis(time1, pattern)), unit);
+        return getTimeSpan(string2Millis(time0, pattern), string2Millis(time1, pattern), unit);
     }
 
     /**
@@ -353,7 +333,7 @@ public class DateUtils {
      * @return unit时间戳
      */
     public static long getTimeSpan(Date date0, Date date1, @TimeConstants.Unit int unit) {
-        return ConvertUtils.millis2TimeSpan(Math.abs(date2Millis(date0) - date2Millis(date1)), unit);
+        return getTimeSpan(date0.getTime(), date1.getTime(), unit);
     }
 
     /**
@@ -391,7 +371,7 @@ public class DateUtils {
      * @return 合适型两个时间差
      */
     public static String getFitTimeSpan(String time0, String time1, int precision) {
-        return ConvertUtils.millis2FitTimeSpan(Math.abs(string2Millis(time0, DEFAULT_PATTERN) - string2Millis(time1, DEFAULT_PATTERN)), precision);
+        return getFitTimeSpan(string2Millis(time0, DEFAULT_PATTERN), string2Millis(time1, DEFAULT_PATTERN), precision);
     }
 
     /**
@@ -411,7 +391,7 @@ public class DateUtils {
      * @return 合适型两个时间差
      */
     public static String getFitTimeSpan(String time0, String time1, int precision, String pattern) {
-        return ConvertUtils.millis2FitTimeSpan(Math.abs(string2Millis(time0, pattern) - string2Millis(time1, pattern)), precision);
+        return getFitTimeSpan(string2Millis(time0, pattern), string2Millis(time1, pattern), precision);
     }
 
     /**
@@ -429,7 +409,7 @@ public class DateUtils {
      * @return 合适型两个时间差
      */
     public static String getFitTimeSpan(Date date0, Date date1, int precision) {
-        return ConvertUtils.millis2FitTimeSpan(Math.abs(date2Millis(date0) - date2Millis(date1)), precision);
+        return getFitTimeSpan(date0.getTime(), date1.getTime(), precision);
     }
 
     /**
@@ -466,7 +446,7 @@ public class DateUtils {
      * @return 时间字符串
      */
     public static String getNowTimeString() {
-        return millis2String(System.currentTimeMillis(), DEFAULT_PATTERN);
+        return getNowTimeString(DEFAULT_PATTERN);
     }
 
     /**
@@ -505,7 +485,7 @@ public class DateUtils {
      * @return unit时间戳
      */
     public static long getTimeSpanByNow(String time, @TimeConstants.Unit int unit) {
-        return getTimeSpan(getNowTimeString(), time, unit, DEFAULT_PATTERN);
+        return getTimeSpan(time, getNowTimeString(), unit, DEFAULT_PATTERN);
     }
 
     /**
@@ -525,7 +505,7 @@ public class DateUtils {
      * @return unit时间戳
      */
     public static long getTimeSpanByNow(String time, @TimeConstants.Unit int unit, String pattern) {
-        return getTimeSpan(getNowTimeString(), time, unit, pattern);
+        return getTimeSpan(time, getNowTimeString(pattern), unit, pattern);
     }
 
     /**
@@ -543,7 +523,7 @@ public class DateUtils {
      * @return unit时间戳
      */
     public static long getTimeSpanByNow(Date date, @TimeConstants.Unit int unit) {
-        return getTimeSpan(new Date(), date, unit);
+        return getTimeSpan(date, new Date(), unit);
     }
 
     /**
@@ -561,7 +541,7 @@ public class DateUtils {
      * @return unit时间戳
      */
     public static long getTimeSpanByNow(long millis, @TimeConstants.Unit int unit) {
-        return getTimeSpan(System.currentTimeMillis(), millis, unit);
+        return getTimeSpan(millis, System.currentTimeMillis(), unit);
     }
 
     /**
@@ -581,7 +561,7 @@ public class DateUtils {
      * @return 合适型与当前时间的差
      */
     public static String getFitTimeSpanByNow(String time, int precision) {
-        return getFitTimeSpan(getNowTimeString(), time, precision, DEFAULT_PATTERN);
+        return getFitTimeSpan(time, getNowTimeString(), precision, DEFAULT_PATTERN);
     }
 
     /**
@@ -602,7 +582,7 @@ public class DateUtils {
      * @return 合适型与当前时间的差
      */
     public static String getFitTimeSpanByNow(String time, int precision, String pattern) {
-        return getFitTimeSpan(getNowTimeString(), time, precision, pattern);
+        return getFitTimeSpan(time, getNowTimeString(pattern), precision, pattern);
     }
 
     /**
@@ -621,7 +601,7 @@ public class DateUtils {
      * @return 合适型与当前时间的差
      */
     public static String getFitTimeSpanByNow(Date date, int precision) {
-        return getFitTimeSpan(getNowTimeDate(), date, precision);
+        return getFitTimeSpan(date, getNowTimeDate(), precision);
     }
 
     /**
@@ -640,7 +620,7 @@ public class DateUtils {
      * @return 合适型与当前时间的差
      */
     public static String getFitTimeSpanByNow(long millis, int precision) {
-        return getFitTimeSpan(System.currentTimeMillis(), millis, precision);
+        return getFitTimeSpan(millis, System.currentTimeMillis(), precision);
     }
 
     /**
@@ -746,44 +726,50 @@ public class DateUtils {
      * 判断是否同一天
      * <p>time格式为yyyy-MM-dd HH:mm:ss</p>
      *
-     * @param time 时间字符串
+     * @param time1 时间字符串
+     * @param time2 时间字符串
      * @return {@code true}: 是<br>{@code false}: 否
      */
-    public static boolean isSameDay(String time) {
-        return isSameDay(string2Millis(time, DEFAULT_PATTERN));
+    public static boolean isSameDay(String time1, String time2) {
+        return isSameDay(string2Millis(time1, DEFAULT_PATTERN), string2Millis(time2, DEFAULT_PATTERN));
     }
 
     /**
      * 判断是否同一天
      * <p>time格式为pattern</p>
      *
-     * @param time    时间字符串
+     * @param time1   时间字符串
+     * @param time2   时间字符串
      * @param pattern 时间格式
      * @return {@code true}: 是<br>{@code false}: 否
      */
-    public static boolean isSameDay(String time, String pattern) {
-        return isSameDay(string2Millis(time, pattern));
+    public static boolean isSameDay(String time1, String time2, String pattern) {
+        return isSameDay(string2Millis(time1, pattern), string2Millis(time2, pattern));
     }
 
     /**
      * 判断是否同一天
      *
-     * @param date Date类型时间
+     * @param date1 Date类型时间
+     * @param date2 Date类型时间
      * @return {@code true}: 是<br>{@code false}: 否
      */
-    public static boolean isSameDay(Date date) {
-        return isSameDay(date.getTime());
+    public static boolean isSameDay(Date date1, Date date2) {
+        return isSameDay(date1.getTime(), date2.getTime());
     }
 
     /**
      * 判断是否同一天
      *
-     * @param millis 毫秒时间戳
+     * @param millis1 毫秒时间戳
+     * @param millis2 毫秒时间戳
      * @return {@code true}: 是<br>{@code false}: 否
      */
-    public static boolean isSameDay(long millis) {
-        long wee = (System.currentTimeMillis() / TimeConstants.DAY) * TimeConstants.DAY - 8 * TimeConstants.HOUR;
-        return millis >= wee && millis < wee + TimeConstants.DAY;
+    public static boolean isSameDay(long millis1, long millis2) {
+//        long wee = System.currentTimeMillis() - 8 * TimeConstants.HOUR;
+//        return millis >= wee && millis < wee + TimeConstants.DAY;
+        return millis2String(millis1, "yyyy-MM-dd")
+                .equals(millis2String(millis2, "yyyy-MM-dd"));
     }
 
     /**
@@ -829,7 +815,7 @@ public class DateUtils {
      * @return {@code true}: 闰年<br>{@code false}: 平年
      */
     public static boolean isLeapYear(long millis) {
-        return isLeapYear(millis2Date(millis));
+        return isLeapYear(new Date(millis));
     }
 
     /**
@@ -839,7 +825,7 @@ public class DateUtils {
      * @return {@code true}: 闰年<br>{@code false}: 平年
      */
     public static boolean isLeapYear(int year) {
-        return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+        return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
     }
 
     /**
@@ -931,7 +917,7 @@ public class DateUtils {
      * @return 1...7
      */
     public static int getWeekIndex(long millis) {
-        return getWeekIndex(millis2Date(millis));
+        return getWeekIndex(new Date(millis));
     }
 
     /**
@@ -980,7 +966,7 @@ public class DateUtils {
      * @return 1...5
      */
     public static int getWeekOfMonth(long millis) {
-        return getWeekOfMonth(millis2Date(millis));
+        return getWeekOfMonth(new Date(millis));
     }
 
     /**
@@ -1029,7 +1015,7 @@ public class DateUtils {
      * @return 1...54
      */
     public static int getWeekOfYear(long millis) {
-        return getWeekOfYear(millis2Date(millis));
+        return getWeekOfYear(new Date(millis));
     }
 
     private static final String[] CHINESE_ZODIAC = {"猴", "鸡", "狗", "猪", "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊"};
@@ -1076,7 +1062,7 @@ public class DateUtils {
      * @return 生肖
      */
     public static String getChineseZodiac(long millis) {
-        return getChineseZodiac(millis2Date(millis));
+        return getChineseZodiac(new Date(millis));
     }
 
     /**
@@ -1136,7 +1122,7 @@ public class DateUtils {
      * @return 星座
      */
     public static String getZodiac(long millis) {
-        return getZodiac(millis2Date(millis));
+        return getZodiac(new Date(millis));
     }
 
     /**
@@ -1200,19 +1186,19 @@ public class DateUtils {
         int unitMultiple = 1;
         switch (unit) {
             case TimeConstants.DAY:
-                unitMultiple = 1000 * 60 * 60 * 24;
+                unitMultiple = TimeConstants.DAY;
                 break;
             case TimeConstants.HOUR:
-                unitMultiple = 1000 * 60 * 60;
+                unitMultiple = TimeConstants.HOUR;
                 break;
             case TimeConstants.MIN:
-                unitMultiple = 1000 * 6;
+                unitMultiple = TimeConstants.MIN;
                 break;
             case TimeConstants.SEC:
-                unitMultiple = 1000;
+                unitMultiple = TimeConstants.SEC;
                 break;
             case TimeConstants.MSEC:
-                unitMultiple = 1;
+                unitMultiple = TimeConstants.MSEC;
                 break;
         }
         return timeMillis + timeSpanNum * unitMultiple;
@@ -1226,7 +1212,7 @@ public class DateUtils {
      * @return 新日期
      */
     public static Date getDateAfterTimeSpan(String time, long millis) {
-        return millis2Date(string2Millis(time) + millis);
+        return new Date(string2Millis(time) + millis);
     }
 
     /**
@@ -1238,7 +1224,7 @@ public class DateUtils {
      * @return 新日期
      */
     public static Date getDateAfterTimeSpan(String time, String pattern, long millis) {
-        return millis2Date(string2Millis(time, pattern) + millis);
+        return new Date(string2Millis(time, pattern) + millis);
     }
 
     /**
@@ -1251,6 +1237,6 @@ public class DateUtils {
      * @return 计算后的新日期
      */
     public static Date getDateAfterTimeSpan(String time, String pattern, long timeSpanNum, @TimeConstants.Unit int unit) {
-        return millis2Date(getDateStringAfterTimeSpan(string2Millis(time, pattern), timeSpanNum, unit));
+        return new Date(getDateStringAfterTimeSpan(string2Millis(time, pattern), timeSpanNum, unit));
     }
 }
