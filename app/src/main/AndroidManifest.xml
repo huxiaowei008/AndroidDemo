@@ -3,7 +3,7 @@
     package="com.hxw.androiddemo">
 
     <application
-        android:name=".base.WeApplication"
+        android:name="com.hxw.frame.base.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

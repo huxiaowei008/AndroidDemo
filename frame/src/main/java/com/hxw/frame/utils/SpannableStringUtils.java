@@ -1,5 +1,6 @@
 package com.hxw.frame.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Typeface;
@@ -48,15 +49,15 @@ public class SpannableStringUtils {
      * @param text 样式字符串文本
      * @return {@link Builder}
      */
-    public static Builder getBuilder(@NonNull CharSequence text) {
-        return new Builder(text);
+    public static Builder getBuilder(Context context,@NonNull CharSequence text) {
+        return new Builder(context,text);
     }
 
     public static class Builder {
 
         private int defaultValue = 0x12000000;
         private CharSequence text;
-
+        private Context context;
         private int flag;
         @ColorInt
         private int foregroundColor;
@@ -106,7 +107,8 @@ public class SpannableStringUtils {
         private SpannableStringBuilder mBuilder;
 
 
-        private Builder(@NonNull CharSequence text) {
+        private Builder(Context context,@NonNull CharSequence text) {
+            this.context=context;
             this.text = text;
             flag = Spanned.SPAN_EXCLUSIVE_EXCLUSIVE;
             foregroundColor = defaultValue;
@@ -522,7 +524,7 @@ public class SpannableStringUtils {
             }
             if (imageIsBitmap || imageIsDrawable || imageIsUri || imageIsResourceId) {
                 if (imageIsBitmap) {
-                    mBuilder.setSpan(new ImageSpan(UIUtils.getContext(), bitmap), start, end, flag);
+                    mBuilder.setSpan(new ImageSpan(context, bitmap), start, end, flag);
                     bitmap = null;
                     imageIsBitmap = false;
                 } else if (imageIsDrawable) {
@@ -530,11 +532,11 @@ public class SpannableStringUtils {
                     drawable = null;
                     imageIsDrawable = false;
                 } else if (imageIsUri) {
-                    mBuilder.setSpan(new ImageSpan(UIUtils.getContext(), uri), start, end, flag);
+                    mBuilder.setSpan(new ImageSpan(context, uri), start, end, flag);
                     uri = null;
                     imageIsUri = false;
                 } else {
-                    mBuilder.setSpan(new ImageSpan(UIUtils.getContext(), resourceId), start, end, flag);
+                    mBuilder.setSpan(new ImageSpan(context, resourceId), start, end, flag);
                     resourceId = 0;
                     imageIsResourceId = false;
                 }

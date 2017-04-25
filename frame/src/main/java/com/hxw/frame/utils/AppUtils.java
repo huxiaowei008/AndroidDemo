@@ -11,6 +11,8 @@ import android.webkit.MimeTypeMap;
 
 import java.io.File;
 
+import butterknife.internal.Utils;
+
 /**
  * App相关工具类
  * Created by hxw on 2017/2/15.
@@ -74,7 +76,7 @@ public class AppUtils {
      */
     public static void installApp(Context context, File file) {
         if (!FileUtils.isFileExists(file)) return;
-        context.startActivity(getInstallAppIntent(file));
+        context.startActivity(getInstallAppIntent(context,file));
     }
 
     /**
@@ -83,8 +85,8 @@ public class AppUtils {
      * @param filePath 文件路径
      * @return intent
      */
-    public static Intent getInstallAppIntent(String filePath) {
-        return getInstallAppIntent(FileUtils.getFileByPath(filePath));
+    public static Intent getInstallAppIntent(Context context,String filePath) {
+        return getInstallAppIntent(context,FileUtils.getFileByPath(filePath));
     }
 
     /**
@@ -93,7 +95,7 @@ public class AppUtils {
      * @param file 文件
      * @return intent
      */
-    public static Intent getInstallAppIntent(File file) {
+    public static Intent getInstallAppIntent(Context context,File file) {
         if (file == null) return null;
         Intent intent = new Intent(Intent.ACTION_VIEW);
         String type;
@@ -106,7 +108,7 @@ public class AppUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             //!!!!注意 com.your.package.fileProvider
-            Uri contentUri = FileProvider.getUriForFile(UIUtils.getContext(), "com.your.package.fileProvider", file);
+            Uri contentUri = FileProvider.getUriForFile(context, "com.your.package.fileProvider", file);
             intent.setDataAndType(contentUri, type);
         }
         intent.setDataAndType(Uri.fromFile(file), type);

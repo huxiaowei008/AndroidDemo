@@ -1,15 +1,22 @@
 package com.hxw.androiddemo.base;
 
+import android.app.Application;
 import android.content.Context;
 
+import com.hxw.androiddemo.BuildConfig;
 import com.hxw.androiddemo.api.ComAPI;
 import com.hxw.androiddemo.api.ComCache;
+import com.hxw.frame.base.AppDelegate;
 import com.hxw.frame.di.module.GlobeConfigModule;
 import com.hxw.frame.http.GlobeHttpHandler;
 import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.integration.ConfigModule;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.utils.UIUtils;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
+
+import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -98,4 +105,46 @@ public class GlobalConfiguration implements ConfigModule {
         repositoryManager.injectCacheService(ComCache.class);
 
     }
+
+    /**
+     * 使用{@link AppDelegate.Lifecycle}在Application的声明周期中注入一些操作
+     *
+     * @param context
+     * @param lifecycles
+     * @return
+     */
+    @Override
+    public void injectAppLifecycle(Context context, List<AppDelegate.Lifecycle> lifecycles) {
+        // AppDelegate.Lifecycle 的所有方法都会在BaseApplication对应的生命周期中被调用,
+        // 所以在对应的方法中可以扩展一些自己需要的逻辑
+        lifecycles.add(new AppDelegate.Lifecycle() {
+            private RefWatcher mRefWatcher;//leakCanary观察器
+
+            @Override
+            public void onCreate(Application application) {
+                if (LeakCanary.isInAnalyzerProcess(application)) {
+                    // This process is dedicated to LeakCanary for heap analysis.
+                    // You should not init your app in this process.
+                    return;
+                }
+
+                //Timber日志打印
+                if (BuildConfig.LOG_DEBUG) {
+                    Timber.plant(new Timber.DebugTree());
+                }
+
+                //安装leakCanary检测内存泄露
+                this.mRefWatcher = BuildConfig.USE_CANARY ?
+                        LeakCanary.install(application) : RefWatcher.DISABLED;
+
+            }
+
+            @Override
+            public void onTerminate(Application application) {
+                this.mRefWatcher = null;
+            }
+        });
+    }
+
+
 }

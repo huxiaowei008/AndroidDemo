@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.StringRes;
 
-import com.hxw.frame.base.BaseApplication;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,26 +15,31 @@ import java.util.Set;
  */
 public class SPUtils {
     private final String SP_NAME = "frame";
-    private static SharedPreferences sharedPreferences;
-    private static SharedPreferences.Editor editor;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
     private Context mContext;
-/**这类是为适配API9一下时使用的,通常我设置最低19,所以不会用
- private static SharedPreferencesCompat.EditorCompat editorCompat =
- SharedPreferencesCompat.EditorCompat.getInstance();
- */
     /**
-     * 静态内部类,一种单例模式的写法
+     * 这类是为适配API9一下时使用的,通常我设置最低19,所以不会用
+     * private static SharedPreferencesCompat.EditorCompat editorCompat =
+     * SharedPreferencesCompat.EditorCompat.getInstance();
      */
-    private static class SPHolder {
-        private static final SPUtils instance = new SPUtils();
+//    /**
+//     * 静态内部类,一种单例模式的写法
+//     */
+//    private static class SPHolder {
+//        private static final SPUtils instance = new SPUtils();
+//    }
+    private static SPUtils instance;
+
+    public static SPUtils getInstance(Context context) {
+        if (instance == null) {
+            instance = new SPUtils(context);
+        }
+        return instance;
     }
 
-    public static SPUtils getInstance() {
-        return SPHolder.instance;
-    }
-
-    private SPUtils() {
-        mContext = BaseApplication.getContext();
+    private SPUtils(Context context) {
+        mContext = context;
         sharedPreferences = mContext.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.apply();

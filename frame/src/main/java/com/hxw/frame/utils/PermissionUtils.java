@@ -65,7 +65,7 @@ public class PermissionUtils {
                                 Timber.tag(TAG).d("request CAMERA success");
                                 requestPermission.onSuccess();
                             } else {
-                                view.showMessage(UIUtils.getString(R.string.requestFail));
+//                                view.showMessage(UIUtils.getString(R.string.requestFail));
                                 requestPermission.onFail();
                             }
                         }
@@ -73,7 +73,7 @@ public class PermissionUtils {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             Timber.tag(TAG).e(throwable);
-                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
+//                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
                         }
                     });
         }
@@ -108,11 +108,11 @@ public class PermissionUtils {
                             } else if (permission.shouldShowRequestPermissionRationale) {
                                 //请求被拒绝但没有不再访问 Denied permission without ask never again
                                 Timber.tag(TAG).d("请求失败但可以再访问");
-                                view.showMessage(UIUtils.getString(R.string.requestFail));
+//                                view.showMessage(UIUtils.getString(R.string.requestFail));
                                 requestPermission.onFail();
                             } else {//请求被拒绝并且不再访问 Denied permission with ask never again
                                 Timber.tag(TAG).d("请求失败并且不再访问");
-                                view.showMessage(UIUtils.getString(R.string.requestFail));
+//                                view.showMessage(UIUtils.getString(R.string.requestFail));
                                 requestPermission.onFail();
                             }
                         }
@@ -120,7 +120,7 @@ public class PermissionUtils {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             Timber.tag(TAG).e(throwable);
-                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
+//                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
                         }
                     });
         }
@@ -152,7 +152,7 @@ public class PermissionUtils {
                                 Timber.tag(TAG).d("request SEND_SMS success");
                                 requestPermission.onSuccess();
                             } else {
-                                view.showMessage(UIUtils.getString(R.string.requestFail));
+//                                view.showMessage(UIUtils.getString(R.string.requestFail));
                                 requestPermission.onFail();
                             }
                         }
@@ -160,7 +160,7 @@ public class PermissionUtils {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             Timber.tag(TAG).e(throwable);
-                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
+//                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
                         }
                     });
         }
@@ -191,7 +191,7 @@ public class PermissionUtils {
                                 Timber.tag(TAG).d("request CALL_PHONE success");
                                 requestPermission.onSuccess();
                             } else {
-                                view.showMessage(UIUtils.getString(R.string.requestFail));
+//                                view.showMessage(UIUtils.getString(R.string.requestFail));
                                 requestPermission.onFail();
                             }
                         }
@@ -199,7 +199,7 @@ public class PermissionUtils {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             Timber.tag(TAG).e(throwable);
-                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
+//                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
                         }
                     });
         }
@@ -232,7 +232,7 @@ public class PermissionUtils {
                                 Timber.tag(TAG).d("request READ_PHONE_STATE success");
                                 requestPermission.onSuccess();
                             } else {
-                                view.showMessage(UIUtils.getString(R.string.requestFail));
+//                                view.showMessage(UIUtils.getString(R.string.requestFail));
                                 requestPermission.onFail();
                             }
                         }
@@ -240,7 +240,7 @@ public class PermissionUtils {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             Timber.tag(TAG).e(throwable);
-                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
+//                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
                         }
                     });
         }
@@ -270,7 +270,7 @@ public class PermissionUtils {
                                 Timber.tag(TAG).d("request ACCESS_FINE_LOCATION success");
                                 requestPermission.onSuccess();
                             } else {
-                                view.showMessage(UIUtils.getString(R.string.requestFail));
+//                                view.showMessage(UIUtils.getString(R.string.requestFail));
                                 requestPermission.onFail();
                             }
                         }
@@ -278,7 +278,7 @@ public class PermissionUtils {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             Timber.tag(TAG).e(throwable);
-                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
+//                            UIUtils.makeText(UIUtils.getString(R.string.requestError));
                         }
                     });
         }

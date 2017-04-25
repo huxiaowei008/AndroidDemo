@@ -3,6 +3,7 @@ package com.hxw.frame.di;
 import android.app.Application;
 
 import com.google.gson.Gson;
+import com.hxw.frame.base.AppDelegate;
 import com.hxw.frame.base.BaseApplication;
 import com.hxw.frame.di.module.AppModule;
 import com.hxw.frame.di.module.ClientModule;
@@ -53,5 +54,5 @@ public interface AppComponent {
     //图片加载器
     ImageLoader imageLoader();
 
-    void inject(BaseApplication application);
+    void inject(AppDelegate delegate);
 }

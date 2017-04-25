@@ -35,14 +35,6 @@ public class UIUtils {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
 
-    /**
-     * 获得上下文
-     *
-     * @return
-     */
-    public static Context getContext() {
-        return BaseApplication.getContext();
-    }
 
 
     /**
@@ -50,8 +42,8 @@ public class UIUtils {
      *
      * @return
      */
-    public static Resources getResources() {
-        return getContext().getResources();
+    public static Resources getResources(Context context) {
+        return context.getResources();
     }
 
     /**
@@ -60,8 +52,8 @@ public class UIUtils {
      * @param stringID
      * @return
      */
-    public static String getString(int stringID) {
-        return getContext().getString(stringID);
+    public static String getString(Context context,int stringID) {
+        return context.getString(stringID);
     }
 
 
@@ -71,8 +63,8 @@ public class UIUtils {
      * @param rId
      * @return
      */
-    public static int getColor(int rId) {
-        return ContextCompat.getColor(getContext(),rId);
+    public static int getColor(Context context,int rId) {
+        return ContextCompat.getColor(context,rId);
     }
 
     /**
@@ -80,24 +72,11 @@ public class UIUtils {
      *
      * @param string
      */
-    public static void makeText(String string) {
+    public static void makeText(Context context,String string) {
         if (mToast == null) {
-            mToast = Toast.makeText(getContext(), string, Toast.LENGTH_SHORT);
+            mToast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
         }
         mToast.setText(string);
-        mToast.show();
-    }
-
-    /**
-     * 单列toast
-     *
-     * @param stringID
-     */
-    public static void makeText(int stringID) {
-        if (mToast == null) {
-            mToast = Toast.makeText(getContext(), stringID, Toast.LENGTH_SHORT);
-        }
-        mToast.setText(stringID);
         mToast.show();
     }
 
@@ -178,8 +157,8 @@ public class UIUtils {
      *
      * @return
      */
-    public static int getScreenWidth() {
-        return getResources().getDisplayMetrics().widthPixels;
+    public static int getScreenWidth(Context context) {
+        return getResources(context).getDisplayMetrics().widthPixels;
     }
 
     /**
@@ -187,8 +166,8 @@ public class UIUtils {
      *
      * @return
      */
-    public static int getScreenHeidth() {
-        return getResources().getDisplayMetrics().heightPixels;
+    public static int getScreenHeidth(Context context) {
+        return getResources(context).getDisplayMetrics().heightPixels;
     }
 
     /**

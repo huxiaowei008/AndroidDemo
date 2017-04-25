@@ -171,7 +171,7 @@ public class UpdateManager {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Timber.tag(TAG).e(throwable, "自动更新检查失败");
-                        UIUtils.makeText("检查更新失败");
+                        UIUtils.makeText(mContext,"检查更新失败");
                         update.error();
                     }
                 });
