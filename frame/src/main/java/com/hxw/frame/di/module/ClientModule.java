@@ -33,6 +33,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ClientModule {
     //超时时间,默认单位为秒
     private final int TIME_OUT = 10;
+
     /**
      * 提供retrofit
      *
@@ -46,10 +47,11 @@ public class ClientModule {
                 .baseUrl(httpUrl)//域名
                 .client(client)//设置okhttp
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//使用rxjava
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
-                        .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                        .registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory<>())
-                        .create()))
+                .addConverterFactory(GsonConverterFactory
+                        .create(new GsonBuilder()
+                                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                                .registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory<>())
+                                .create()))
                 .build();
     }
 

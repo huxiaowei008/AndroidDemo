@@ -2,24 +2,17 @@ package com.hxw.androiddemo.mvp;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.Button;
 
 import com.hxw.androiddemo.R;
 import com.hxw.androiddemo.base.Constant;
+import com.hxw.androiddemo.mvp.bottomnavigation.BottomNavigationActivity;
 import com.hxw.androiddemo.mvp.guide.GuideActivity;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
 
-import butterknife.BindView;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity {
-
-
-    @BindView(R.id.btn_1)
-    Button btn1;
-    @BindView(R.id.btn_2)
-    Button btn2;
 
 
     /**
@@ -48,7 +41,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_1, R.id.btn_2,R.id.btn_3})
+    @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_1:
@@ -58,7 +51,10 @@ public class MainActivity extends BaseActivity {
                 goTo(2, GuideActivity.class);
                 break;
             case R.id.btn_3:
-                goTo(3,StateActivity.class);
+                goTo(3, StateActivity.class);
+                break;
+            case R.id.btn_4:
+                goTo(4, BottomNavigationActivity.class);
                 break;
         }
     }

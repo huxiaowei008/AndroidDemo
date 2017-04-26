@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".mvp.guide.GuideActivity" />
         <activity android:name=".mvp.StateActivity" android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"/>
+        <activity android:name=".mvp.bottomnavigation.BottomNavigationActivity"/>
 
         <!--glide配置-->
         <meta-data
