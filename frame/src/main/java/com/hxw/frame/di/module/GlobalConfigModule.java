@@ -3,7 +3,7 @@ package com.hxw.frame.di.module;
 import android.app.Application;
 import android.text.TextUtils;
 
-import com.hxw.frame.http.GlobeHttpHandler;
+import com.hxw.frame.http.GlobalHttpHandler;
 import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.utils.FileUtils;
 import com.hxw.frame.utils.Preconditions;
@@ -23,9 +23,9 @@ import okhttp3.Interceptor;
  * Created by hxw on 2017/2/8.
  */
 @Module
-public class GlobeConfigModule {
+public class GlobalConfigModule {
     private HttpUrl mApiUrl;
-    private GlobeHttpHandler mHandler;
+    private GlobalHttpHandler mHandler;
     private List<Interceptor> mInterceptors;
     private OnResponseErrorListener mErrorListener;
     private File mCacheFile;
@@ -35,7 +35,7 @@ public class GlobeConfigModule {
      *
      * @param builder
      */
-    private GlobeConfigModule(Builder builder) {
+    private GlobalConfigModule(Builder builder) {
         this.mApiUrl = builder.apiUrl;
         this.mHandler = builder.handler;
         this.mInterceptors = builder.interceptors;
@@ -68,8 +68,8 @@ public class GlobeConfigModule {
      */
     @Singleton
     @Provides
-    GlobeHttpHandler provideGlobeHttpHandler() {
-        return mHandler == null ? GlobeHttpHandler.EMPTY : mHandler;
+    GlobalHttpHandler provideGlobeHttpHandler() {
+        return mHandler == null ? GlobalHttpHandler.EMPTY : mHandler;
     }
 
 
@@ -99,7 +99,7 @@ public class GlobeConfigModule {
 
     public static final class Builder {
         private HttpUrl apiUrl = HttpUrl.parse("https://api.github.com/");
-        private GlobeHttpHandler handler;
+        private GlobalHttpHandler handler;
         private List<Interceptor> interceptors = new ArrayList<>();
         private OnResponseErrorListener onResponseErrorListener;
         private File cacheFile;
@@ -116,7 +116,7 @@ public class GlobeConfigModule {
         }
 
         //用来处理http响应结果
-        public Builder globeHttpHandler(GlobeHttpHandler handler) {
+        public Builder globeHttpHandler(GlobalHttpHandler handler) {
             this.handler = handler;
             return this;
         }
@@ -140,9 +140,9 @@ public class GlobeConfigModule {
         }
 
 
-        public GlobeConfigModule build() {
+        public GlobalConfigModule build() {
             Preconditions.checkNotNull(apiUrl, "baseUrl is required");
-            return new GlobeConfigModule(this);
+            return new GlobalConfigModule(this);
         }
 
 

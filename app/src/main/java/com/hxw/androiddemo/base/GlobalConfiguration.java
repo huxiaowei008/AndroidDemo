@@ -7,8 +7,8 @@ import com.hxw.androiddemo.BuildConfig;
 import com.hxw.androiddemo.api.ComAPI;
 import com.hxw.androiddemo.api.ComCache;
 import com.hxw.frame.base.AppDelegate;
-import com.hxw.frame.di.module.GlobeConfigModule;
-import com.hxw.frame.http.GlobeHttpHandler;
+import com.hxw.frame.di.module.GlobalConfigModule;
+import com.hxw.frame.http.GlobalHttpHandler;
 import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.integration.ConfigModule;
 import com.hxw.frame.integration.IRepositoryManager;
@@ -29,15 +29,15 @@ import timber.log.Timber;
 
 public class GlobalConfiguration implements ConfigModule {
     /**
-     * 使用{@link GlobeConfigModule.Builder}给框架配置一些配置参数
+     * 使用{@link GlobalConfigModule.Builder}给框架配置一些配置参数
      *
      * @param context
      * @param builder
      */
     @Override
-    public void applyOptions(Context context, GlobeConfigModule.Builder builder) {
+    public void applyOptions(Context context, GlobalConfigModule.Builder builder) {
         builder.baseUrl(Constant.BASE_URL)
-                .globeHttpHandler(new GlobeHttpHandler() {// 这里可以提供一个全局处理Http请求和响应结果的处理类,
+                .globeHttpHandler(new GlobalHttpHandler() {// 这里可以提供一个全局处理Http请求和响应结果的处理类,
                     // 这里可以比客户端提前一步拿到服务器返回的结果,可以做一些操作,比如token超时,重新获取
                     @Override
                     public Response onHttpResultResponse(String httpResult, Interceptor.Chain chain, Response response) {

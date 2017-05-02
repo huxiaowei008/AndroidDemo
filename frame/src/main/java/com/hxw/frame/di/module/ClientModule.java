@@ -1,7 +1,7 @@
 package com.hxw.frame.di.module;
 
 import com.google.gson.GsonBuilder;
-import com.hxw.frame.http.GlobeHttpHandler;
+import com.hxw.frame.http.GlobalHttpHandler;
 import com.hxw.frame.http.RequestInterceptor;
 import com.hxw.frame.utils.FileUtils;
 import com.hxw.frame.utils.NullStringToEmptyAdapterFactory;
@@ -66,7 +66,7 @@ public class ClientModule {
     @Singleton
     @Provides
     OkHttpClient provideClient(Interceptor intercept, List<Interceptor> interceptors,
-                               final GlobeHttpHandler handler) {
+                               final GlobalHttpHandler handler) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .readTimeout(TIME_OUT, TimeUnit.SECONDS)//读取超时
                 .writeTimeout(TIME_OUT, TimeUnit.SECONDS)//写入超时

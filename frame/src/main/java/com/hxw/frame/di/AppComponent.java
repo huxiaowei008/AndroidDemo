@@ -4,10 +4,9 @@ import android.app.Application;
 
 import com.google.gson.Gson;
 import com.hxw.frame.base.AppDelegate;
-import com.hxw.frame.base.BaseApplication;
 import com.hxw.frame.di.module.AppModule;
 import com.hxw.frame.di.module.ClientModule;
-import com.hxw.frame.di.module.GlobeConfigModule;
+import com.hxw.frame.di.module.GlobalConfigModule;
 import com.hxw.frame.di.module.ImageModule;
 import com.hxw.frame.integration.AppManager;
 import com.hxw.frame.integration.IRepositoryManager;
@@ -26,7 +25,7 @@ import okhttp3.OkHttpClient;
  */
 @Singleton
 @Component(modules = {AppModule.class, ClientModule.class, ImageModule.class,
-        GlobeConfigModule.class})
+        GlobalConfigModule.class})
 public interface AppComponent {
 
     Application applicaton();

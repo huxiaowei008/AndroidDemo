@@ -6,7 +6,7 @@ import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.di.DaggerAppComponent;
 import com.hxw.frame.di.module.AppModule;
 import com.hxw.frame.di.module.ClientModule;
-import com.hxw.frame.di.module.GlobeConfigModule;
+import com.hxw.frame.di.module.GlobalConfigModule;
 import com.hxw.frame.di.module.ImageModule;
 import com.hxw.frame.integration.ActivityLifecycle;
 import com.hxw.frame.integration.ConfigModule;
@@ -49,7 +49,7 @@ public class AppDelegate {
                 .appModule(new AppModule(mApplication))////提供application
                 .clientModule(new ClientModule())//用于提供okhttp和retrofit的单例
                 .imageModule(new ImageModule())//图片加载框架默认使用glide
-                .globeConfigModule(getGlobeConfigModule(mApplication, mModules))
+                .globalConfigModule(getGlobeConfigModule(mApplication, mModules))
                 .build();
         mAppComponent.inject(this);
 
@@ -83,8 +83,8 @@ public class AppDelegate {
      * 需要在AndroidManifest中声明{@link ConfigModule}的实现类,和Glide的配置方式相似
      * @return
      */
-    private GlobeConfigModule getGlobeConfigModule(Application context, List<ConfigModule> modules) {
-        GlobeConfigModule.Builder builder = GlobeConfigModule.builder();
+    private GlobalConfigModule getGlobeConfigModule(Application context, List<ConfigModule> modules) {
+        GlobalConfigModule.Builder builder = GlobalConfigModule.builder();
         //循环集合，执行ConfigModule 实现类中的方法
         for (ConfigModule module : modules) {
             module.applyOptions(context, builder);
