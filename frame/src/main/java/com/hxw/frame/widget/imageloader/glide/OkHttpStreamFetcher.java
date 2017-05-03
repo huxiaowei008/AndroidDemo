@@ -1,4 +1,4 @@
-package com.hxw.frame.http;
+package com.hxw.frame.widget.imageloader.glide;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.ResourceDecoder;

@@ -3,11 +3,10 @@ package com.hxw.frame.di;
 import android.app.Application;
 
 import com.google.gson.Gson;
-import com.hxw.frame.base.AppDelegate;
+import com.hxw.frame.base.delegate.AppDelegate;
 import com.hxw.frame.di.module.AppModule;
 import com.hxw.frame.di.module.ClientModule;
 import com.hxw.frame.di.module.GlobalConfigModule;
-import com.hxw.frame.di.module.ImageModule;
 import com.hxw.frame.integration.AppManager;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.update.UpdateManager;
@@ -24,7 +23,7 @@ import okhttp3.OkHttpClient;
  * Created by hxw on 2017/2/8.
  */
 @Singleton
-@Component(modules = {AppModule.class, ClientModule.class, ImageModule.class,
+@Component(modules = {AppModule.class, ClientModule.class,
         GlobalConfigModule.class})
 public interface AppComponent {
 

@@ -1,8 +1,10 @@
 package com.hxw.frame.di.module;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.integration.RepositoryManager;
 
@@ -41,10 +43,23 @@ public class AppModule {
      */
     @Singleton
     @Provides
-    public Gson provideGson() {
-        return new Gson();
+    public Gson provideGson(Application application, GsonConfiguration configuration) {
+        GsonBuilder builder=new GsonBuilder();
+        configuration.configGson(application,builder);
+        return builder.create();
     }
 
+
+    public interface GsonConfiguration {
+        GsonConfiguration EMPTY = new GsonConfiguration() {
+            @Override
+            public void configGson(Context context, GsonBuilder builder) {
+
+            }
+        };
+
+        void configGson(Context context, GsonBuilder builder);
+    }
 
     /**
      * 提供数据来源管理

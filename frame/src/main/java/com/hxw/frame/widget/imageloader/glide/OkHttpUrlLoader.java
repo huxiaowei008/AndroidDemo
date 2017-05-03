@@ -1,4 +1,4 @@
-package com.hxw.frame.http;
+package com.hxw.frame.widget.imageloader.glide;
 
 import android.content.Context;
 

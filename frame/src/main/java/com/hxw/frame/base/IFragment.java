@@ -1,58 +1,31 @@
-package com.hxw.androiddemo.mvp.bottomnavigation;
+package com.hxw.frame.base;
 
-import android.widget.TextView;
-
-import com.hxw.androiddemo.R;
-import com.hxw.frame.base.BaseFragment;
 import com.hxw.frame.di.AppComponent;
 
-import butterknife.BindView;
-
 /**
- * Created by hxw on 2017/4/26.
+ * Created by hxw on 2017/5/3.
  */
 
-public class SimpleFragment extends BaseFragment {
-
-
-    @BindView(R.id.tv_text)
-    TextView tvText;
-
-    private String text = "";
-
-    public static SimpleFragment getInstance(String text) {
-        SimpleFragment simpleFragment = new SimpleFragment();
-        simpleFragment.text = text;
-
-        return simpleFragment;
-    }
+public interface IFragment {
 
     /**
      * @return 返回布局资源ID
      */
-    @Override
-    public int getLayoutId() {
-        return R.layout.fragment_simple;
-    }
+    int getLayoutId();
 
     /**
      * 依赖注入的入口,提供AppComponent(提供所有的单例对象)给子类，进行Component依赖
      *
      * @param appComponent
      */
-    @Override
-    public void componentInject(AppComponent appComponent) {
-
-    }
+    void componentInject(AppComponent appComponent);
 
     /**
      * 初始化,会在onActivityCreated中执行
      */
-    @Override
-    public void init() {
+    void init();
 
-        tvText.setText(text);
-    }
+    boolean useEventBus();
 
     /**
      * 此方法是让外部调用使fragment做一些操作的,比如说外部的activity想让fragment对象执行一些方法,
@@ -66,8 +39,5 @@ public class SimpleFragment extends BaseFragment {
      *
      * @param data
      */
-    @Override
-    public void setData(Object data) {
-
-    }
+    void setData(Object data);
 }

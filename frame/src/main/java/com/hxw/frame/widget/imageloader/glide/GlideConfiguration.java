@@ -13,7 +13,6 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.module.GlideModule;
 import com.hxw.frame.base.BaseApplication;
 import com.hxw.frame.di.AppComponent;
-import com.hxw.frame.http.OkHttpUrlLoader;
 import com.hxw.frame.utils.FileUtils;
 
 import java.io.File;

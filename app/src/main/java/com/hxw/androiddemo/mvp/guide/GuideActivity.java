@@ -29,7 +29,7 @@ public class GuideActivity extends BaseActivity {
      * @return 返回布局资源ID
      */
     @Override
-    protected int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.activity_guide;
     }
 
@@ -39,7 +39,7 @@ public class GuideActivity extends BaseActivity {
      * @param appComponent
      */
     @Override
-    protected void componentInject(AppComponent appComponent) {
+    public void componentInject(AppComponent appComponent) {
 
     }
 
@@ -47,7 +47,7 @@ public class GuideActivity extends BaseActivity {
      * 初始化，会在onCreate中执行
      */
     @Override
-    protected void init() {
+    public void init() {
 //        //获取当前版本号
 //        int currentVersion = AppUtils.getVersionCode(this);
 //        //获取上次的版本号

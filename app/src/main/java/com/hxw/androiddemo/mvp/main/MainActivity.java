@@ -1,6 +1,12 @@
 package com.hxw.androiddemo.mvp.main;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.hxw.androiddemo.R;
@@ -22,12 +28,13 @@ public class MainActivity extends BaseActivity {
     @Inject
     UpdateManager updateManager;
 
+    private int reCode = 8;
 
     /**
      * @return 返回布局资源ID
      */
     @Override
-    protected int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.activity_main;
     }
 
@@ -37,7 +44,7 @@ public class MainActivity extends BaseActivity {
      * @param appComponent
      */
     @Override
-    protected void componentInject(AppComponent appComponent) {
+    public void componentInject(AppComponent appComponent) {
             DaggerMainComponent.builder()
                     .appComponent(appComponent)
                     .mainModule(new MainModule())
@@ -49,7 +56,7 @@ public class MainActivity extends BaseActivity {
      * 初始化，会在onCreate中执行
      */
     @Override
-    protected void init() {
+    public void init() {
 
     }
 
@@ -93,5 +100,35 @@ public class MainActivity extends BaseActivity {
         Intent intent = new Intent(MainActivity.this, targetActivity);
         intent.putExtra(Constant.INDEX, index);
         startActivity(intent);
+    }
+
+    /*  权限校验  */
+    private void checkBluetoothPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //校验是否已具有模糊定位权限
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        reCode);
+            } else {
+                //具有权限
+
+            }
+        } else {
+            //系统不高于6.0直接执行
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == reCode) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //同意权限
+
+            } else {
+                // 权限拒绝，提示用户开启权限
+
+            }
+        }
     }
 }

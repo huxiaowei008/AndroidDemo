@@ -23,7 +23,7 @@ public class StateActivity extends BaseActivity {
      * @return 返回布局资源ID
      */
     @Override
-    protected int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.activity_state;
     }
 
@@ -33,7 +33,7 @@ public class StateActivity extends BaseActivity {
      * @param appComponent
      */
     @Override
-    protected void componentInject(AppComponent appComponent) {
+    public void componentInject(AppComponent appComponent) {
 
     }
 
@@ -41,7 +41,7 @@ public class StateActivity extends BaseActivity {
      * 初始化，会在onCreate中执行
      */
     @Override
-    protected void init() {
+    public void init() {
         slLayout.setOnRetryClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

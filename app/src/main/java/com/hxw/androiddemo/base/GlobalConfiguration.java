@@ -2,11 +2,12 @@ package com.hxw.androiddemo.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 
 import com.hxw.androiddemo.BuildConfig;
 import com.hxw.androiddemo.api.ComAPI;
 import com.hxw.androiddemo.api.ComCache;
-import com.hxw.frame.base.AppDelegate;
+import com.hxw.frame.base.delegate.AppDelegate;
 import com.hxw.frame.di.module.GlobalConfigModule;
 import com.hxw.frame.http.GlobalHttpHandler;
 import com.hxw.frame.http.OnResponseErrorListener;
@@ -144,6 +145,28 @@ public class GlobalConfiguration implements ConfigModule {
                 this.mRefWatcher = null;
             }
         });
+    }
+
+    /**
+     * 使用{@link Application.ActivityLifecycleCallbacks}在Activity的生命周期中注入一些操作
+     *
+     * @param context
+     * @param lifecycles
+     */
+    @Override
+    public void injectActivityLifecycle(Context context, List<Application.ActivityLifecycleCallbacks> lifecycles) {
+
+    }
+
+    /**
+     * 使用{@link FragmentManager.FragmentLifecycleCallbacks}在Fragment的生命周期中注入一些操作
+     *
+     * @param context
+     * @param lifecycles
+     */
+    @Override
+    public void injectFragmentLifecycle(Context context, List<FragmentManager.FragmentLifecycleCallbacks> lifecycles) {
+
     }
 
 

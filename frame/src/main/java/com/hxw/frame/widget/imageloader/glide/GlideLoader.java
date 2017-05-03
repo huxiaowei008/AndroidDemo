@@ -22,13 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Created by hxw on 2017/3/15.
  */
-@Singleton
 public class GlideLoader implements IImageLoaderStrategy<GlideImageConfig> {
-
-    @Inject
-    public GlideLoader() {
-
-    }
 
     @Override
     public void loadImage(Context context, GlideImageConfig config) {

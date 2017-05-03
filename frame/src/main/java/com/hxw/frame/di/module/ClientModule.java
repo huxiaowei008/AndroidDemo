@@ -1,10 +1,12 @@
 package com.hxw.frame.di.module;
 
-import com.google.gson.GsonBuilder;
+import android.app.Application;
+import android.content.Context;
+
+import com.google.gson.Gson;
 import com.hxw.frame.http.GlobalHttpHandler;
 import com.hxw.frame.http.RequestInterceptor;
 import com.hxw.frame.utils.FileUtils;
-import com.hxw.frame.utils.NullStringToEmptyAdapterFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,17 +44,31 @@ public class ClientModule {
      */
     @Singleton
     @Provides
-    Retrofit provideRetrofit(OkHttpClient client, HttpUrl httpUrl) {
-        return new Retrofit.Builder()
-                .baseUrl(httpUrl)//域名
+    Retrofit provideRetrofit(Application application, RetrofitConfiguration configuration,
+                             OkHttpClient client, HttpUrl httpUrl, Gson gson) {
+        Retrofit.Builder builder = new Retrofit.Builder();
+        builder.baseUrl(httpUrl)//域名
                 .client(client)//设置okhttp
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//使用rxjava
-                .addConverterFactory(GsonConverterFactory
-                        .create(new GsonBuilder()
-                                .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                                .registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory<>())
-                                .create()))
-                .build();
+                .addConverterFactory(GsonConverterFactory.create(gson));////使用Gson
+        configuration.configRetrofit(application, builder);
+        return builder.build();
+//        .create(new GsonBuilder()
+//                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+//                .registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory<>())
+//                .create()))
+
+    }
+
+    public interface RetrofitConfiguration {
+        RetrofitConfiguration EMPTY = new RetrofitConfiguration() {
+            @Override
+            public void configRetrofit(Context context, Retrofit.Builder builder) {
+
+            }
+        };
+
+        void configRetrofit(Context context, Retrofit.Builder builder);
     }
 
 
@@ -65,7 +81,8 @@ public class ClientModule {
      */
     @Singleton
     @Provides
-    OkHttpClient provideClient(Interceptor intercept, List<Interceptor> interceptors,
+    OkHttpClient provideClient(Application application, OkHttpConfiguration configuration,
+                               Interceptor intercept, List<Interceptor> interceptors,
                                final GlobalHttpHandler handler) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .readTimeout(TIME_OUT, TimeUnit.SECONDS)//读取超时
@@ -84,7 +101,19 @@ public class ClientModule {
                 builder.addInterceptor(interceptor);
             }
         }
+        configuration.configOkHttp(application, builder);
         return builder.build();
+    }
+
+    public interface OkHttpConfiguration {
+        OkHttpConfiguration EMPTY = new OkHttpConfiguration() {
+            @Override
+            public void configOkHttp(Context context, OkHttpClient.Builder builder) {
+
+            }
+        };
+
+        void configOkHttp(Context context, OkHttpClient.Builder builder);
     }
 
     /**
@@ -107,10 +136,22 @@ public class ClientModule {
      */
     @Singleton
     @Provides
-    RxCache provideRxCache(@Named("RxCacheDirectory") File cacheDirectory) {
-        return new RxCache
-                .Builder()
-                .persistence(cacheDirectory, new GsonSpeaker());
+    RxCache provideRxCache(Application application, RxCacheConfiguration configuration,
+                           @Named("RxCacheDirectory") File cacheDirectory) {
+        RxCache.Builder builder = new RxCache.Builder();
+        configuration.configRxCache(application, builder);
+        return builder.persistence(cacheDirectory, new GsonSpeaker());
+    }
+
+    public interface RxCacheConfiguration {
+        RxCacheConfiguration EMPTY = new RxCacheConfiguration() {
+            @Override
+            public void configRxCache(Context context, RxCache.Builder builder) {
+
+            }
+        };
+
+        void configRxCache(Context context, RxCache.Builder builder);
     }
 
 

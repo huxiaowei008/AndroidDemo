@@ -1,8 +1,10 @@
 package com.hxw.frame.integration;
 
+import android.app.Application;
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 
-import com.hxw.frame.base.AppDelegate;
+import com.hxw.frame.base.delegate.AppDelegate;
 import com.hxw.frame.di.module.GlobalConfigModule;
 
 import java.util.List;
@@ -34,4 +36,21 @@ public interface ConfigModule {
      * @return
      */
     void injectAppLifecycle(Context context, List<AppDelegate.Lifecycle> lifecycles);
+
+    /**
+     * 使用{@link Application.ActivityLifecycleCallbacks}在Activity的生命周期中注入一些操作
+     *
+     * @param context
+     * @param lifecycles
+     */
+    void injectActivityLifecycle(Context context, List<Application.ActivityLifecycleCallbacks> lifecycles);
+
+
+    /**
+     * 使用{@link FragmentManager.FragmentLifecycleCallbacks}在Fragment的生命周期中注入一些操作
+     *
+     * @param context
+     * @param lifecycles
+     */
+    void injectFragmentLifecycle(Context context, List<FragmentManager.FragmentLifecycleCallbacks> lifecycles);
 }
