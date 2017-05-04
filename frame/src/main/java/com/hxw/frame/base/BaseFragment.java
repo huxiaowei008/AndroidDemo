@@ -18,7 +18,7 @@ public abstract class BaseFragment extends RxFragment implements IFragment {
     protected final String TAG = this.getClass().getSimpleName();
 
     public BaseFragment() {
-        //必须确保在Fragment实例化时setArguments()
+        //必须确保在Fragment实例化时setArguments(),为存取FragmentDelegate
         setArguments(new Bundle());
     }
 

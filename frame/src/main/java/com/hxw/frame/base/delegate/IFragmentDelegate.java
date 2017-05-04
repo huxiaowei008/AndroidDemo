@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import java.io.Serializable;
+
 /**
  * Created by hxw on 2017/5/3.
  */
 
-public interface IFragmentDelegate {
+public interface IFragmentDelegate extends Serializable{
+    String FRAGMENT_DELEGATE = "fragment_delegate";
+
     void onAttach(Context context);
 
     void onCreate(@Nullable Bundle savedInstanceState);

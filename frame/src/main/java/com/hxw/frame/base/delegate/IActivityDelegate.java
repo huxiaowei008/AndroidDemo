@@ -11,6 +11,7 @@ import java.io.Serializable;
 
 public interface IActivityDelegate extends Serializable {
     String ACTIVITY_DELEGATE = "activity_delegate";
+
     @Nullable
     void onCreate(@Nullable Bundle savedInstanceState);
 

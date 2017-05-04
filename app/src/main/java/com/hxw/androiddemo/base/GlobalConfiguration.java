@@ -2,11 +2,13 @@ package com.hxw.androiddemo.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.hxw.androiddemo.BuildConfig;
 import com.hxw.androiddemo.api.ComAPI;
 import com.hxw.androiddemo.api.ComCache;
+import com.hxw.frame.base.App;
 import com.hxw.frame.base.delegate.AppDelegate;
 import com.hxw.frame.di.module.GlobalConfigModule;
 import com.hxw.frame.http.GlobalHttpHandler;
@@ -119,7 +121,7 @@ public class GlobalConfiguration implements ConfigModule {
         // AppDelegate.Lifecycle 的所有方法都会在BaseApplication对应的生命周期中被调用,
         // 所以在对应的方法中可以扩展一些自己需要的逻辑
         lifecycles.add(new AppDelegate.Lifecycle() {
-            private RefWatcher mRefWatcher;//leakCanary观察器
+
 
             @Override
             public void onCreate(Application application) {
@@ -135,14 +137,14 @@ public class GlobalConfiguration implements ConfigModule {
                 }
 
                 //安装leakCanary检测内存泄露
-                this.mRefWatcher = BuildConfig.USE_CANARY ?
-                        LeakCanary.install(application) : RefWatcher.DISABLED;
+                ((App) application).getAppComponent().extras().put(RefWatcher.class.getName(),BuildConfig.USE_CANARY ?
+                        LeakCanary.install(application) : RefWatcher.DISABLED);
 
             }
 
             @Override
             public void onTerminate(Application application) {
-                this.mRefWatcher = null;
+
             }
         });
     }
@@ -166,7 +168,20 @@ public class GlobalConfiguration implements ConfigModule {
      */
     @Override
     public void injectFragmentLifecycle(Context context, List<FragmentManager.FragmentLifecycleCallbacks> lifecycles) {
-
+        lifecycles.add(new FragmentManager.FragmentLifecycleCallbacks() {
+            /**
+             * Called after the fragment has returned from the FragmentManager's call to
+             * {@link Fragment#onDestroy()}.
+             *
+             * @param fm Host FragmentManager
+             * @param f  Fragment changing state
+             */
+            @Override
+            public void onFragmentDestroyed(FragmentManager fm, Fragment f) {
+                ((RefWatcher)((App) f.getActivity().getApplication()).getAppComponent()
+                        .extras().get(RefWatcher.class.getName())).watch(f);
+            }
+        });
     }
 
 

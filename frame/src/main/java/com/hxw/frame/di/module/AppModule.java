@@ -2,11 +2,14 @@ package com.hxw.frame.di.module;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v4.util.ArrayMap;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.integration.RepositoryManager;
+
+import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -44,8 +47,8 @@ public class AppModule {
     @Singleton
     @Provides
     public Gson provideGson(Application application, GsonConfiguration configuration) {
-        GsonBuilder builder=new GsonBuilder();
-        configuration.configGson(application,builder);
+        GsonBuilder builder = new GsonBuilder();
+        configuration.configGson(application, builder);
         return builder.create();
     }
 
@@ -71,5 +74,16 @@ public class AppModule {
     @Provides
     public IRepositoryManager provideRepositoryManager(RepositoryManager repositoryManager) {
         return repositoryManager;
+    }
+
+    /**
+     * 用于存放一些整个APP公用的数据,切勿大量存放大容量数据
+     *
+     * @return
+     */
+    @Singleton
+    @Provides
+    public Map<String, Object> provideExtras() {
+        return new ArrayMap<>();
     }
 }

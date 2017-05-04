@@ -123,4 +123,9 @@ public class BottomNavigationActivity extends BaseActivity {
         transaction.commit();
 
     }
+
+    @Override
+    public boolean useFragment() {
+        return true;
+    }
 }

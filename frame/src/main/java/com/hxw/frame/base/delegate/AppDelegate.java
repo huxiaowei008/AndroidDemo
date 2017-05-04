@@ -53,6 +53,9 @@ public class AppDelegate {
                 .globalConfigModule(getGlobeConfigModule(mApplication, mModules))
                 .build();
         mAppComponent.inject(this);
+
+        mAppComponent.extras().put(ConfigModule.class.getName(), mModules);
+
         //注册activity生命周期的回调
         mApplication.registerActivityLifecycleCallbacks(mActivityLifecycle);
         //注册activity生命周期的回调

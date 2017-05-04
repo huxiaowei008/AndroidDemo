@@ -13,6 +13,7 @@ import com.hxw.frame.update.UpdateManager;
 import com.hxw.frame.widget.imageloader.ImageLoader;
 
 import java.io.File;
+import java.util.Map;
 
 import javax.inject.Singleton;
 
@@ -43,14 +44,15 @@ public interface AppComponent {
 
     OkHttpClient okHttpClient();
 
-    //API管理器,retrofitApi
-
     //缓存文件根目录(RxCache和Glide的的缓存都已经作为子文件夹在这个目录里),
     //应该将所有缓存放到这个根目录里,便于管理和清理,可在GlobeConfigModule里配置
     File cacheFile();
 
     //图片加载器
     ImageLoader imageLoader();
+
+    //用来存取一些整个App公用的数据,切勿大量存放大容量数据
+    Map<String, Object> extras();
 
     void inject(AppDelegate delegate);
 }
