@@ -18,6 +18,7 @@ import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.update.OnUpdateListener;
 import com.hxw.frame.update.UpdateManager;
+import com.hxw.frame.utils.SpannableStringUtils;
 
 import javax.inject.Inject;
 

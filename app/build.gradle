@@ -53,4 +53,6 @@ dependencies {
 
     //轮播图 https://github.com/bingoogolapple/BGABanner-Android
     compile rootProject.ext.dependencies["BGABanner"]
+    //BaseRecyclerViewAdapterHelper https://github.com/CymChad/BaseRecyclerViewAdapterHelper
+    compile rootProject.ext.dependencies["base-recyclerview-adapter"]
 }
