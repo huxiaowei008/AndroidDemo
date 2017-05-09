@@ -87,7 +87,7 @@ public class BasePresenter<M extends IModel, V extends IView> implements IPresen
     protected void dispose() {
         if (mCompositeDisposable != null) {
             //保证activity结束时取消所有正在执行的订阅
-            mCompositeDisposable.dispose();
+            mCompositeDisposable.clear();
         }
     }
 

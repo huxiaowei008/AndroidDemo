@@ -2,16 +2,15 @@ package com.hxw.frame.base.delegate;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.View;
-
-import java.io.Serializable;
 
 /**
  * Created by hxw on 2017/5/3.
  */
 
-public interface IFragmentDelegate extends Serializable{
+public interface IFragmentDelegate extends Parcelable {
     String FRAGMENT_DELEGATE = "fragment_delegate";
 
     void onAttach(Context context);

@@ -1,15 +1,14 @@
 package com.hxw.frame.base.delegate;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
-
-import java.io.Serializable;
 
 /**
  * Created by hxw on 2017/5/3.
  */
 
-public interface IActivityDelegate extends Serializable {
+public interface IActivityDelegate extends Parcelable {
     String ACTIVITY_DELEGATE = "activity_delegate";
 
     @Nullable

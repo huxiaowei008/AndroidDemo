@@ -72,7 +72,7 @@ public class SpannableStringUtils {
     public @interface Align {
     }
 
-    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");//意思是换行
 
     public static class Builder {
 
@@ -590,7 +590,7 @@ public class SpannableStringUtils {
         }
 
         /**
-         * 追加样式一行字符串
+         * 追加样式一行字符串,就是之后会换行
          *
          * @param text 样式字符串文本
          * @return {@link Builder}

@@ -2,6 +2,7 @@ package com.hxw.frame.base.delegate;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.Nullable;
 
 import com.hxw.frame.base.App;
@@ -32,10 +33,10 @@ public class ActivityDelegate implements IActivityDelegate {
         if (iActivity.useEventBus()) {
             EventBus.getDefault().register(mActivity);//注册到事件主线
         }
+        iActivity.componentInject(((App) mActivity.getApplication()).getAppComponent());
         mActivity.setContentView(iActivity.getLayoutId());
         //绑定到butterknife
         mUnBinder = ButterKnife.bind(mActivity);
-        iActivity.componentInject(((App) mActivity.getApplication()).getAppComponent());
         iActivity.init();
     }
 
@@ -81,4 +82,32 @@ public class ActivityDelegate implements IActivityDelegate {
         this.iActivity = null;
         this.mActivity = null;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
+
+    protected ActivityDelegate(Parcel in) {
+        this.mActivity = in.readParcelable(Activity.class.getClassLoader());
+        this.iActivity = in.readParcelable(IActivity.class.getClassLoader());
+        this.mUnBinder = in.readParcelable(Unbinder.class.getClassLoader());
+    }
+
+    public static final Creator<IActivityDelegate> CREATOR = new Creator<IActivityDelegate>() {
+        @Override
+        public ActivityDelegate createFromParcel(Parcel source) {
+            return new ActivityDelegate(source);
+        }
+
+        @Override
+        public ActivityDelegate[] newArray(int size) {
+            return new ActivityDelegate[size];
+        }
+    };
 }

@@ -2,6 +2,7 @@ package com.hxw.frame.base.delegate;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -33,7 +34,10 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onAttach(Context context) {
-
+        if (iFragment.useEventBus()) {
+            EventBus.getDefault().register(mFragment);//注册到事件主线
+        }
+        iFragment.componentInject(((App) mFragment.getActivity().getApplication()).getAppComponent());
     }
 
     @Override
@@ -51,10 +55,6 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
-        if (iFragment.useEventBus()) {
-            EventBus.getDefault().register(mFragment);//注册到事件主线
-        }
-        iFragment.componentInject(((App) mFragment.getActivity().getApplication()).getAppComponent());
         iFragment.init();
     }
 
@@ -85,7 +85,7 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onDestroyView() {
-        if (mUnBinder != Unbinder.EMPTY) {
+        if (mUnBinder != null &&mUnBinder != Unbinder.EMPTY) {
             mUnBinder.unbind();
         }
     }
@@ -95,13 +95,43 @@ public class FragmentDelegate implements IFragmentDelegate {
         if (iFragment.useEventBus()) {
             EventBus.getDefault().unregister(mFragment);
         }
-        mUnBinder = null;
-        iFragment = null;
-        mFragment = null;
+        this.mUnBinder = null;
+        this.mFragmentManager = null;
+        this.mFragment = null;
+        this.iFragment = null;
     }
 
     @Override
     public void onDetach() {
 
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+    }
+
+    protected FragmentDelegate(Parcel in) {
+        this.mFragmentManager = in.readParcelable(FragmentManager.class.getClassLoader());
+        this.mFragment = in.readParcelable(Fragment.class.getClassLoader());
+        this.iFragment = in.readParcelable(IFragment.class.getClassLoader());
+        this.mUnBinder = in.readParcelable(Unbinder.class.getClassLoader());
+    }
+
+    public static final Creator<FragmentDelegate> CREATOR = new Creator<FragmentDelegate>() {
+        @Override
+        public FragmentDelegate createFromParcel(Parcel source) {
+            return new FragmentDelegate(source);
+        }
+
+        @Override
+        public FragmentDelegate[] newArray(int size) {
+            return new FragmentDelegate[size];
+        }
+    };
 }

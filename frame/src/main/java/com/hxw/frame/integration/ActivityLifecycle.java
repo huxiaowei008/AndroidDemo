@@ -56,15 +56,6 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             Timber.e("onCreated" + activityDelegate.toString());
             activityDelegate.onCreate(savedInstanceState);
         }
-    }
-
-    @Override
-    public void onActivityStarted(Activity activity) {
-        ActivityDelegate activityDelegate = fetchActivityDelegate(activity);
-        if (activityDelegate != null) {
-            Timber.e("onStart" + activityDelegate.toString());
-            activityDelegate.onStart();
-        }
 
         boolean useFragment = (activity instanceof IActivity) && ((IActivity) activity).useFragment();
         if (activity instanceof FragmentActivity && useFragment) {
@@ -87,6 +78,15 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
                 ((FragmentActivity) activity).getSupportFragmentManager()
                         .registerFragmentLifecycleCallbacks(fragmentLifecycle, true);
             }
+        }
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
+        ActivityDelegate activityDelegate = fetchActivityDelegate(activity);
+        if (activityDelegate != null) {
+            Timber.e("onStart" + activityDelegate.toString());
+            activityDelegate.onStart();
         }
     }
 
@@ -170,16 +170,12 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
     private ActivityDelegate fetchActivityDelegate(Activity activity) {
         if (activity instanceof IActivity && activity.getIntent() != null) {
             return (ActivityDelegate) activity.getIntent()
-                    .getSerializableExtra(ActivityDelegate.ACTIVITY_DELEGATE);
+                    .getParcelableExtra(ActivityDelegate.ACTIVITY_DELEGATE);
         }
         return null;
     }
 
     public class FragmentLifecycle extends FragmentManager.FragmentLifecycleCallbacks {
-
-        public FragmentLifecycle() {
-
-        }
 
         @Override
         public void onFragmentAttached(FragmentManager fm, Fragment f, Context context) {
@@ -188,7 +184,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
                 FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
                 if (fragmentDelegate == null) {
                     fragmentDelegate = new FragmentDelegate(fm, f);
-                    f.getArguments().putSerializable(FragmentDelegate.FRAGMENT_DELEGATE, fragmentDelegate);
+                    f.getArguments().putParcelable(FragmentDelegate.FRAGMENT_DELEGATE, fragmentDelegate);
                 }
                 Timber.e("onFragmentAttach" + fragmentDelegate.toString());
                 fragmentDelegate.onAttach(context);
@@ -309,7 +305,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         private FragmentDelegate fetchFragmentDelegate(Fragment fragment) {
             if (fragment instanceof IFragment && fragment.getArguments() != null) {
                 return (FragmentDelegate) fragment.getArguments()
-                        .getSerializable(FragmentDelegate.FRAGMENT_DELEGATE);
+                        .getParcelable(FragmentDelegate.FRAGMENT_DELEGATE);
             }
             return null;
         }
