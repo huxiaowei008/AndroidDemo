@@ -37,5 +37,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="检查更新"/>
+        <Button
+            android:id="@+id/btn_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="头像选择"/>
     </LinearLayout>
 </ScrollView>

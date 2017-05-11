@@ -14,11 +14,11 @@ import com.hxw.androiddemo.base.Constant;
 import com.hxw.androiddemo.mvp.StateActivity;
 import com.hxw.androiddemo.mvp.bottomnavigation.BottomNavigationActivity;
 import com.hxw.androiddemo.mvp.guide.GuideActivity;
+import com.hxw.androiddemo.mvp.photopicker.PhotoPickerActivity;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.update.OnUpdateListener;
 import com.hxw.frame.update.UpdateManager;
-import com.hxw.frame.utils.SpannableStringUtils;
 
 import javax.inject.Inject;
 
@@ -46,11 +46,11 @@ public class MainActivity extends BaseActivity {
      */
     @Override
     public void componentInject(AppComponent appComponent) {
-            DaggerMainComponent.builder()
-                    .appComponent(appComponent)
-                    .mainModule(new MainModule())
-                    .build()
-                    .inject(this);
+        DaggerMainComponent.builder()
+                .appComponent(appComponent)
+                .mainModule(new MainModule())
+                .build()
+                .inject(this);
     }
 
     /**
@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5})
+    @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5,R.id.btn_6})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_1:
@@ -93,6 +93,9 @@ public class MainActivity extends BaseActivity {
 
                     }
                 });
+                break;
+            case R.id.btn_6:
+                goTo(6, PhotoPickerActivity.class);
                 break;
         }
     }
