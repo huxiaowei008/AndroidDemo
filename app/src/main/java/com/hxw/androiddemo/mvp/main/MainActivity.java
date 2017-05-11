@@ -15,6 +15,7 @@ import com.hxw.androiddemo.mvp.StateActivity;
 import com.hxw.androiddemo.mvp.bottomnavigation.BottomNavigationActivity;
 import com.hxw.androiddemo.mvp.guide.GuideActivity;
 import com.hxw.androiddemo.mvp.photopicker.PhotoPickerActivity;
+import com.hxw.androiddemo.mvp.recyclerviewh.RecyclerVeiwHActivity;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.update.OnUpdateListener;
@@ -61,7 +62,7 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5,R.id.btn_6})
+    @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_1:
@@ -96,6 +97,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_6:
                 goTo(6, PhotoPickerActivity.class);
+                break;
+            case R.id.btn_7:
+                goTo(7, RecyclerVeiwHActivity.class);
                 break;
         }
     }

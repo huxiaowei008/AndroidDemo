@@ -42,5 +42,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="头像选择"/>
+        <Button
+            android:id="@+id/btn_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="recyclerView横向滑动"/>
     </LinearLayout>
 </ScrollView>

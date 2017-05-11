@@ -27,6 +27,7 @@
         <activity android:name=".mvp.StateActivity" android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"/>
         <activity android:name=".mvp.bottomnavigation.BottomNavigationActivity"/>
         <activity android:name=".mvp.photopicker.PhotoPickerActivity"/>
+        <activity android:name=".mvp.recyclerviewh.RecyclerVeiwHActivity"/>
 
         <!--glide配置-->
         <meta-data

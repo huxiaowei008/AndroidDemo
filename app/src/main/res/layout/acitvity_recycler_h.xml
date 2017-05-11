@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:text="recyclerView横向滑动"
+        android:textColor="@color/textWhite_text"
+        android:textSize="@dimen/title" />
+
+    <TextView
+        android:id="@+id/tv_position"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/rv_h"
+        android:layout_marginBottom="56dp"
+        android:gravity="center"
+        android:text="1"
+        android:textSize="@dimen/headline" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_h"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_alignParentBottom="true" />
+
 
 </RelativeLayout>
