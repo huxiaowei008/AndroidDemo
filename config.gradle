@@ -107,7 +107,7 @@ ext {
             "flyco-tab-layout"          : 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar',
             //boxing https://github.com/Bilibili/boxing bilibili的多媒体选择器
             //核心版'com.bilibili:boxing:0.7.0'  带界面版'com.bilibili:boxing-impl:0.7.0'
-            "boxing"                    : 'com.bilibili:boxing:0.7.0'
+            "boxing"                    : 'com.bilibili:boxing-impl:0.7.0'
     ]
 
 

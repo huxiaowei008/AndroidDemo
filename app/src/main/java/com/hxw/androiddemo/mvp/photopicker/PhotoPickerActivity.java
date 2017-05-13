@@ -10,6 +10,7 @@ import com.bilibili.boxing.model.config.BoxingConfig;
 import com.bilibili.boxing.model.entity.BaseMedia;
 import com.bilibili.boxing.model.entity.impl.ImageMedia;
 import com.bilibili.boxing.utils.ImageCompressor;
+import com.bilibili.boxing_impl.ui.BoxingActivity;
 import com.hxw.androiddemo.R;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
@@ -63,8 +64,8 @@ public class PhotoPickerActivity extends BaseActivity {
         BoxingConfig singleImgConfig = new BoxingConfig(BoxingConfig.Mode.SINGLE_IMG)//图片单选
                 .needCamera(R.drawable.ic_photo_camera)
                 .withMediaPlaceHolderRes(R.drawable.ic_crop_original);
-//        Boxing.of(singleImgConfig).withIntent(this, BoxingActivity.class)
-//                .start(this, COMPRESS_REQUEST_CODE);
+        Boxing.of(singleImgConfig).withIntent(this, BoxingActivity.class)
+                .start(this, COMPRESS_REQUEST_CODE);
     }
 
     @Override
