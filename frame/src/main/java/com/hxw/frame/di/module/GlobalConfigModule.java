@@ -7,7 +7,7 @@ import com.hxw.frame.http.GlobalHttpHandler;
 import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.utils.FileUtils;
 import com.hxw.frame.utils.Preconditions;
-import com.hxw.frame.widget.imageloader.IImageLoaderStrategy;
+import com.hxw.frame.widget.imageloader.IImageLoader;
 import com.hxw.frame.widget.imageloader.glide.GlideLoader;
 
 import java.io.File;
@@ -31,7 +31,7 @@ public class GlobalConfigModule {
     private List<Interceptor> mInterceptors;
     private OnResponseErrorListener mErrorListener;
     private File mCacheFile;
-    private IImageLoaderStrategy mLoaderStrategy;
+    private IImageLoader mLoaderStrategy;
     private AppModule.GsonConfiguration mGsonConfiguration;
     private ClientModule.RetrofitConfiguration mRetrofitConfiguration;
     private ClientModule.OkHttpConfiguration mOkHttpConfiguration;
@@ -105,7 +105,7 @@ public class GlobalConfigModule {
      */
     @Singleton
     @Provides
-    IImageLoaderStrategy provideImageLoaderStrategy() {
+    IImageLoader provideImageLoaderStrategy() {
         return mLoaderStrategy == null ? new GlideLoader() : mLoaderStrategy;
     }
 
@@ -152,7 +152,7 @@ public class GlobalConfigModule {
         private List<Interceptor> interceptors = new ArrayList<>();
         private OnResponseErrorListener onResponseErrorListener;
         private File cacheFile;
-        private IImageLoaderStrategy loaderStrategy;
+        private IImageLoader loaderStrategy;
         private AppModule.GsonConfiguration gsonConfiguration;
         private ClientModule.RetrofitConfiguration retrofitConfiguration;
         private ClientModule.OkHttpConfiguration okHttpConfiguration;
@@ -194,7 +194,7 @@ public class GlobalConfigModule {
         }
 
         //用来请求网络图片
-        public Builder imageLoaderStrategy(IImageLoaderStrategy loaderStrategy) {
+        public Builder imageLoaderStrategy(IImageLoader loaderStrategy) {
             this.loaderStrategy = loaderStrategy;
             return this;
         }

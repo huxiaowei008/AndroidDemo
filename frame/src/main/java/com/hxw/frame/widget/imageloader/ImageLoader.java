@@ -1,6 +1,8 @@
 package com.hxw.frame.widget.imageloader;
 
-import android.content.Context;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.widget.ImageView;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -10,20 +12,19 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class ImageLoader {
-    private IImageLoaderStrategy mStrategy;
+    private IImageLoader mLoader;
 
     @Inject
-    public ImageLoader(IImageLoaderStrategy strategy) {
-        this.mStrategy = strategy;
+    public ImageLoader(IImageLoader loader) {
+        this.mLoader = loader;
     }
 
-
-    public <T extends ImageConfig> void loadImage(Context context, T config) {
-        this.mStrategy.loadImage(context, config);
+    public void displayString(@NonNull ImageView img, @NonNull String uri) {
+        mLoader.displayString(img, uri);
     }
 
-
-    public <T extends ImageConfig> void clear(Context context, T config) {
-        this.mStrategy.clear(context, config);
+    public void displayRes(@NonNull ImageView img, @DrawableRes int res) {
+        mLoader.displayRes(img, res);
     }
+
 }

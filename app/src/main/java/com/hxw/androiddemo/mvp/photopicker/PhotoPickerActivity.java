@@ -1,16 +1,15 @@
 package com.hxw.androiddemo.mvp.photopicker;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bilibili.boxing.Boxing;
 import com.bilibili.boxing.BoxingMediaLoader;
-import com.bilibili.boxing.model.config.BoxingConfig;
 import com.bilibili.boxing.model.entity.BaseMedia;
 import com.bilibili.boxing.model.entity.impl.ImageMedia;
 import com.bilibili.boxing.utils.ImageCompressor;
-import com.bilibili.boxing_impl.ui.BoxingActivity;
 import com.hxw.androiddemo.R;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
@@ -26,6 +25,7 @@ import butterknife.OnClick;
 
 public class PhotoPickerActivity extends BaseActivity {
     private static final int COMPRESS_REQUEST_CODE = 2048;
+    private static final int READ_REQUEST_CODE = 42;
 
     @BindView(R.id.img_head)
     ImageView imgHead;
@@ -61,12 +61,32 @@ public class PhotoPickerActivity extends BaseActivity {
 
     @OnClick(R.id.btn_picker)
     public void onClick() {
-        BoxingConfig singleImgConfig = new BoxingConfig(BoxingConfig.Mode.SINGLE_IMG)//图片单选
-                .needCamera(R.drawable.ic_photo_camera)
-                .withMediaPlaceHolderRes(R.drawable.ic_crop_original);
-        Boxing.of(singleImgConfig).withIntent(this, BoxingActivity.class)
-                .start(this, COMPRESS_REQUEST_CODE);
+//        BoxingConfig singleImgConfig = new BoxingConfig(BoxingConfig.Mode.SINGLE_IMG)//图片单选
+//                .needCamera(R.drawable.ic_photo_camera)
+//                .withMediaPlaceHolderRes(R.drawable.ic_crop_original);
+//        Boxing.of(singleImgConfig).withIntent(this, BoxingActivity.class)
+//                .start(this, COMPRESS_REQUEST_CODE);
+//        startActivity(new Intent(this, PhotoPickActivity.class));
+
+        //调用系统取选取,只能单张
+        // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+        // browser.
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+        // Filter to only show results that can be "opened", such as a
+        // file (as opposed to a list of contacts or timezones)
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // Filter to show only images, using the image MIME data type.
+        // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
+        // To search for all documents available via installed storage providers,
+        // it would be "*/*".
+        intent.setType("image/*");
+
+        startActivityForResult(intent, READ_REQUEST_CODE);
+
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -83,6 +103,12 @@ public class PhotoPickerActivity extends BaseActivity {
                 imageMedia.removeExif();
             }
             BoxingMediaLoader.getInstance().displayThumbnail(imgHead, imageMedia.getThumbnailPath(), 150, 150);
+        } else if (resultCode == RESULT_OK && requestCode == READ_REQUEST_CODE) {
+            Uri uri = null;
+            if (data != null) {
+                uri = data.getData();
+                imgHead.setImageURI(uri);
+            }
         }
     }
 }

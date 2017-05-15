@@ -21,7 +21,12 @@ public class ImageLoader extends CursorLoader {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
             MediaStore.Images.Media.DATE_ADDED,//文件被添加的时间
             //Image File
-            MediaStore.Images.Media.ORIENTATION
+//            MediaStore.Images.Media.ORIENTATION,
+            MediaStore.Images.Media.MIME_TYPE,//图片的类型     image/jpeg
+            MediaStore.Images.Media.WIDTH,
+            MediaStore.Images.Media.HEIGHT,
+            MediaStore.Images.Thumbnails.DATA//缩略图地址
+
     };
     private static final String IMAGE_SELECTION = MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=?";//sql语句条件查询
     private static final String[] IMAGE_SELECTION_ARGS = {"image/jpeg", "image/png", "image/jpg", "image/gif"};//查询条件中问号对应的值

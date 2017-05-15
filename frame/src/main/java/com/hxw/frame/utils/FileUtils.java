@@ -15,12 +15,14 @@ public class FileUtils {
     private FileUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
+
     /**
      * 返回缓存文件夹
      */
     public static File getCacheFile(Context context) {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            File file = context.getExternalCacheDir();//获取系统管理的sd卡缓存文件
+            File file = context.getExternalCacheDir();//获取系统管理的外部存储目录
+//            File file = context.getCacheDir();//临时缓存文件保存到的内部目录
             if (file == null) {//如果获取的为空,就是用自己定义的缓存文件夹做缓存路径
                 file = new File(getCacheFilePath(context));
                 makeDirs(file);

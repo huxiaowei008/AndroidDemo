@@ -46,6 +46,7 @@
 -optimizations !code/simplification/artithmetic,!field/*,!class/merging/*
 
 ################common###############
+-keep public class * implements com.hxw.frame.integration.ConfigModule
 #实体类不参与混淆
 #自定义控件不参与混淆
 -keep class com.hxw.frame.** { *; }
