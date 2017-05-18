@@ -42,6 +42,15 @@ public class MediaLoaderManager {
         loaderImage(activity, null, bucketId, resultCallbacks);
     }
 
+    /**
+     * 对于多次调用activity.getSupportLoaderManager().initLoader(int id, Bundle args,
+     * LoaderManager.LoaderCallbacks<D> callback),id若是一样的,是不会执行callback中的
+     * onCreateLoader去创建新的Loader<Cursor>,直接查询,id不一样才会调用去创建新的Loader<Cursor>;
+     * @param activity
+     * @param args
+     * @param bucketId
+     * @param resultCallbacks
+     */
     public void loaderImage(FragmentActivity activity, Bundle args, String bucketId,
                             LoaderCallbacks<ImageMedia> resultCallbacks) {
         if (bucketId == null || bucketId.equals("")) {

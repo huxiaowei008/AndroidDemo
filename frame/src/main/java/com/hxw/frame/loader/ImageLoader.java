@@ -89,7 +89,7 @@ public class ImageLoader implements LoaderManager.LoaderCallbacks<Cursor> {
         CursorLoader loader = new CursorLoader(context.get(),
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 IMAGE_PROJECTION, selection,
-                selectionArgs, MediaStore.Images.Media.DATE_MODIFIED + " desc");
+                selectionArgs, MediaStore.Images.Media.DATE_MODIFIED + " desc");//最后一个参数是排序
 //下面是加了分页的
 //MediaStore.Images.Media.DATE_MODIFIED + " desc" + " LIMIT " + page * PAGE_LIMIT + " , " + PAGE_LIMIT
         return loader;
