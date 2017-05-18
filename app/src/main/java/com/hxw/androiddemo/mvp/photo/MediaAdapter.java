@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.hxw.androiddemo.R;
-import com.hxw.frame.loader.media.BaseMedia;
 import com.hxw.frame.loader.media.ImageMedia;
 
 import java.util.ArrayList;
@@ -22,23 +21,24 @@ import java.util.List;
 
 public class MediaAdapter extends RecyclerView.Adapter {
 
-    private List<BaseMedia> mMedias;
+    private List<ImageMedia> mMedias;
     private LayoutInflater mInflater;
     private int imageSize;//图片的大小
+    private View.OnClickListener mOnMediaClickListener;
 
-    public MediaAdapter(Context context,int count) {
+    public MediaAdapter(Context context, int count) {
         this.mInflater = LayoutInflater.from(context);
         this.mMedias = new ArrayList<>();
-        this.imageSize = getImageItemWidth(context,count);
+        this.imageSize = getImageItemWidth(context, count);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view=mInflater.inflate(R.layout.item_media_show, parent, false);
+        View view = mInflater.inflate(R.layout.item_media_show, parent, false);
         //把视图变成正方行并适配屏幕的大小
         ViewGroup.LayoutParams params = view.getLayoutParams();
-        params.width=imageSize;
-        params.height=imageSize;
+        params.width = imageSize;
+        params.height = imageSize;
 
         return new MediaHolder(view);
     }
@@ -47,15 +47,17 @@ public class MediaAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         MediaHolder mediaHolder = (MediaHolder) holder;
-        ImageMedia imageMedia = (ImageMedia) mMedias.get(position);
+        ImageMedia imageMedia = mMedias.get(position);
         Glide.with(mediaHolder.img_media.getContext())
                 .load("file://" + imageMedia.getThumbnailPath())
                 .placeholder(R.drawable.ic_placeholder)
                 .crossFade()
                 .centerCrop()
-                .override(imageSize,imageSize)
+                .override(imageSize, imageSize)
                 .into(mediaHolder.img_media);
 
+        mediaHolder.img_media.setTag(imageMedia);
+        mediaHolder.img_media.setOnClickListener(mOnMediaClickListener);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class MediaAdapter extends RecyclerView.Adapter {
         return mMedias.size();
     }
 
-    public void addAllData(@NonNull List<BaseMedia> data) {
+    public void addAllData(@NonNull List<ImageMedia> data) {
         this.mMedias.addAll(data);
         notifyDataSetChanged();
     }
@@ -82,6 +84,9 @@ public class MediaAdapter extends RecyclerView.Adapter {
         }
     }
 
+    public void setOnMediaClickListener(View.OnClickListener onMediaClickListener) {
+        mOnMediaClickListener = onMediaClickListener;
+    }
 
     public static int getImageItemWidth(Context context, int count) {
         int screenWidth = context.getResources().getDisplayMetrics().widthPixels;

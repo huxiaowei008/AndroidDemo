@@ -9,7 +9,20 @@
         android:id="@+id/tb_title"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        app:theme="@style/Base.Widget.AppCompat.Toolbar" />
+        app:theme="@style/Base.Widget.AppCompat.Toolbar">
+
+        <TextView
+            android:id="@+id/tv_pick_album"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:drawablePadding="8dp"
+            android:drawableRight="@drawable/abc_spinner_mtrl_am_alpha"
+            android:gravity="center_vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="默认相册" />
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_photo"

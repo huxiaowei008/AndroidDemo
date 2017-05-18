@@ -1,17 +1,31 @@
 package com.hxw.androiddemo.mvp.photo;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.hxw.androiddemo.R;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
+import com.hxw.frame.loader.IAlbumTaskCallback;
 import com.hxw.frame.loader.LoaderCallbacks;
-import com.hxw.frame.loader.LocalMediaLoader;
+import com.hxw.frame.loader.MediaLoaderManager;
+import com.hxw.frame.loader.media.AlbumEntity;
 import com.hxw.frame.loader.media.BaseMedia;
+import com.hxw.frame.loader.media.ImageMedia;
+import com.hxw.frame.utils.WindowManagerUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,8 +39,19 @@ public class PhotoPickActivity extends BaseActivity {
     Toolbar tbTitle;
     @BindView(R.id.rv_photo)
     RecyclerView rvPhoto;
+    @BindView(R.id.tv_pick_album)
+    TextView tvPickAlbum;
 
-    private MediaAdapter adapter;
+    private MediaAdapter mediaAdapter;
+    private AlbumAdapter albumAdapter;
+    private PopupWindow mAlbumPopWindow;
+    private LoaderCallbacks<ImageMedia> callbacks = new LoaderCallbacks<ImageMedia>() {//图片加载的回调
+        @Override
+        public void onResult(List<ImageMedia> data) {
+            mediaAdapter.clearData();
+            mediaAdapter.addAllData(data);
+        }
+    };
 
     /**
      * @return 返回布局资源ID
@@ -54,21 +79,39 @@ public class PhotoPickActivity extends BaseActivity {
 
         createToolbar();
         initRecyclerView();
-        this.getSupportLoaderManager().initLoader(0, null, new LocalMediaLoader(this,
-                LocalMediaLoader.TYPE_IMAGE, new LoaderCallbacks<BaseMedia>() {
-            @Override
-            public void onResult(List<BaseMedia> data) {
-                adapter.addAllData(data);
-            }
-        }));
+        albumAdapter = new AlbumAdapter(PhotoPickActivity.this);//这需要先初始化
+        createAlbumView();
+        MediaLoaderManager.getInstance().loaderImage(this, callbacks);
+        MediaLoaderManager.getInstance().loaderAlbum(this.getApplicationContext().getContentResolver(),
+                new IAlbumTaskCallback() {
+                    @Override
+                    public void postAlbumList(@Nullable List<AlbumEntity> albums) {
+                        if ((albums == null || albums.isEmpty())
+                                && tvPickAlbum != null) {
+                            tvPickAlbum.setCompoundDrawables(null, null, null, null);
+                            tvPickAlbum.setOnClickListener(null);
+                            return;
+                        }
+                        albumAdapter.addAllData(albums);
+                    }
+                });
+
     }
 
     private void initRecyclerView() {
-        adapter = new MediaAdapter(this,3);
-
+        mediaAdapter = new MediaAdapter(this, 3);
+        mediaAdapter.setOnMediaClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImageMedia imageMedia=(ImageMedia)v.getTag();
+                List<ImageMedia> list=new ArrayList<ImageMedia>();
+                list.add(imageMedia);
+                onFinish(list);
+            }
+        });
         rvPhoto.setLayoutManager(new GridLayoutManager(this, 3));
         rvPhoto.addItemDecoration(new SpacesItemDecoration(getResources().getDimensionPixelOffset(R.dimen.media_margin), 3));
-        rvPhoto.setAdapter(adapter);
+        rvPhoto.setAdapter(mediaAdapter);
     }
 
     private void createToolbar() {
@@ -83,4 +126,74 @@ public class PhotoPickActivity extends BaseActivity {
             }
         });
     }
+
+    private void createAlbumView() {
+        tvPickAlbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAlbumPopWindow == null) {
+                    int height = WindowManagerUtils.getScreenHeight(v.getContext()) -
+                            (WindowManagerUtils.getToolbarHeight(v.getContext())
+                                    + WindowManagerUtils.getStatusBarHeight(v.getContext()));
+                    View windowView = createWindowView();
+                    mAlbumPopWindow = new PopupWindow(windowView, ViewGroup.LayoutParams.MATCH_PARENT,
+                            height, true);
+                    mAlbumPopWindow.setOutsideTouchable(true);
+                }
+                mAlbumPopWindow.showAsDropDown(v, 0, 0);
+            }
+
+            @NonNull
+            private View createWindowView() {
+                View view = LayoutInflater.from(PhotoPickActivity.this).inflate(R.layout.view_album_list, null);
+                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rv_album);
+                recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                recyclerView.addItemDecoration(new SpacesItemDecoration(2, 1));
+
+                View albumShadowLayout = view.findViewById(R.id.album_shadow);
+                albumShadowLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dismissAlbumWindow();
+                    }
+                });
+                albumAdapter.setAlbumOnClickListener(new AlbumAdapter.OnAlbumClickListener() {
+                    @Override
+                    public void onClick(View view, int pos) {
+                        if (albumAdapter != null && albumAdapter.getCurrentAlbumPos() != pos) {
+                            List<AlbumEntity> albums = albumAdapter.getAlums();
+                            albumAdapter.setCurrentAlbumPos(pos);
+                            AlbumEntity albumMedia = albums.get(pos);
+                            MediaLoaderManager.getInstance().loaderImage(PhotoPickActivity.this,
+                                    albumMedia.mBucketId, callbacks);
+
+                            tvPickAlbum.setText(albumMedia.mBucketName);
+                            albumMedia.mIsSelected = true;
+                            albumAdapter.notifyDataSetChanged();
+                        }
+                        dismissAlbumWindow();
+                    }
+                });
+                recyclerView.setAdapter(albumAdapter);
+                return view;
+            }
+        });
+    }
+
+    /**
+     * 关闭相册窗口
+     */
+    private void dismissAlbumWindow() {
+        if (mAlbumPopWindow != null && mAlbumPopWindow.isShowing()) {
+            mAlbumPopWindow.dismiss();
+        }
+    }
+
+    private void onFinish(List<ImageMedia> medias){
+        Intent intent =new Intent();
+        intent.putParcelableArrayListExtra("result",(ArrayList<ImageMedia>) medias);
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+    }
+
 }
