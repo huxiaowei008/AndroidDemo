@@ -13,6 +13,8 @@ import com.hxw.frame.base.IActivity;
 import com.hxw.frame.base.IFragment;
 import com.hxw.frame.base.delegate.ActivityDelegate;
 import com.hxw.frame.base.delegate.FragmentDelegate;
+import com.hxw.frame.base.delegate.IActivityDelegate;
+import com.hxw.frame.base.delegate.IFragmentDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +50,10 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         mAppManager.addActivity(activity);
 
         if (activity instanceof IActivity && activity.getIntent() != null) {
-            ActivityDelegate activityDelegate = fetchActivityDelegate(activity);
+            IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
             if (activityDelegate == null) {
                 activityDelegate = new ActivityDelegate(activity);
-                activity.getIntent().putExtra(ActivityDelegate.ACTIVITY_DELEGATE, activityDelegate);
+                activity.getIntent().putExtra(IActivityDelegate.ACTIVITY_DELEGATE, activityDelegate);
             }
             Timber.e("onCreated" + activityDelegate.toString());
             activityDelegate.onCreate(savedInstanceState);
@@ -83,7 +85,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
 
     @Override
     public void onActivityStarted(Activity activity) {
-        ActivityDelegate activityDelegate = fetchActivityDelegate(activity);
+        IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
             Timber.e("onStart" + activityDelegate.toString());
             activityDelegate.onStart();
@@ -94,7 +96,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
     public void onActivityResumed(Activity activity) {
         mAppManager.setCurrentActivity(activity);
 
-        ActivityDelegate activityDelegate = fetchActivityDelegate(activity);
+        IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
             Timber.e("onResume" + activityDelegate.toString());
             activityDelegate.onResume();
@@ -107,7 +109,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             mAppManager.setCurrentActivity(null);
         }
 
-        ActivityDelegate activityDelegate = fetchActivityDelegate(activity);
+        IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
             Timber.e("onPaused" + activityDelegate.toString());
             activityDelegate.onPause();
@@ -116,7 +118,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
 
     @Override
     public void onActivityStopped(Activity activity) {
-        ActivityDelegate activityDelegate = fetchActivityDelegate(activity);
+        IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
             Timber.e("onStop" + activityDelegate.toString());
             activityDelegate.onStop();
@@ -125,7 +127,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-        ActivityDelegate activityDelegate = fetchActivityDelegate(activity);
+        IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
             Timber.e("onSaveInstanceState" + activityDelegate.toString());
             activityDelegate.onSaveInstanceState(outState);
@@ -151,11 +153,11 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             }
         }
 
-        ActivityDelegate activityDelegate = fetchActivityDelegate(activity);
+        IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
             Timber.e("onDestroy" + activityDelegate.toString());
             activityDelegate.onDestroy();
-            activity.getIntent().removeExtra(ActivityDelegate.ACTIVITY_DELEGATE);
+            activity.getIntent().removeExtra(IActivityDelegate.ACTIVITY_DELEGATE);
         }
     }
 
@@ -167,9 +169,9 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
 
     }
 
-    private ActivityDelegate fetchActivityDelegate(Activity activity) {
+    private IActivityDelegate fetchActivityDelegate(Activity activity) {
         if (activity instanceof IActivity && activity.getIntent() != null) {
-            return (ActivityDelegate) activity.getIntent()
+            return activity.getIntent()
                     .getParcelableExtra(ActivityDelegate.ACTIVITY_DELEGATE);
         }
         return null;
@@ -181,10 +183,10 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         public void onFragmentAttached(FragmentManager fm, Fragment f, Context context) {
             super.onFragmentAttached(fm, f, context);
             if (f instanceof IFragment && f.getArguments() != null) {
-                FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
-                if (fragmentDelegate == null) {
+                IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+                if (fragmentDelegate == null || !fragmentDelegate.isAdded()) {
                     fragmentDelegate = new FragmentDelegate(fm, f);
-                    f.getArguments().putParcelable(FragmentDelegate.FRAGMENT_DELEGATE, fragmentDelegate);
+                    f.getArguments().putParcelable(IFragmentDelegate.FRAGMENT_DELEGATE, fragmentDelegate);
                 }
                 Timber.e("onFragmentAttach" + fragmentDelegate.toString());
                 fragmentDelegate.onAttach(context);
@@ -194,7 +196,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         @Override
         public void onFragmentCreated(FragmentManager fm, Fragment f, Bundle savedInstanceState) {
             super.onFragmentCreated(fm, f, savedInstanceState);
-            FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+            IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
                 Timber.e("onFragmentCreate" + fragmentDelegate.toString());
                 fragmentDelegate.onCreate(savedInstanceState);
@@ -204,7 +206,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         @Override
         public void onFragmentViewCreated(FragmentManager fm, Fragment f, View v, Bundle savedInstanceState) {
             super.onFragmentViewCreated(fm, f, v, savedInstanceState);
-            FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+            IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
                 Timber.e("onFragmentViewCreate" + fragmentDelegate.toString());
                 fragmentDelegate.onCreateView(v, savedInstanceState);
@@ -214,7 +216,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         @Override
         public void onFragmentActivityCreated(FragmentManager fm, Fragment f, Bundle savedInstanceState) {
             super.onFragmentActivityCreated(fm, f, savedInstanceState);
-            FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+            IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
                 Timber.e("onFragmentActivityCreate" + fragmentDelegate.toString());
                 fragmentDelegate.onActivityCreate(savedInstanceState);
@@ -224,7 +226,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         @Override
         public void onFragmentStarted(FragmentManager fm, Fragment f) {
             super.onFragmentStarted(fm, f);
-            FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+            IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
                 Timber.e("onFragmentStart" + fragmentDelegate.toString());
                 fragmentDelegate.onStart();
@@ -234,7 +236,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         @Override
         public void onFragmentResumed(FragmentManager fm, Fragment f) {
             super.onFragmentResumed(fm, f);
-            FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+            IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
                 Timber.e("onFragmentResume" + fragmentDelegate.toString());
                 fragmentDelegate.onResume();
@@ -244,7 +246,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         @Override
         public void onFragmentPaused(FragmentManager fm, Fragment f) {
             super.onFragmentPaused(fm, f);
-            FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+            IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
                 Timber.e("onFragmentPause" + fragmentDelegate.toString());
                 fragmentDelegate.onPause();
@@ -254,7 +256,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         @Override
         public void onFragmentStopped(FragmentManager fm, Fragment f) {
             super.onFragmentStopped(fm, f);
-            FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+            IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
                 Timber.e("onFragmentStop" + fragmentDelegate.toString());
                 fragmentDelegate.onStop();
@@ -264,7 +266,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         @Override
         public void onFragmentSaveInstanceState(FragmentManager fm, Fragment f, Bundle outState) {
             super.onFragmentSaveInstanceState(fm, f, outState);
-            FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+            IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
                 Timber.e("onFragmentSaveInstanceState" + fragmentDelegate.toString());
                 fragmentDelegate.onSaveInstanceState(outState);
@@ -274,7 +276,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         @Override
         public void onFragmentViewDestroyed(FragmentManager fm, Fragment f) {
             super.onFragmentViewDestroyed(fm, f);
-            FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+            IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
                 Timber.e("onFragmentViewDestroy" + fragmentDelegate.toString());
                 fragmentDelegate.onDestroyView();
@@ -284,7 +286,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         @Override
         public void onFragmentDestroyed(FragmentManager fm, Fragment f) {
             super.onFragmentDestroyed(fm, f);
-            FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+            IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
                 Timber.e("onFragmentDestroy" + fragmentDelegate.toString());
                 fragmentDelegate.onDestroy();
@@ -294,18 +296,18 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         @Override
         public void onFragmentDetached(FragmentManager fm, Fragment f) {
             super.onFragmentDetached(fm, f);
-            FragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
+            IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
                 Timber.e("onFragmentDetach" + fragmentDelegate.toString());
                 fragmentDelegate.onDetach();
-                f.getArguments().remove(FragmentDelegate.FRAGMENT_DELEGATE);
+                f.getArguments().clear();
             }
         }
 
-        private FragmentDelegate fetchFragmentDelegate(Fragment fragment) {
-            if (fragment instanceof IFragment && fragment.getArguments() != null) {
-                return (FragmentDelegate) fragment.getArguments()
-                        .getParcelable(FragmentDelegate.FRAGMENT_DELEGATE);
+        private IFragmentDelegate fetchFragmentDelegate(Fragment fragment) {
+            if (fragment instanceof IFragment) {
+                return fragment.getArguments() == null ? null : (IFragmentDelegate) fragment.getArguments()
+                        .getParcelable(IFragmentDelegate.FRAGMENT_DELEGATE);
             }
             return null;
         }
