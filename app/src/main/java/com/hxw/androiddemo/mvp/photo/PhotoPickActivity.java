@@ -2,6 +2,7 @@ package com.hxw.androiddemo.mvp.photo;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -75,7 +76,7 @@ public class PhotoPickActivity extends BaseActivity {
      * 初始化，会在onCreate中执行
      */
     @Override
-    public void init() {
+    public void init(Bundle savedInstanceState) {
 
         createToolbar();
         initRecyclerView();

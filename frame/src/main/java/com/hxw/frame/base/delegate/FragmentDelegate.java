@@ -56,7 +56,7 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
-        iFragment.init();
+        iFragment.init(savedInstanceState);
     }
 
     @Override

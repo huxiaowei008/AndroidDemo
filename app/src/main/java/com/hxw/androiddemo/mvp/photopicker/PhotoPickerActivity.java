@@ -2,6 +2,7 @@ package com.hxw.androiddemo.mvp.photopicker;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -57,7 +58,7 @@ public class PhotoPickerActivity extends BaseActivity {
      * 初始化，会在onCreate中执行
      */
     @Override
-    public void init() {
+    public void init(Bundle savedInstanceState) {
         // 需要实现IBoxingMediaLoader
         BoxingMediaLoader.getInstance().init(new BoxingGlideLoader());
     }

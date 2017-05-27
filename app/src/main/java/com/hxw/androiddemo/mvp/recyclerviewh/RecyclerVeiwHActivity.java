@@ -1,5 +1,6 @@
 package com.hxw.androiddemo.mvp.recyclerviewh;
 
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -51,7 +52,7 @@ public class RecyclerVeiwHActivity extends BaseActivity {
      * 初始化，会在onCreate中执行
      */
     @Override
-    public void init() {
+    public void init(Bundle savedInstanceState) {
         for (int i = 0; i < 10; i++) {
             data.add(i + "");
         }

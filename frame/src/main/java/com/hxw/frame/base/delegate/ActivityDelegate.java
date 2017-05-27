@@ -37,7 +37,7 @@ public class ActivityDelegate implements IActivityDelegate {
         mActivity.setContentView(iActivity.getLayoutId());
         //绑定到butterknife
         mUnBinder = ButterKnife.bind(mActivity);
-        iActivity.init();
+        iActivity.init(savedInstanceState);
     }
 
     @Override

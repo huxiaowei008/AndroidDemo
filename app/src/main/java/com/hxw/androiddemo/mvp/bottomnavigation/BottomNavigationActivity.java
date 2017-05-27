@@ -1,5 +1,6 @@
 package com.hxw.androiddemo.mvp.bottomnavigation;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -55,7 +56,7 @@ public class BottomNavigationActivity extends BaseActivity {
      * 初始化，会在onCreate中执行
      */
     @Override
-    public void init() {
+    public void init(Bundle savedInstanceState) {
         initFragment();
         initNavigationBar();
     }

@@ -1,5 +1,7 @@
 package com.hxw.frame.base;
 
+import android.os.Bundle;
+
 import com.hxw.frame.di.AppComponent;
 
 /**
@@ -23,7 +25,7 @@ public interface IFragment {
     /**
      * 初始化,会在onActivityCreated中执行
      */
-    void init();
+    void init(Bundle savedInstanceState);
 
     boolean useEventBus();
 
