@@ -21,14 +21,14 @@ ext {
             "support-annotations"       : "com.android.support:support-annotations:${supportVersion}",
             "support-vector-drawable"   : "com.android.support:support-vector-drawable:${supportVersion}",
             //ButterKnife https://github.com/JakeWharton/butterknife
-            "butterknife"               : 'com.jakewharton:butterknife:8.5.1',
-            "butterknife-compiler"      : 'com.jakewharton:butterknife-compiler:8.5.1',
+            "butterknife"               : 'com.jakewharton:butterknife:8.6.0',
+            "butterknife-compiler"      : 'com.jakewharton:butterknife-compiler:8.6.0',
             //retrofit https://github.com/square/retrofit
-            "retrofit"                  : 'com.squareup.retrofit2:retrofit:2.2.0',
-            "adapter-rxjava"            : 'com.squareup.retrofit2:adapter-rxjava:2.2.0',
+            "retrofit"                  : 'com.squareup.retrofit2:retrofit:2.3.0',
+            "adapter-rxjava"            : 'com.squareup.retrofit2:adapter-rxjava:2.3.0',
             //'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
-            "adapter-rxjava2"           : 'com.squareup.retrofit2:adapter-rxjava2:2.2.0',
-            "converter-gson"            : 'com.squareup.retrofit2:converter-gson:2.2.0',
+            "adapter-rxjava2"           : 'com.squareup.retrofit2:adapter-rxjava2:2.3.0',
+            "converter-gson"            : 'com.squareup.retrofit2:converter-gson:2.3.0',
             //Gson https://github.com/google/gson
             "gson"                      : 'com.google.code.gson:gson:2.8.0',
             //okHttp https://github.com/square/okhttp
@@ -74,8 +74,8 @@ ext {
             "dagger"                    : 'com.google.dagger:dagger:2.10',
             "dagger-compiler"           : 'com.google.dagger:dagger-compiler:2.10',
             //leakcanary内存泄露检测工具 https://github.com/square/leakcanary
-            "leakcanary-debug"          : 'com.squareup.leakcanary:leakcanary-android:1.5',
-            "leakcanary-release"        : 'com.squareup.leakcanary:leakcanary-android-no-op:1.5',
+            "leakcanary-debug"          : 'com.squareup.leakcanary:leakcanary-android:1.5.1',
+            "leakcanary-release"        : 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1',
             //谷歌官方约束布局，还在测试中 http://blog.csdn.net/guolin_blog/article/details/53122387
             "constraint-layout"         : 'com.android.support.constraint:constraint-layout:1.0.2',
             //Material风格的dialog https://github.com/afollestad/material-dialogs
