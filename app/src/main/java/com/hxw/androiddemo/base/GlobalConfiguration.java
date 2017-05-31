@@ -6,16 +6,19 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.google.gson.GsonBuilder;
 import com.hxw.androiddemo.BuildConfig;
 import com.hxw.androiddemo.api.ComAPI;
 import com.hxw.androiddemo.api.ComCache;
 import com.hxw.frame.base.App;
 import com.hxw.frame.base.delegate.AppDelegate;
+import com.hxw.frame.di.module.AppModule;
 import com.hxw.frame.di.module.GlobalConfigModule;
 import com.hxw.frame.http.GlobalHttpHandler;
 import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.integration.ConfigModule;
 import com.hxw.frame.integration.IRepositoryManager;
+import com.hxw.frame.utils.NullStringToEmptyAdapterFactory;
 import com.hxw.frame.utils.UIUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -94,6 +97,13 @@ public class GlobalConfiguration implements ConfigModule {
                         Timber.w("------------>" + e.getMessage());
                         UIUtils.showSnackBar("net error", 0);
                     }
+                })
+                .gsonConfiguration(new AppModule.GsonConfiguration() {
+                    @Override
+                    public void configGson(Context context, GsonBuilder builder) {
+                        builder.setDateFormat("yyyy-MM-dd HH:mm:ss")
+                                .registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory<>());
+                    }
                 });
     }
 
@@ -138,7 +148,7 @@ public class GlobalConfiguration implements ConfigModule {
                 }
 
                 //安装leakCanary检测内存泄露
-                ((App) application).getAppComponent().extras().put(RefWatcher.class.getName(),BuildConfig.USE_CANARY ?
+                ((App) application).getAppComponent().extras().put(RefWatcher.class.getName(), BuildConfig.USE_CANARY ?
                         LeakCanary.install(application) : RefWatcher.DISABLED);
 
             }
@@ -188,7 +198,7 @@ public class GlobalConfiguration implements ConfigModule {
              */
             @Override
             public void onFragmentDestroyed(FragmentManager fm, Fragment f) {
-                ((RefWatcher)((App) f.getActivity().getApplication()).getAppComponent()
+                ((RefWatcher) ((App) f.getActivity().getApplication()).getAppComponent()
                         .extras().get(RefWatcher.class.getName())).watch(f);
             }
         });

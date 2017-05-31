@@ -2,6 +2,7 @@ package com.hxw.frame.di.module;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.hxw.frame.http.GlobalHttpHandler;
@@ -44,29 +45,21 @@ public class ClientModule {
      */
     @Singleton
     @Provides
-    Retrofit provideRetrofit(Application application, RetrofitConfiguration configuration,
+    Retrofit provideRetrofit(Application application, @Nullable RetrofitConfiguration configuration,
                              OkHttpClient client, HttpUrl httpUrl, Gson gson) {
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(httpUrl)//域名
                 .client(client)//设置okhttp
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//使用rxjava
                 .addConverterFactory(GsonConverterFactory.create(gson));////使用Gson
-        configuration.configRetrofit(application, builder);
+        if (configuration != null) {
+            configuration.configRetrofit(application, builder);
+        }
         return builder.build();
-//        .create(new GsonBuilder()
-//                .setDateFormat("yyyy-MM-dd HH:mm:ss")
-//                .registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory<>())
-//                .create()))
 
     }
 
     public interface RetrofitConfiguration {
-        RetrofitConfiguration EMPTY = new RetrofitConfiguration() {
-            @Override
-            public void configRetrofit(Context context, Retrofit.Builder builder) {
-
-            }
-        };
 
         void configRetrofit(Context context, Retrofit.Builder builder);
     }
@@ -81,37 +74,36 @@ public class ClientModule {
      */
     @Singleton
     @Provides
-    OkHttpClient provideClient(Application application, OkHttpConfiguration configuration,
-                               Interceptor intercept, List<Interceptor> interceptors,
-                               final GlobalHttpHandler handler) {
+    OkHttpClient provideClient(Application application, @Nullable OkHttpConfiguration configuration,
+                               Interceptor intercept, @Nullable List<Interceptor> interceptors,
+                               @Nullable final GlobalHttpHandler handler) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .readTimeout(TIME_OUT, TimeUnit.SECONDS)//读取超时
                 .writeTimeout(TIME_OUT, TimeUnit.SECONDS)//写入超时
                 .connectTimeout(TIME_OUT, TimeUnit.SECONDS)//连接超时
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        return chain.proceed(handler.onHttpRequestBefore(chain, chain.request()));
-                    }
-                })
                 .addNetworkInterceptor(intercept);
+
+        if (handler != null) {
+            builder.addInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    return chain.proceed(handler.onHttpRequestBefore(chain, chain.request()));
+                }
+            });
+        }
         //如果外部提供了interceptor的数组则遍历添加
         if (interceptors != null && interceptors.size() > 0) {
             for (Interceptor interceptor : interceptors) {
                 builder.addInterceptor(interceptor);
             }
         }
-        configuration.configOkHttp(application, builder);
+        if (configuration != null) {
+            configuration.configOkHttp(application, builder);
+        }
         return builder.build();
     }
 
     public interface OkHttpConfiguration {
-        OkHttpConfiguration EMPTY = new OkHttpConfiguration() {
-            @Override
-            public void configOkHttp(Context context, OkHttpClient.Builder builder) {
-
-            }
-        };
 
         void configOkHttp(Context context, OkHttpClient.Builder builder);
     }
@@ -136,20 +128,16 @@ public class ClientModule {
      */
     @Singleton
     @Provides
-    RxCache provideRxCache(Application application, RxCacheConfiguration configuration,
+    RxCache provideRxCache(Application application, @Nullable RxCacheConfiguration configuration,
                            @Named("RxCacheDirectory") File cacheDirectory) {
         RxCache.Builder builder = new RxCache.Builder();
-        configuration.configRxCache(application, builder);
+        if (configuration != null) {
+            configuration.configRxCache(application, builder);
+        }
         return builder.persistence(cacheDirectory, new GsonSpeaker());
     }
 
     public interface RxCacheConfiguration {
-        RxCacheConfiguration EMPTY = new RxCacheConfiguration() {
-            @Override
-            public void configRxCache(Context context, RxCache.Builder builder) {
-
-            }
-        };
 
         void configRxCache(Context context, RxCache.Builder builder);
     }
