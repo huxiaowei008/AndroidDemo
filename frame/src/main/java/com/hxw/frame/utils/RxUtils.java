@@ -8,6 +8,8 @@ import com.hxw.frame.mvp.IView;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
+import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,10 +37,10 @@ public class RxUtils {
      * @return
      */
     public static <T> LifecycleTransformer<T> bindToLifecycle(IView view) {
-        if (view instanceof BaseActivity) {
-            return ((BaseActivity) view).<T>bindToLifecycle();
-        } else if (view instanceof BaseFragment) {
-            return ((BaseFragment) view).<T>bindToLifecycle();
+        if (view instanceof RxAppCompatActivity) {
+            return ((RxAppCompatActivity) view).bindToLifecycle();
+        } else if (view instanceof RxFragment) {
+            return ((RxFragment) view).bindToLifecycle();
         } else {
             throw new IllegalArgumentException("view isn't activity or fragment");
         }
@@ -54,8 +56,8 @@ public class RxUtils {
      */
     public static <T> LifecycleTransformer<T> bindUntilEvent(IView view,
                                                              @NonNull ActivityEvent event) {
-        if (view instanceof BaseActivity) {
-            return ((BaseActivity) view).<T>bindUntilEvent(event);
+        if (view instanceof RxAppCompatActivity) {
+            return ((RxAppCompatActivity) view).bindUntilEvent(event);
         } else {
             throw new IllegalArgumentException("view isn't activity");
         }
@@ -71,8 +73,8 @@ public class RxUtils {
      */
     public static <T> LifecycleTransformer<T> bindUntilEvent(IView view,
                                                              @NonNull FragmentEvent event) {
-        if (view instanceof BaseFragment) {
-            return ((BaseFragment) view).<T>bindUntilEvent(event);
+        if (view instanceof RxFragment) {
+            return ((RxFragment) view).bindUntilEvent(event);
         } else {
             throw new IllegalArgumentException("view isn't fragment");
         }
