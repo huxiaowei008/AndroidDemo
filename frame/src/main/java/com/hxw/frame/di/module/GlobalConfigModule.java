@@ -63,6 +63,7 @@ public class GlobalConfigModule {
 
     @Singleton
     @Provides
+    @Nullable
     List<Interceptor> provideInterceptors() {
         return mInterceptors;
     }

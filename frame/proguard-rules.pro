@@ -110,16 +110,18 @@
 }
 
 ################retrofit###############
--dontnote retrofit2.Platform
--dontnote retrofit2.Platform$IOS$MainThreadExecutor
--dontwarn retrofit2.Platform$Java8
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
--keepattributes Signature
--keepattributes Exceptions
--keepclasseswithmembers class * {
-    @retrofit2.http.* <methods>;
-}
+#-dontnote retrofit2.Platform
+#-dontnote retrofit2.Platform$IOS$MainThreadExecutor
+#-dontwarn retrofit2.Platform$Java8
+#-dontwarn retrofit2.**
+#-keep class retrofit2.** { *; }
+#-keepattributes Signature
+#-keepattributes Exceptions
+#-keepclasseswithmembers class * {
+#    @retrofit2.http.* <methods>;
+#}
+-dontwarn okio.**
+-dontwarn javax.annotation.**
 ################gson###############
 -keepattributes Signature
 -keepattributes *Annotation*
