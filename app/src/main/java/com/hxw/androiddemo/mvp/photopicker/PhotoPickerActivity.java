@@ -34,9 +34,11 @@ import com.bumptech.glide.Glide;
 import com.hxw.androiddemo.R;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
+import com.hxw.frame.utils.DateUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -49,7 +51,7 @@ import butterknife.OnClick;
  * Created by hxw on 2017/5/11.
  */
 
-public class PhotoPickerActivity extends BaseActivity {
+public class PhotoPickerActivity extends BaseActivity  {
     private static final int COMPRESS_REQUEST_CODE = 2048;
     private static final int READ_REQUEST_CODE = 42;
     private static final int MYDIY = 8;
@@ -116,18 +118,25 @@ public class PhotoPickerActivity extends BaseActivity {
         }
     }
 
+    /**
+     * onRequestPermissionsResult需要实现的时fragmentActivity下的,若是activity下的话不会实现,
+     * 需要去实现ActivityCompat.OnRequestPermissionsResultCallback
+     * fragment中直接用fragment的requestPermissions,这样能在fragment的onRequestPermissionsResult中收到
+     * ，否则会在activity中
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == reCode) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //同意权限
-
+                openCamera();
             } else {
                 // 权限拒绝，提示用户开启权限
 
             }
         }
+
     }
 
     @OnClick({R.id.btn_picker, R.id.btn_camera})
@@ -161,27 +170,37 @@ public class PhotoPickerActivity extends BaseActivity {
                 startActivityForResult(intent, READ_REQUEST_CODE);
                 break;
             case R.id.btn_camera:
-                if (!checkCameraPermission()) {
-                    return;
-                }
-
-                Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                tempUri = Uri.fromFile(new File(Environment
-//                        .getExternalStorageDirectory(), "image.jpg"));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {//7.0系统适配
-                    //转变成Content uri
-                    tempUri = FileProvider.getUriForFile(PhotoPickerActivity.this,
-                            getPackageName() + ".provider", new File(cacheFile, "head.jpg"));
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                            reCode);
                 } else {
-                    //file uri
-                    tempUri = Uri.fromFile(new File(cacheFile, "head.jpg"));
+                    //具有权限
+                    openCamera();
                 }
-
-                // 指定照片保存路径（SD卡），head.jpg为一个临时文件，每次拍照后这个图片都会被替换
-                openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
-                startActivityForResult(openCameraIntent, TAKE_PICTURE);
                 break;
         }
+    }
+
+    /**
+     * 打开相机
+     */
+    private void openCamera() {
+        Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {//7.0系统适配
+            //转变成Content uri
+            tempUri = FileProvider.getUriForFile(PhotoPickerActivity.this,
+                    getPackageName() + ".provider", new File(cacheFile, DateUtils
+                            .date2String(new Date(), "yyMMddHHmmss") + "head.jpg"));
+        } else {
+            //file uri
+            tempUri = Uri.fromFile(new File(cacheFile, DateUtils
+                    .date2String(new Date(), "yyMMddHHmmss") + "head.jpg"));
+        }
+
+        // 指定照片保存路径（SD卡），head.jpg为一个临时文件，每次拍照后这个图片都会被替换
+        openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
+        startActivityForResult(openCameraIntent, TAKE_PICTURE);
     }
 
 
@@ -271,13 +290,10 @@ public class PhotoPickerActivity extends BaseActivity {
 //        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         //是否是圆形裁剪区域，设置了也不一定有效
 //        intent.putExtra("circleCrop", true);
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {//7.0系统适配
-//            tempUri = FileProvider.getUriForFile(PhotoPickerActivity.this,
-//                    getPackageName() + ".provider", new File(cacheFile, "head.jpg"));
-//        } else {
-        tempUri = Uri.fromFile(new File(cacheFile, "head.jpg"));//file uri
-//        }
+
+        tempUri = Uri.fromFile(new File(cacheFile, DateUtils
+                .date2String(new Date(), "yyMMddHHmmss") + "head.jpg"));//file uri
+
         //return-data为false时使用
         // 指定照片保存路径（SD卡），head.jpg为一个临时文件，每次拍照后这个图片都会被替换
         intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);

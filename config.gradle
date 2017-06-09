@@ -79,9 +79,9 @@ ext {
             //谷歌官方约束布局，还在测试中 http://blog.csdn.net/guolin_blog/article/details/53122387
             "constraint-layout"         : 'com.android.support.constraint:constraint-layout:1.0.2',
             //Material风格的dialog https://github.com/afollestad/material-dialogs
-            "material-dialogs"          : 'com.afollestad.material-dialogs:core:0.9.3.0',
+            "material-dialogs"          : 'com.afollestad.material-dialogs:core:0.9.4.5',
             //material-dialogs 的共享库,里面的不是每人都需要的,上面的是核心库
-            "material-dialogs-commons"  : 'com.afollestad.material-dialogs:commons:0.9.3.0',
+            "material-dialogs-commons"  : 'com.afollestad.material-dialogs:commons:0.9.4.5',
             //material风格的控件库 https://github.com/rey5137/material
             "material"                  : 'com.github.rey5137:material:1.2.4',
             //BottomNavigation https://github.com/Ashok-Varma/BottomNavigation/wiki/Usage
