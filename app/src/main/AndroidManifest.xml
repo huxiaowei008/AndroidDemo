@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.hxw.androiddemo">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name="com.hxw.frame.base.BaseApplication"
@@ -24,11 +24,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".mvp.guide.GuideActivity" />
-        <activity android:name=".mvp.StateActivity" android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"/>
-        <activity android:name=".mvp.bottomnavigation.BottomNavigationActivity"/>
-        <activity android:name=".mvp.photopicker.PhotoPickerActivity"/>
-        <activity android:name=".mvp.recyclerviewh.RecyclerVeiwHActivity"/>
-        <activity android:name=".mvp.photo.PhotoPickActivity"/>
+        <activity
+            android:name=".mvp.StateActivity"
+            android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar" />
+        <activity android:name=".mvp.bottomnavigation.BottomNavigationActivity" />
+        <activity android:name=".mvp.photopicker.PhotoPickerActivity" />
+        <activity android:name=".mvp.recyclerviewh.RecyclerVeiwHActivity" />
+        <activity android:name=".mvp.photo.PhotoPickActivity" />
 
         <!--glide配置-->
         <meta-data
@@ -38,18 +40,30 @@
         <meta-data
             android:name="com.hxw.androiddemo.base.GlobalConfiguration"
             android:value="ConfigModule" />
+        <!--bilibili中适配7.0的-->
+        <!--<provider-->
+            <!--android:name="android.support.v4.content.FileProvider"-->
+            <!--android:authorities="${applicationId}.file.provider"-->
+            <!--android:exported="false"-->
+            <!--android:grantUriPermissions="true">-->
 
+            <!--<meta-data-->
+                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
+                <!--android:resource="@xml/boxing_file_provider" />-->
+        <!--</provider>-->
+        <!--自己建立的适配7.0,只能存在一个provider-->
+        <!--authorities需要和FileProvider.getUriForFile中的第二个参数一致-->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.file.provider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/boxing_file_provider"/>
-
+                android:resource="@xml/file_paths"
+                />
         </provider>
+
     </application>
 
 </manifest>

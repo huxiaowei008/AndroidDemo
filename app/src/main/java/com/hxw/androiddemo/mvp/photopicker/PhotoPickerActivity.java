@@ -1,12 +1,14 @@
 package com.hxw.androiddemo.mvp.photopicker;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,9 +18,12 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bilibili.boxing.Boxing;
 import com.bilibili.boxing.BoxingMediaLoader;
@@ -40,6 +45,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
+ * 关于相册和头像获取，还可以看第一行代码第二版的第八章
  * Created by hxw on 2017/5/11.
  */
 
@@ -162,7 +168,15 @@ public class PhotoPickerActivity extends BaseActivity {
                 Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //                tempUri = Uri.fromFile(new File(Environment
 //                        .getExternalStorageDirectory(), "image.jpg"));
-                tempUri = Uri.fromFile(new File(cacheFile, "head.jpg"));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {//7.0系统适配
+                    //转变成Content uri
+                    tempUri = FileProvider.getUriForFile(PhotoPickerActivity.this,
+                            getPackageName() + ".provider", new File(cacheFile, "head.jpg"));
+                } else {
+                    //file uri
+                    tempUri = Uri.fromFile(new File(cacheFile, "head.jpg"));
+                }
+
                 // 指定照片保存路径（SD卡），head.jpg为一个临时文件，每次拍照后这个图片都会被替换
                 openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
                 startActivityForResult(openCameraIntent, TAKE_PICTURE);
@@ -195,20 +209,29 @@ public class PhotoPickerActivity extends BaseActivity {
             Uri uri = null;
             if (data != null) {
                 uri = data.getData();
-                crop(uri);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    crop(uri);
+                } else {
+                    //这里getUriFile适用于Intent.ACTION_PICK,为简略版
+                    //用Intent.ACTION_OPEN_DOCUMENT或Intent.ACTION_GET_CONTENT时用完整版
+                    crop(Uri.fromFile(getUriFile(uri)));
+                }
+
 //                imgHead.setImageURI(uri);
             }
         } else if (resultCode == RESULT_OK && requestCode == TAKE_PICTURE) {//系统拍照的返回
 
             crop(tempUri);
+
 //            imgHead.setImageURI(tempUri);
         } else if (resultCode == RESULT_OK && requestCode == CROP) {//图片剪裁后
             //大图用uri,图小可用bitmap
             Bitmap bitmap = data.getParcelableExtra("data");
-            if (bitmap!=null){
+            if (bitmap != null) {
                 imgHead.setImageBitmap(bitmap);
                 return;
             }
+            //前后设置的uri相同的话，虽然内容改变了，但imageView不会放上新图
             imgHead.setImageURI(tempUri);
         }
     }
@@ -216,16 +239,16 @@ public class PhotoPickerActivity extends BaseActivity {
 
     /**
      * 系统的图片剪裁
+     * Android7.0 前适用File Uri,之后适用Content Uri,从相册选取的在4.4以上就变成了Content Uri
      *
      * @param uri
      */
     private void crop(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
-            intent.setDataAndType(Uri.fromFile(getUriFile(uri)), "image/*");
-        } else {
-            intent.setDataAndType(uri, "image/*");
-        }
+
+        intent.setDataAndType(uri, "image/*");
+
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);//为7.0适配
 
         // 设置裁剪
         //下面这个crop = true是设置在开启的Intent中设置显示的VIEW可裁剪
@@ -241,17 +264,23 @@ public class PhotoPickerActivity extends BaseActivity {
         intent.putExtra("noFaceDetection", true);// 取消人脸识别
         //是否将数据保留在Bitmap中返回,也可以说是是否返回数据
         //为false时需和intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri)一同使用
-        intent.putExtra("return-data", true);// true:不返回uri，false：返回uri
+        intent.putExtra("return-data", false);// true:不返回uri，false：返回uri
         //是否缩放
         intent.putExtra("scale", true);
 //        //输入图片的Uri，指定以后，可以在这个uri获得图片
 //        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         //是否是圆形裁剪区域，设置了也不一定有效
 //        intent.putExtra("circleCrop", true);
-
-//        tempUri = Uri.fromFile(new File(cacheFile, "head.jpg"));//return-data为false时使用
-//        // 指定照片保存路径（SD卡），head.jpg为一个临时文件，每次拍照后这个图片都会被替换
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {//7.0系统适配
+//            tempUri = FileProvider.getUriForFile(PhotoPickerActivity.this,
+//                    getPackageName() + ".provider", new File(cacheFile, "head.jpg"));
+//        } else {
+        tempUri = Uri.fromFile(new File(cacheFile, "head.jpg"));//file uri
+//        }
+        //return-data为false时使用
+        // 指定照片保存路径（SD卡），head.jpg为一个临时文件，每次拍照后这个图片都会被替换
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
         startActivityForResult(intent, CROP);
     }
 
@@ -378,6 +407,56 @@ public class PhotoPickerActivity extends BaseActivity {
                 cursor.close();
         }
         return null;
+    }
+
+    //第一行代码第二版上的代码
+    @TargetApi(19)
+    private void handleImageOnKitKat(Intent data) {
+        String imagePath = null;
+        Uri uri = data.getData();
+        Log.d("TAG", "handleImageOnKitKat: uri is " + uri);
+        if (DocumentsContract.isDocumentUri(this, uri)) {
+            // 如果是document类型的Uri，则通过document id处理
+            String docId = DocumentsContract.getDocumentId(uri);
+            if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                String id = docId.split(":")[1]; // 解析出数字格式的id
+                String selection = MediaStore.Images.Media._ID + "=" + id;
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
+                imagePath = getImagePath(contentUri, null);
+            }
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            // 如果是content类型的Uri，则使用普通方式处理
+            imagePath = getImagePath(uri, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            // 如果是file类型的Uri，直接获取图片路径即可
+            imagePath = uri.getPath();
+        }
+        displayImage(imagePath); // 根据图片路径显示图片
+    }
+
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        String[] projection = {MediaStore.Images.Media.DATA};
+        // 通过Uri和selection来获取真实的图片路径
+        Cursor cursor = getContentResolver().query(uri, projection, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
+    }
+
+    private void displayImage(String imagePath) {
+        if (imagePath != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            imgHead.setImageBitmap(bitmap);
+        } else {
+            Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
