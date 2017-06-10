@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity {
      */
     @Override
     public void init(Bundle savedInstanceState) {
-        checkBluetoothPermission();
+
     }
 
     @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7})
@@ -112,39 +112,4 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    /*  权限校验  */
-    private void checkBluetoothPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //校验是否已具有模糊定位权限
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        reCode);
-            } else {
-                //具有权限
-
-            }
-        } else {
-            //系统不高于6.0直接执行
-        }
-    }
-
-    /**
-     * onRequestPermissionsResult需要实现的时fragmentActivity下的,若是activity下的话不会实现,
-     * 需要去实现ActivityCompat.OnRequestPermissionsResultCallback
-     * fragment中直接用fragment的requestPermissions,这样能在fragment的onRequestPermissionsResult中收到
-     * ，否则会在activity中
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == reCode) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //同意权限
-                UIUtils.makeText(this,"权限申请成功");
-            } else {
-                // 权限拒绝，提示用户开启权限
-
-            }
-        }
-    }
 }

@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -51,7 +52,7 @@ import butterknife.OnClick;
  * Created by hxw on 2017/5/11.
  */
 
-public class PhotoPickerActivity extends BaseActivity  {
+public class PhotoPickerActivity extends BaseActivity {
     private static final int COMPRESS_REQUEST_CODE = 2048;
     private static final int READ_REQUEST_CODE = 42;
     private static final int MYDIY = 8;
@@ -100,13 +101,30 @@ public class PhotoPickerActivity extends BaseActivity  {
         BoxingMediaLoader.getInstance().init(new BoxingGlideLoader());
     }
 
+    /**
+     * Android原生系统中，如果第二次弹出权限申请的对话框，会出现“以后不再弹出”的提示框，如果用户勾选了，
+     * 你再申请权限，则shouldShowRequestPermissionRationale返回true，意思是说要给用户一个 解释，
+     * 告诉用户为什么要这个权限。然而，在实际开发中，需要注意的是，很多手机对原生系统做了修改，比如小米，
+     * 小米4的6.0的shouldShowRequestPermissionRationale 就一直返回false，而且在申请权限时，
+     * 如果用户选择了拒绝，则不会再弹出对话框了
+     */
     /*  权限校验  */
     private boolean checkCameraPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //校验是否已具有拍照权限
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
-                        reCode);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                // 没有权限
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.CAMERA)) {
+                    // 用户拒绝过这个权限了，应该提示用户，为什么需要这个权限。
+
+                } else {
+                    // 申请授权。
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                            reCode);
+                }
+
                 return false;
             } else {
                 //具有权限
@@ -122,7 +140,11 @@ public class PhotoPickerActivity extends BaseActivity  {
      * onRequestPermissionsResult需要实现的时fragmentActivity下的,若是activity下的话不会实现,
      * 需要去实现ActivityCompat.OnRequestPermissionsResultCallback
      * fragment中直接用fragment的requestPermissions,这样能在fragment的onRequestPermissionsResult中收到
-     * ，否则会在activity中
+     * ，否则会在activity中。
+     * 对于Activity我们直接调用requestPermissions(int, String[])即可，不过这个方法是在api leve 23以上，
+     * 所以我们为了适配可以是使用兼容包提供的方法
+     * 对于support包的Fragment就可以直接调用requestPermissions(int, String[])，
+     * 对于app包的Fragment就需要做版本判断了，这样就显得比较麻烦
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -134,6 +156,18 @@ public class PhotoPickerActivity extends BaseActivity  {
             } else {
                 // 权限拒绝，提示用户开启权限
 
+                // 在用户已经拒绝授权的情况下，如果shouldShowRequestPermissionRationale返回false则
+                // 可以推断出用户选择了“不在提示”选项，在这种情况下需要引导用户至设置页手动授权
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[0])) {
+                    //需要弹窗说明
+                    //引导用户至设置页手动授权
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getApplicationContext().getPackageName(), null);
+                    intent.setData(uri);
+                    startActivity(intent);
+                    //若不行就试试startActivityForResult
+
+                }
             }
         }
 
@@ -203,7 +237,14 @@ public class PhotoPickerActivity extends BaseActivity  {
         startActivityForResult(openCameraIntent, TAKE_PICTURE);
     }
 
-
+    /**
+     * 打开相机的方法2
+     */
+    private void openCamera2() {
+        //这方法不去保存图片的输出路径
+        Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(openCameraIntent, TAKE_PICTURE);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -239,8 +280,15 @@ public class PhotoPickerActivity extends BaseActivity  {
 //                imgHead.setImageURI(uri);
             }
         } else if (resultCode == RESULT_OK && requestCode == TAKE_PICTURE) {//系统拍照的返回
-
+            //这是1方法的操作
             crop(tempUri);
+
+//            //这是2方法的操作，2的图片相对与1比较模糊
+//            Bitmap bitmap = data.getParcelableExtra("data");
+//            //下面那句话需要有WRITE_EXTERNAL_STORAGE权限
+//            Uri uri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, null, null));
+//            crop(uri);
+
 
 //            imgHead.setImageURI(tempUri);
         } else if (resultCode == RESULT_OK && requestCode == CROP) {//图片剪裁后
