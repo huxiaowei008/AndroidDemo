@@ -1,13 +1,14 @@
 package com.hxw.frame.di.module;
 
 import android.app.Application;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.hxw.frame.http.GlobalHttpHandler;
 import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.utils.FileUtils;
 import com.hxw.frame.utils.Preconditions;
-import com.hxw.frame.widget.imageloader.IImageLoaderStrategy;
+import com.hxw.frame.widget.imageloader.IImageLoader;
 import com.hxw.frame.widget.imageloader.glide.GlideLoader;
 
 import java.io.File;
@@ -31,7 +32,7 @@ public class GlobalConfigModule {
     private List<Interceptor> mInterceptors;
     private OnResponseErrorListener mErrorListener;
     private File mCacheFile;
-    private IImageLoaderStrategy mLoaderStrategy;
+    private IImageLoader mLoaderStrategy;
     private AppModule.GsonConfiguration mGsonConfiguration;
     private ClientModule.RetrofitConfiguration mRetrofitConfiguration;
     private ClientModule.OkHttpConfiguration mOkHttpConfiguration;
@@ -62,6 +63,7 @@ public class GlobalConfigModule {
 
     @Singleton
     @Provides
+    @Nullable
     List<Interceptor> provideInterceptors() {
         return mInterceptors;
     }
@@ -81,8 +83,9 @@ public class GlobalConfigModule {
      */
     @Singleton
     @Provides
+    @Nullable
     GlobalHttpHandler provideGlobeHttpHandler() {
-        return mHandler == null ? GlobalHttpHandler.EMPTY : mHandler;
+        return mHandler;//处理Http请求和响应结果
     }
 
 
@@ -105,32 +108,36 @@ public class GlobalConfigModule {
      */
     @Singleton
     @Provides
-    IImageLoaderStrategy provideImageLoaderStrategy() {
+    IImageLoader provideImageLoaderStrategy() {
         return mLoaderStrategy == null ? new GlideLoader() : mLoaderStrategy;
     }
 
     @Singleton
     @Provides
+    @Nullable
     AppModule.GsonConfiguration provideGsonConfiguration() {
-        return mGsonConfiguration == null ? AppModule.GsonConfiguration.EMPTY : mGsonConfiguration;
+        return mGsonConfiguration;
     }
 
     @Singleton
     @Provides
+    @Nullable
     ClientModule.RetrofitConfiguration provideRetrofitConfiguration() {
-        return mRetrofitConfiguration == null ? ClientModule.RetrofitConfiguration.EMPTY : mRetrofitConfiguration;
+        return mRetrofitConfiguration;
     }
 
     @Singleton
     @Provides
+    @Nullable
     ClientModule.OkHttpConfiguration provideOkhttpConfiguration() {
-        return mOkHttpConfiguration == null ? ClientModule.OkHttpConfiguration.EMPTY : mOkHttpConfiguration;
+        return mOkHttpConfiguration;
     }
 
     @Singleton
     @Provides
+    @Nullable
     ClientModule.RxCacheConfiguration provideRxCacheConfiguration() {
-        return mRxCacheConfiguration == null ? ClientModule.RxCacheConfiguration.EMPTY : mRxCacheConfiguration;
+        return mRxCacheConfiguration;
     }
 
 
@@ -149,10 +156,10 @@ public class GlobalConfigModule {
     public static final class Builder {
         private HttpUrl apiUrl = HttpUrl.parse("https://api.github.com/");
         private GlobalHttpHandler handler;
-        private List<Interceptor> interceptors = new ArrayList<>();
+        private List<Interceptor> interceptors;
         private OnResponseErrorListener onResponseErrorListener;
         private File cacheFile;
-        private IImageLoaderStrategy loaderStrategy;
+        private IImageLoader loaderStrategy;
         private AppModule.GsonConfiguration gsonConfiguration;
         private ClientModule.RetrofitConfiguration retrofitConfiguration;
         private ClientModule.OkHttpConfiguration okHttpConfiguration;
@@ -177,6 +184,9 @@ public class GlobalConfigModule {
 
         //动态添加任意个interceptor
         public Builder addInterceptor(Interceptor interceptor) {
+            if (interceptors == null) {
+                interceptors = new ArrayList<>();
+            }
             this.interceptors.add(interceptor);
             return this;
         }
@@ -194,7 +204,7 @@ public class GlobalConfigModule {
         }
 
         //用来请求网络图片
-        public Builder imageLoaderStrategy(IImageLoaderStrategy loaderStrategy) {
+        public Builder imageLoaderStrategy(IImageLoader loaderStrategy) {
             this.loaderStrategy = loaderStrategy;
             return this;
         }

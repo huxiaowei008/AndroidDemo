@@ -317,7 +317,7 @@ public class ConvertUtils {
             e.printStackTrace();
             return null;
         } finally {
-            FileUtils.closeQuietly(is);
+            CloseUtils.closeIO(is);
         }
     }
 
@@ -382,7 +382,7 @@ public class ConvertUtils {
             e.printStackTrace();
             return null;
         } finally {
-            FileUtils.closeQuietly(os);
+            CloseUtils.closeIO(os);
         }
     }
 

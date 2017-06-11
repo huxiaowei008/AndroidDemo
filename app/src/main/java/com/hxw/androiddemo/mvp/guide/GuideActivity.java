@@ -1,5 +1,6 @@
 package com.hxw.androiddemo.mvp.guide;
 
+import android.os.Bundle;
 import android.widget.TextView;
 
 import com.hxw.androiddemo.R;
@@ -47,7 +48,7 @@ public class GuideActivity extends BaseActivity {
      * 初始化，会在onCreate中执行
      */
     @Override
-    public void init() {
+    public void init(Bundle savedInstanceState) {
 //        //获取当前版本号
 //        int currentVersion = AppUtils.getVersionCode(this);
 //        //获取上次的版本号

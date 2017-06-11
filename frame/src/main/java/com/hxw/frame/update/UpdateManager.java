@@ -7,7 +7,7 @@ import android.support.v7.app.AlertDialog;
 import com.hxw.frame.R;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.utils.AppUtils;
-import com.hxw.frame.utils.FileUtils;
+import com.hxw.frame.utils.CloseUtils;
 import com.hxw.frame.utils.UIUtils;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
@@ -171,7 +171,7 @@ public class UpdateManager {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Timber.tag(TAG).e(throwable, "自动更新检查失败");
-                        UIUtils.makeText(mContext,"检查更新失败");
+                        UIUtils.makeText(mContext, "检查更新失败");
                         update.error();
                     }
                 });
@@ -332,9 +332,8 @@ public class UpdateManager {
             emitter.onError(e);
         } finally {
             //关闭流
-            FileUtils.closeQuietly(inputStream);
-            FileUtils.closeQuietly(outputStream);
-            FileUtils.closeQuietly(responseBodyResponse.body());
+            CloseUtils.closeIO(inputStream, outputStream, responseBodyResponse.body());
+
         }
 
     }

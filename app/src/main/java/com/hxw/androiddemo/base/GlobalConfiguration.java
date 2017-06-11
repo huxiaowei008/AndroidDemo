@@ -2,19 +2,23 @@ package com.hxw.androiddemo.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.google.gson.GsonBuilder;
 import com.hxw.androiddemo.BuildConfig;
 import com.hxw.androiddemo.api.ComAPI;
 import com.hxw.androiddemo.api.ComCache;
 import com.hxw.frame.base.App;
 import com.hxw.frame.base.delegate.AppDelegate;
+import com.hxw.frame.di.module.AppModule;
 import com.hxw.frame.di.module.GlobalConfigModule;
 import com.hxw.frame.http.GlobalHttpHandler;
 import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.integration.ConfigModule;
 import com.hxw.frame.integration.IRepositoryManager;
+import com.hxw.frame.utils.NullStringToEmptyAdapterFactory;
 import com.hxw.frame.utils.UIUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -93,6 +97,13 @@ public class GlobalConfiguration implements ConfigModule {
                         Timber.w("------------>" + e.getMessage());
                         UIUtils.showSnackBar("net error", 0);
                     }
+                })
+                .gsonConfiguration(new AppModule.GsonConfiguration() {
+                    @Override
+                    public void configGson(Context context, GsonBuilder builder) {
+                        builder.setDateFormat("yyyy-MM-dd HH:mm:ss")
+                                .registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory<>());
+                    }
                 });
     }
 
@@ -137,7 +148,7 @@ public class GlobalConfiguration implements ConfigModule {
                 }
 
                 //安装leakCanary检测内存泄露
-                ((App) application).getAppComponent().extras().put(RefWatcher.class.getName(),BuildConfig.USE_CANARY ?
+                ((App) application).getAppComponent().extras().put(RefWatcher.class.getName(), BuildConfig.USE_CANARY ?
                         LeakCanary.install(application) : RefWatcher.DISABLED);
 
             }
@@ -169,6 +180,15 @@ public class GlobalConfiguration implements ConfigModule {
     @Override
     public void injectFragmentLifecycle(Context context, List<FragmentManager.FragmentLifecycleCallbacks> lifecycles) {
         lifecycles.add(new FragmentManager.FragmentLifecycleCallbacks() {
+
+            @Override
+            public void onFragmentCreated(FragmentManager fm, Fragment f, Bundle savedInstanceState) {
+                // 在配置变化的时候将这个 Fragment 保存下来,在 Activity 由于配置变化重建是重复利用已经创建的Fragment。
+                // https://developer.android.com/reference/android/app/Fragment.html?hl=zh-cn#setRetainInstance(boolean)
+                // 在 Activity 中绑定少量的 Fragment 建议这样做,如果需要绑定较多的 Fragment 不建议设置此参数,如 ViewPager 需要展示较多 Fragment
+                f.setRetainInstance(true);
+            }
+
             /**
              * Called after the fragment has returned from the FragmentManager's call to
              * {@link Fragment#onDestroy()}.
@@ -178,7 +198,7 @@ public class GlobalConfiguration implements ConfigModule {
              */
             @Override
             public void onFragmentDestroyed(FragmentManager fm, Fragment f) {
-                ((RefWatcher)((App) f.getActivity().getApplication()).getAppComponent()
+                ((RefWatcher) ((App) f.getActivity().getApplication()).getAppComponent()
                         .extras().get(RefWatcher.class.getName())).watch(f);
             }
         });

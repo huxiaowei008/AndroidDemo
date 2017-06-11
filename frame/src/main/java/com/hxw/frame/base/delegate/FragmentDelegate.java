@@ -15,6 +15,7 @@ import org.simple.eventbus.EventBus;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 /**
  * Created by hxw on 2017/5/3.
@@ -55,7 +56,7 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onActivityCreate(@Nullable Bundle savedInstanceState) {
-        iFragment.init();
+        iFragment.init(savedInstanceState);
     }
 
     @Override
@@ -86,7 +87,13 @@ public class FragmentDelegate implements IFragmentDelegate {
     @Override
     public void onDestroyView() {
         if (mUnBinder != null &&mUnBinder != Unbinder.EMPTY) {
-            mUnBinder.unbind();
+            try {
+                mUnBinder.unbind();
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+                //fix Bindings already cleared
+                Timber.w("onDestroyView: " + e.getMessage());
+            }
         }
     }
 
@@ -104,6 +111,11 @@ public class FragmentDelegate implements IFragmentDelegate {
     @Override
     public void onDetach() {
 
+    }
+
+    @Override
+    public boolean isAdded() {
+        return mFragment == null ? false : mFragment.isAdded();
     }
 
     @Override

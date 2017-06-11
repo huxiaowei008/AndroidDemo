@@ -2,7 +2,6 @@ package com.hxw.frame.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -185,8 +184,7 @@ public class ZipHelper {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            FileUtils.closeQuietly(gos);
-            FileUtils.closeQuietly(os);
+            CloseUtils.closeIO(gos, os);
         }
         return null;
     }
@@ -228,8 +226,7 @@ public class ZipHelper {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            FileUtils.closeQuietly(gis);
-            FileUtils.closeQuietly(is);
+            CloseUtils.closeIO(gis, is);
         }
         return null;
     }

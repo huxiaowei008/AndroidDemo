@@ -1,5 +1,6 @@
 package com.hxw.androiddemo.mvp.bottomnavigation;
 
+import android.os.Bundle;
 import android.widget.TextView;
 
 import com.hxw.androiddemo.R;
@@ -49,7 +50,7 @@ public class SimpleFragment extends BaseFragment {
      * 初始化,会在onActivityCreated中执行
      */
     @Override
-    public void init() {
+    public void init(Bundle savedInstanceState) {
 
         tvText.setText(text);
     }

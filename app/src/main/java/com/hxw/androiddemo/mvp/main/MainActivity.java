@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,7 @@ import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.update.OnUpdateListener;
 import com.hxw.frame.update.UpdateManager;
+import com.hxw.frame.utils.UIUtils;
 
 import javax.inject.Inject;
 
@@ -58,7 +60,7 @@ public class MainActivity extends BaseActivity {
      * 初始化，会在onCreate中执行
      */
     @Override
-    public void init() {
+    public void init(Bundle savedInstanceState) {
 
     }
 
@@ -110,33 +112,4 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    /*  权限校验  */
-    private void checkBluetoothPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //校验是否已具有模糊定位权限
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                        reCode);
-            } else {
-                //具有权限
-
-            }
-        } else {
-            //系统不高于6.0直接执行
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == reCode) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //同意权限
-
-            } else {
-                // 权限拒绝，提示用户开启权限
-
-            }
-        }
-    }
 }

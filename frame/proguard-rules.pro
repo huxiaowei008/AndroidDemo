@@ -46,6 +46,7 @@
 -optimizations !code/simplification/artithmetic,!field/*,!class/merging/*
 
 ################common###############
+-keep public class * implements com.hxw.frame.integration.ConfigModule
 #实体类不参与混淆
 #自定义控件不参与混淆
 -keep class com.hxw.frame.** { *; }
@@ -109,16 +110,18 @@
 }
 
 ################retrofit###############
--dontnote retrofit2.Platform
--dontnote retrofit2.Platform$IOS$MainThreadExecutor
--dontwarn retrofit2.Platform$Java8
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
--keepattributes Signature
--keepattributes Exceptions
--keepclasseswithmembers class * {
-    @retrofit2.http.* <methods>;
-}
+#-dontnote retrofit2.Platform
+#-dontnote retrofit2.Platform$IOS$MainThreadExecutor
+#-dontwarn retrofit2.Platform$Java8
+#-dontwarn retrofit2.**
+#-keep class retrofit2.** { *; }
+#-keepattributes Signature
+#-keepattributes Exceptions
+#-keepclasseswithmembers class * {
+#    @retrofit2.http.* <methods>;
+#}
+-dontwarn okio.**
+-dontwarn javax.annotation.**
 ################gson###############
 -keepattributes Signature
 -keepattributes *Annotation*

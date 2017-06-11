@@ -1,5 +1,6 @@
 package com.hxw.androiddemo.mvp;
 
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,7 +42,7 @@ public class StateActivity extends BaseActivity {
      * 初始化，会在onCreate中执行
      */
     @Override
-    public void init() {
+    public void init(Bundle savedInstanceState) {
         slLayout.setOnRetryClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

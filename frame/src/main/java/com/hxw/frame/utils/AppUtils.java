@@ -7,11 +7,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
-import android.webkit.MimeTypeMap;
 
 import java.io.File;
-
-import butterknife.internal.Utils;
 
 /**
  * App相关工具类
@@ -59,7 +56,7 @@ public class AppUtils {
     }
 
     /**
-     * 安装App(支持6.0)
+     * 安装App(支持7.0)
      *
      * @param context  上下文
      * @param filePath 文件路径
@@ -69,49 +66,45 @@ public class AppUtils {
     }
 
     /**
-     * 安装App（支持6.0）
+     * 安装App（支持7.0）
      *
      * @param context 上下文
      * @param file    文件
      */
     public static void installApp(Context context, File file) {
         if (!FileUtils.isFileExists(file)) return;
-        context.startActivity(getInstallAppIntent(context,file));
+        context.startActivity(getInstallAppIntent(context, file));
     }
 
     /**
-     * 获取安装App（支持6.0）的意图
+     * 获取安装App（支持7.0）的意图
      *
      * @param filePath 文件路径
      * @return intent
      */
-    public static Intent getInstallAppIntent(Context context,String filePath) {
-        return getInstallAppIntent(context,FileUtils.getFileByPath(filePath));
+    public static Intent getInstallAppIntent(Context context, String filePath) {
+        return getInstallAppIntent(context, FileUtils.getFileByPath(filePath));
     }
 
     /**
-     * 获取安装App(支持6.0)的意图
+     * 获取安装App(支持7.0)的意图
      *
      * @param file 文件
      * @return intent
      */
-    public static Intent getInstallAppIntent(Context context,File file) {
+    public static Intent getInstallAppIntent(Context context, File file) {
         if (file == null) return null;
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        String type;
 
-        if (Build.VERSION.SDK_INT < 23) {
-            type = "application/vnd.android.package-archive";
+        Uri data;
+        String type = "application/vnd.android.package-archive";
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            data = Uri.fromFile(file);
         } else {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(FileUtils.getFileExtension(file));
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            //!!!!注意 com.your.package.fileProvider
-            Uri contentUri = FileProvider.getUriForFile(context, "com.your.package.fileProvider", file);
-            intent.setDataAndType(contentUri, type);
+            data = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
         }
-        intent.setDataAndType(Uri.fromFile(file), type);
+        intent.setDataAndType(data, type);
         return intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 }
