@@ -149,11 +149,12 @@
 
 ################glide###############
 -keep public class * implements com.bumptech.glide.module.GlideModule
--keep class com.bumptech.glide.** { *; }
+-keep public class * extends com.bumptech.glide.AppGlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-    **[] $VALUES;
-    public *;
+  **[] $VALUES;
+  public *;
 }
+
 # for DexGuard only
 -keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 -keep class GlideConfiguration
@@ -275,3 +276,6 @@
 ################zxing###############
 -keep class com.google.zxing.** {*;}
 -dontwarn com.google.zxing.**
+################RxErrorHandler################
+ -keep class me.jessyan.rxerrorhandler.** { *; }
+ -keep interface me.jessyan.rxerrorhandler.** { *; }

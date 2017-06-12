@@ -1,5 +1,6 @@
 package com.hxw.frame.widget.imageloader.glide;
 
+import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
@@ -51,5 +52,15 @@ public class GlideLoader implements IImageLoader {
                 .crossFade()
                 .centerCrop()
                 .into(img);
+    }
+
+    /**
+     * 清除内存缓存
+     *
+     * @param context
+     */
+    @Override
+    public void clear(Context context) {
+        Glide.get(context).clearMemory();
     }
 }
