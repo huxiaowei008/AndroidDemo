@@ -311,4 +311,6 @@
     <color name="textWhite_disable">#42ffffff</color>
     <color name="textWhite_secondaryText">#89ffffff</color>
     <color name="textWhite_text">#ddffffff</color>
+
+    <color name="common_pressed">#20000000</color>  <!--白色背景按下去的颜色-->
 </resources>
