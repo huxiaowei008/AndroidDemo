@@ -237,4 +237,70 @@
         <attr name="cCenterViewMarginLeft" format="dimension" />
 
     </declare-styleable>
+
+
+    <declare-styleable name="CommonLayoutView">
+        <attr name="leftText" format="string" />
+        <attr name="centerText" format="string" />
+        <attr name="rightText" format="string" />
+        <attr name="leftTopText" format="string" />
+        <attr name="centerTopText" format="string" />
+        <attr name="rightTopText" format="string" />
+        <attr name="leftBottomText" format="string" />
+        <attr name="centerBottomText" format="string" />
+        <attr name="rightBottomText" format="string" />
+
+        <attr name="leftTextSize" format="dimension" />
+        <attr name="centerTextSize" format="dimension" />
+        <attr name="rightTextSize" format="dimension" />
+        <attr name="leftTopTextSize" format="dimension" />
+        <attr name="centerTopTextSize" format="dimension" />
+        <attr name="rightTopTextSize" format="dimension" />
+        <attr name="leftBottomTextSize" format="dimension" />
+        <attr name="centerBottomTextSize" format="dimension" />
+        <attr name="rightBottomTextSize" format="dimension" />
+
+        <attr name="leftTextColor" format="reference" />
+        <attr name="centerTextColor" format="reference" />
+        <attr name="rightTextColor" format="reference" />
+        <attr name="leftTopTextColor" format="reference" />
+        <attr name="centerTopTextColor" format="reference" />
+        <attr name="rightTopTextColor" format="reference" />
+        <attr name="leftBottomTextColor" format="reference" />
+        <attr name="centerBottomTextColor" format="reference" />
+        <attr name="rightBottomTextColor" format="reference" />
+
+        <attr name="leftImgRes" format="reference" />
+        <attr name="rightImgRes" format="reference" />
+        <attr name="centerTopImgRes" format="reference" />
+        <attr name="centerBottomImgRes" format="reference" />
+
+        <attr name="leftImgWidth" format="dimension" />
+        <attr name="rightImgWidth" format="dimension" />
+        <attr name="centerTopImgWidth" format="dimension" />
+        <attr name="centerBottomImgWidth" format="dimension" />
+
+        <attr name="leftImgHeight" format="dimension" />
+        <attr name="rightImgHeight" format="dimension" />
+        <attr name="centerTopImgHeight" format="dimension" />
+        <attr name="centerBottomImgHeight" format="dimension" />
+
+        <attr name="isShowCheckBox" format="boolean" />
+        <attr name="rightCheckBoxRes" format="reference" />
+        <attr name="isBoxCheck" format="boolean" />
+
+        <attr name="isShowSwitch" format="boolean" />
+        <attr name="thumbRes" format="reference" />
+        <attr name="trackRes" format="reference" />
+        <attr name="isSwitchCheck" format="boolean" />
+
+        <attr name="topLineHeight" format="dimension" />
+        <attr name="bottomLineHeight" format="dimension" />
+        <attr name="topLineMarginLeft" format="dimension" />
+        <attr name="topLineMarginRight" format="dimension" />
+        <attr name="bottomLineMarginLeft" format="dimension" />
+        <attr name="bottomLineMarginRight" format="dimension" />
+        <attr name="topLineColor" format="color" />
+        <attr name="bottomLineColor" format="color" />
+    </declare-styleable>
 </resources>

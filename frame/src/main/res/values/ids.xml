@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="tv_left" type="id"/>
+    <item name="tv_left_top" type="id"/>
+    <item name="tv_left_bottom" type="id"/>
+    <item name="tv_center" type="id"/>
+    <item name="tv_center_top" type="id"/>
+    <item name="tv_center_bottom" type="id"/>
+    <item name="tv_right" type="id"/>
+    <item name="tv_right_top" type="id"/>
+    <item name="tv_right_bottom" type="id"/>
+
+    <item name="img_left" type="id"/>
+    <item name="img_right" type="id"/>
+    <item name="img_center_top" type="id"/>
+    <item name="img_center_bottom" type="id"/>
+
+    <item name="check_box_right" type="id"/>
+    <item name="switch_right" type="id"/>
+
+</resources>
