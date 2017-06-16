@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
@@ -43,34 +44,41 @@ public class CommonLayoutView extends RelativeLayout {
     private AppCompatImageView centerTopImg, centerBottomImg;
     //imageView资源
     private int leftImgRes, rightImgRes, centerTopImgRes, centerBottomImgRes;
-    //imageVeiw宽高
+    //imageView宽高
     private int leftImgWidth, rightImgWidth, centerTopImgWidth, centerBottomImgWidth;
     private int leftImgHeight, rightImgHeight, centerTopImgHeight, centerBottomImgHeight;
-
+    //imageView的tint 这属性要5.0以上才能用
+    private ColorStateList leftImgTint, rightImgTint, centerTopImgTint, centerBottomImgTint;
     //1个在右边的checkBox
     private AppCompatCheckBox checkBox;
-    private int rightCheckBoxRes;
+    private int checkBoxRes;
     private boolean isBoxCheck;
     private boolean isShowCheckBox;
     //1个在右边的开关
     private SwitchCompat switchCompat;
     private int thumbRes;//设置开关的图片
-    private int trackRes;//设置开关的轨迹图片
+    private int trackRes;//设置开关的轨迹图片(背景)
     private boolean isSwitchCheck;
     private boolean isShowSwitch;
+    //1个在右边的radioButton
+    private AppCompatRadioButton radioButton;
+    private int radioButtonRes;
+    private boolean isRadioCheck;
+    private boolean isShowRadio;
     //2个上下线
     private View topLine, bottomLine;
     private int topLineHeight, bottomLineHeight;
     private int topLineMarginLeft, topLineMarginRight;
     private int bottomLineMarginLeft, bottomLineMarginRight;
     private int topLineColor, bottomLineColor;
-
-    //布局属性
-    private LayoutParams leftTextParams, centerTextParams, rightTextParams,
-            leftTopTextParams, centerTopTextParams, rightTopTextParams,
-            leftBottomTextParams, centerBottomTextParams, rightBottomTextParams,
-            leftImgParams, rightImgParams, centerTopImgParams, centerBottomImgParams,
-            rightCheckBoxParams, rightSwitchParams, topLineParams, bottomLineParams;
+    //底部控件marginTop
+    private int bottomMarginTop;
+    //顶部控件marginBottom
+    private int topMarginBottom;
+    //左右控件的对左右间距
+    private int marginLeft, marginRight;
+    //顶部控件marginTop,底部控件marginBottom
+    private int marginTop, marginBottom;
 
     private int defaultTextSize;//默认字体大小
     private int defaultPMValue;//默认padding和margin的大小
@@ -145,8 +153,8 @@ public class CommonLayoutView extends RelativeLayout {
             if (a.hasValue(R.styleable.CommonLayoutView_centerTextColor)) {
                 centerTextColor = a.getColorStateList(R.styleable.CommonLayoutView_centerTextColor);
             }
-            if (a.hasValue(R.styleable.CommonLayoutView_leftTextColor)) {
-                rightTextColor = a.getColorStateList(R.styleable.CommonLayoutView_leftTextColor);
+            if (a.hasValue(R.styleable.CommonLayoutView_rightTextColor)) {
+                rightTextColor = a.getColorStateList(R.styleable.CommonLayoutView_rightTextColor);
             }
             if (a.hasValue(R.styleable.CommonLayoutView_leftTopTextColor)) {
                 leftTopTextColor = a.getColorStateList(R.styleable.CommonLayoutView_leftTopTextColor);
@@ -180,15 +188,32 @@ public class CommonLayoutView extends RelativeLayout {
             centerTopImgHeight = a.getDimensionPixelSize(R.styleable.CommonLayoutView_centerTopImgHeight, defaultWH);
             centerBottomImgWidth = a.getDimensionPixelSize(R.styleable.CommonLayoutView_centerBottomImgWidth, defaultWH);
             centerBottomImgHeight = a.getDimensionPixelSize(R.styleable.CommonLayoutView_centerBottomImgHeight, defaultWH);
+            //图片tint
+            if (a.hasValue(R.styleable.CommonLayoutView_leftImgTint)) {
+                leftImgTint = a.getColorStateList(R.styleable.CommonLayoutView_leftImgTint);
+            }
+            if (a.hasValue(R.styleable.CommonLayoutView_rightImgTint)) {
+                rightImgTint = a.getColorStateList(R.styleable.CommonLayoutView_rightImgTint);
+            }
+            if (a.hasValue(R.styleable.CommonLayoutView_centerTopImgTint)) {
+                centerTopImgTint = a.getColorStateList(R.styleable.CommonLayoutView_centerTopImgTint);
+            }
+            if (a.hasValue(R.styleable.CommonLayoutView_centerBottomImgTint)) {
+                centerBottomImgTint = a.getColorStateList(R.styleable.CommonLayoutView_centerBottomImgTint);
+            }
             //checkBox属性
             isShowCheckBox = a.getBoolean(R.styleable.CommonLayoutView_isShowCheckBox, false);
-            rightCheckBoxRes = a.getResourceId(R.styleable.CommonLayoutView_rightCheckBoxRes, -1);
+            checkBoxRes = a.getResourceId(R.styleable.CommonLayoutView_checkBoxRes, -1);
             isBoxCheck = a.getBoolean(R.styleable.CommonLayoutView_isBoxCheck, false);
             //switch属性
             isShowSwitch = a.getBoolean(R.styleable.CommonLayoutView_isShowSwitch, false);
             thumbRes = a.getResourceId(R.styleable.CommonLayoutView_thumbRes, -1);
             trackRes = a.getResourceId(R.styleable.CommonLayoutView_trackRes, -1);
             isSwitchCheck = a.getBoolean(R.styleable.CommonLayoutView_isSwitchCheck, false);
+            //radioButton属性
+            isShowRadio = a.getBoolean(R.styleable.CommonLayoutView_isShowRadio, false);
+            radioButtonRes = a.getResourceId(R.styleable.CommonLayoutView_radioButtonRes, -1);
+            isRadioCheck = a.getBoolean(R.styleable.CommonLayoutView_isRadioCheck, false);
             //上下线属性
             topLineHeight = a.getDimensionPixelSize(R.styleable.CommonLayoutView_topLineHeight, 0);
             bottomLineHeight = a.getDimensionPixelSize(R.styleable.CommonLayoutView_bottomLineHeight, 0);
@@ -198,6 +223,13 @@ public class CommonLayoutView extends RelativeLayout {
             bottomLineMarginRight = a.getDimensionPixelSize(R.styleable.CommonLayoutView_bottomLineMarginRight, 0);
             topLineColor = a.getColor(R.styleable.CommonLayoutView_topLineColor, Color.parseColor("#ebebeb"));
             bottomLineColor = a.getColor(R.styleable.CommonLayoutView_bottomLineColor, Color.parseColor("#ebebeb"));
+            //margin,默认为0
+            bottomMarginTop = a.getDimensionPixelSize(R.styleable.CommonLayoutView_bottomMarginTop, 0);
+            topMarginBottom = a.getDimensionPixelSize(R.styleable.CommonLayoutView_topMarginBottom, 0);
+            marginLeft = a.getDimensionPixelSize(R.styleable.CommonLayoutView_marginLeft, 0);
+            marginRight = a.getDimensionPixelSize(R.styleable.CommonLayoutView_marginRight, 0);
+            marginTop = a.getDimensionPixelSize(R.styleable.CommonLayoutView_marginTop, 0);
+            marginBottom = a.getDimensionPixelSize(R.styleable.CommonLayoutView_marginBottom, 0);
         } finally {
             a.recycle();
         }
@@ -243,6 +275,9 @@ public class CommonLayoutView extends RelativeLayout {
         if (isShowCheckBox) {
             initCheckBox();
         }
+        if (isShowRadio) {
+            initRadioButton();
+        }
 
         if (rightImgRes != -1) {
             initRightImage();
@@ -270,16 +305,19 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initLeftImage() {
         leftImg = new AppCompatImageView(mContext);
-        leftImgParams = new LayoutParams(leftImgWidth, leftImgHeight);
+        LayoutParams leftImgParams = new LayoutParams(leftImgWidth, leftImgHeight);
         leftImgParams.addRule(CENTER_VERTICAL);
         leftImgParams.addRule(ALIGN_PARENT_LEFT);
-        leftImgParams.setMargins(defaultPMValue, defaultPMValue, 0, defaultPMValue);
+        leftImgParams.setMarginStart(marginLeft);
         leftImg.setLayoutParams(leftImgParams);
         leftImg.setScaleType(ImageView.ScaleType.FIT_CENTER);
         leftImg.setId(R.id.img_left);
         if (leftImgRes != -1) {
             leftImg.setImageResource(leftImgRes);
         }
+//        if (leftImgTint!=null) {
+//            leftImg.setImageTintList(leftImgTint);
+//        }
 
         addView(leftImg);
     }
@@ -289,14 +327,15 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initLeftText() {
         leftTV = new AppCompatTextView(mContext);
-        leftTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams leftTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         leftTextParams.addRule(CENTER_VERTICAL);
         if (leftImg != null) {
             leftTextParams.addRule(RIGHT_OF, R.id.img_left);
+            leftTextParams.setMarginStart(defaultPMValue);
         } else {
             leftTextParams.addRule(ALIGN_PARENT_LEFT);
+            leftTextParams.setMarginStart(marginLeft);
         }
-        leftTextParams.setMarginStart(defaultPMValue);
         leftTV.setLayoutParams(leftTextParams);
         leftTV.setId(R.id.tv_left);
 
@@ -314,20 +353,21 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initLeftTopText() {
         leftTopTV = new AppCompatTextView(mContext);
-        leftTopTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams leftTopTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         if (leftImg != null) {
             leftTopTextParams.addRule(RIGHT_OF, R.id.img_left);
+            leftTopTextParams.setMarginStart(defaultPMValue);
         } else {
             leftTopTextParams.addRule(ALIGN_PARENT_LEFT);
+            leftTopTextParams.setMarginStart(marginLeft);
         }
         if (leftTV != null) {
             leftTopTextParams.addRule(ABOVE, R.id.tv_left);
-            leftTopTextParams.bottomMargin = defaultPMValue;
+            leftTopTextParams.bottomMargin = topMarginBottom;
         } else {
             leftTopTextParams.addRule(ALIGN_PARENT_TOP);
-            leftTopTextParams.topMargin = defaultPMValue;
+            leftTopTextParams.topMargin = marginTop;
         }
-        leftTopTextParams.setMarginStart(defaultPMValue);
         leftTopTV.setLayoutParams(leftTopTextParams);
         leftTopTV.setId(R.id.tv_left_top);
         leftTopTV.setText(leftTopText);
@@ -344,24 +384,22 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initLeftBottomText() {
         leftBottomTV = new AppCompatTextView(mContext);
-        leftBottomTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams leftBottomTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         if (leftImg != null) {
             leftBottomTextParams.addRule(RIGHT_OF, R.id.img_left);
+            leftBottomTextParams.setMarginStart(defaultPMValue);
         } else {
             leftBottomTextParams.addRule(ALIGN_PARENT_LEFT);
+            leftBottomTextParams.setMarginStart(marginLeft);
         }
-        if (leftTopTV != null || leftTV != null) {
-            if (leftTV != null) {
-                leftBottomTextParams.addRule(BELOW, R.id.tv_left);
-            } else {
-                leftBottomTextParams.addRule(BELOW, R.id.tv_left_top);
-            }
-            leftBottomTextParams.topMargin = defaultPMValue;
+        if (leftTV != null) {
+
+            leftBottomTextParams.addRule(BELOW, R.id.tv_left);
+            leftBottomTextParams.topMargin = bottomMarginTop;
         } else {
             leftBottomTextParams.addRule(ALIGN_PARENT_BOTTOM);
-            leftBottomTextParams.bottomMargin = defaultPMValue;
+            leftBottomTextParams.bottomMargin = marginBottom;
         }
-        leftBottomTextParams.setMarginStart(defaultPMValue);
         leftBottomTV.setLayoutParams(leftBottomTextParams);
         leftBottomTV.setId(R.id.tv_left_bottom);
         leftBottomTV.setText(leftBottomText);
@@ -378,7 +416,7 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initCenterText() {
         centerTV = new AppCompatTextView(mContext);
-        centerTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams centerTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         centerTextParams.addRule(CENTER_IN_PARENT);
 
         centerTV.setLayoutParams(centerTextParams);
@@ -397,14 +435,14 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initCenterTopImage() {
         centerTopImg = new AppCompatImageView(mContext);
-        centerTopImgParams = new LayoutParams(centerTopImgWidth, centerTopImgHeight);
+        LayoutParams centerTopImgParams = new LayoutParams(centerTopImgWidth, centerTopImgHeight);
         centerTopImgParams.addRule(CENTER_HORIZONTAL);
         if (centerTV != null) {
             centerTopImgParams.addRule(ABOVE, R.id.tv_center);
-            centerTopImgParams.bottomMargin = defaultPMValue;
+            centerTopImgParams.bottomMargin = topMarginBottom;
         } else {
             centerTopImgParams.addRule(ALIGN_PARENT_TOP);
-            centerTopImgParams.topMargin = defaultPMValue;
+            centerTopImgParams.topMargin = marginTop;
         }
         centerTopImg.setLayoutParams(centerTopImgParams);
         centerTopImg.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -421,14 +459,14 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initCenterTopText() {
         centerTopTV = new AppCompatTextView(mContext);
-        centerTopTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams centerTopTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         centerTopTextParams.addRule(CENTER_HORIZONTAL);
         if (centerTV != null) {
             centerTopTextParams.addRule(ABOVE, R.id.tv_center);
-            centerTopTextParams.bottomMargin = defaultPMValue;
+            centerTopTextParams.bottomMargin = topMarginBottom;
         } else {
             centerTopTextParams.addRule(ALIGN_PARENT_TOP);
-            centerTopTextParams.topMargin = defaultPMValue;
+            centerTopTextParams.topMargin = marginTop;
         }
         centerTopTV.setLayoutParams(centerTopTextParams);
         centerTopTV.setId(R.id.tv_center_top);
@@ -446,18 +484,14 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initCenterBottomImage() {
         centerBottomImg = new AppCompatImageView(mContext);
-        centerBottomImgParams = new LayoutParams(centerBottomImgWidth, centerBottomImgHeight);
+        LayoutParams centerBottomImgParams = new LayoutParams(centerBottomImgWidth, centerBottomImgHeight);
         centerBottomImgParams.addRule(CENTER_HORIZONTAL);
-        if (centerTopTV != null || centerTV != null) {
-            if (centerTV != null) {
-                centerBottomImgParams.addRule(BELOW, R.id.tv_center);
-            } else {
-                centerBottomImgParams.addRule(BELOW, R.id.tv_center_top);
-            }
-            centerBottomImgParams.topMargin = defaultPMValue;
+        if ( centerTV != null ) {
+            centerBottomImgParams.addRule(BELOW, R.id.tv_center);
+            centerBottomImgParams.topMargin = bottomMarginTop;
         } else {
             centerBottomImgParams.addRule(ALIGN_PARENT_BOTTOM);
-            centerBottomImgParams.bottomMargin = defaultPMValue;
+            centerBottomImgParams.bottomMargin = marginBottom;
         }
         centerBottomImg.setLayoutParams(centerBottomImgParams);
         centerBottomImg.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -474,18 +508,14 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initCenterBottomText() {
         centerBottomTV = new AppCompatTextView(mContext);
-        centerBottomTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams centerBottomTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         centerBottomTextParams.addRule(CENTER_HORIZONTAL);
-        if (centerTopImg != null || centerTV != null) {
-            if (centerTV != null) {
-                centerBottomTextParams.addRule(BELOW, R.id.tv_center);
-            } else {
-                centerBottomTextParams.addRule(BELOW, R.id.img_center_top);
-            }
-            centerBottomTextParams.topMargin = defaultPMValue;
+        if ( centerTV != null ) {
+            centerBottomTextParams.addRule(BELOW, R.id.tv_center);
+            centerBottomTextParams.topMargin = bottomMarginTop;
         } else {
             centerBottomTextParams.addRule(ALIGN_PARENT_BOTTOM);
-            centerBottomTextParams.bottomMargin = defaultPMValue;
+            centerBottomTextParams.bottomMargin = marginBottom;
         }
         centerBottomTV.setLayoutParams(centerBottomTextParams);
         centerBottomTV.setId(R.id.tv_center_bottom);
@@ -503,11 +533,11 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initSwitch() {
         switchCompat = new SwitchCompat(mContext);
-        rightSwitchParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        rightSwitchParams.addRule(CENTER_VERTICAL);
-        rightSwitchParams.addRule(ALIGN_PARENT_RIGHT);
-        rightSwitchParams.setMargins(0, defaultPMValue, defaultPMValue, defaultPMValue);
-        switchCompat.setLayoutParams(rightSwitchParams);
+        LayoutParams switchParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        switchParams.addRule(CENTER_VERTICAL);
+        switchParams.addRule(ALIGN_PARENT_RIGHT);
+        switchParams.setMarginEnd(marginRight);
+        switchCompat.setLayoutParams(switchParams);
         switchCompat.setId(R.id.switch_right);
         if (thumbRes != -1) {
             switchCompat.setThumbResource(thumbRes);
@@ -525,14 +555,14 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initCheckBox() {
         checkBox = new AppCompatCheckBox(mContext);
-        rightCheckBoxParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        rightCheckBoxParams.addRule(CENTER_VERTICAL);
-        rightCheckBoxParams.addRule(ALIGN_PARENT_RIGHT);
-        rightCheckBoxParams.setMargins(0, defaultPMValue, defaultPMValue, defaultPMValue);
-        checkBox.setLayoutParams(rightCheckBoxParams);
+        LayoutParams checkBoxParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        checkBoxParams.addRule(CENTER_VERTICAL);
+        checkBoxParams.addRule(ALIGN_PARENT_RIGHT);
+        checkBoxParams.setMarginEnd(marginRight);
+        checkBox.setLayoutParams(checkBoxParams);
         checkBox.setId(R.id.check_box_right);
-        if (rightCheckBoxRes != -1) {
-            checkBox.setButtonDrawable(rightCheckBoxRes);
+        if (checkBoxRes != -1) {
+            checkBox.setButtonDrawable(checkBoxRes);
         }
         checkBox.setChecked(isBoxCheck);
 
@@ -540,14 +570,33 @@ public class CommonLayoutView extends RelativeLayout {
     }
 
     /**
+     * 初始化右边RadioButton
+     */
+    private void initRadioButton() {
+        radioButton = new AppCompatRadioButton(mContext);
+        LayoutParams radioButtonParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        radioButtonParams.addRule(CENTER_VERTICAL);
+        radioButtonParams.addRule(ALIGN_PARENT_RIGHT);
+        radioButtonParams.setMarginEnd(marginRight);
+        radioButton.setLayoutParams(radioButtonParams);
+        radioButton.setId(R.id.radioButton_right);
+        if (radioButtonRes != -1) {
+            radioButton.setButtonDrawable(radioButtonRes);
+        }
+        radioButton.setChecked(isRadioCheck);
+
+        addView(radioButton);
+    }
+
+    /**
      * 初始化右边图片
      */
     private void initRightImage() {
         rightImg = new AppCompatImageView(mContext);
-        rightImgParams = new LayoutParams(rightImgWidth, rightImgHeight);
+        LayoutParams rightImgParams = new LayoutParams(rightImgWidth, rightImgHeight);
         rightImgParams.addRule(CENTER_VERTICAL);
         rightImgParams.addRule(ALIGN_PARENT_RIGHT);
-        rightImgParams.setMargins(0, defaultPMValue, defaultPMValue, defaultPMValue);
+        rightImgParams.setMarginEnd(marginRight);
         rightImg.setLayoutParams(rightImgParams);
         rightImg.setScaleType(ImageView.ScaleType.FIT_CENTER);
         rightImg.setId(R.id.img_right);
@@ -563,25 +612,28 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initRightText() {
         rightTV = new AppCompatTextView(mContext);
-        rightTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        LayoutParams rightTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         rightTextParams.addRule(CENTER_VERTICAL);
-        if (checkBox != null || switchCompat != null || rightImg != null) {
+        if (checkBox != null || switchCompat != null || rightImg != null || radioButton != null) {
             if (checkBox != null) {
                 rightTextParams.addRule(LEFT_OF, R.id.check_box_right);
             }
             if (switchCompat != null) {
                 rightTextParams.addRule(LEFT_OF, R.id.switch_right);
             }
+            if (radioButton != null) {
+                rightTextParams.addRule(LEFT_OF, R.id.radioButton_right);
+            }
             if (rightImg != null) {
                 rightTextParams.addRule(LEFT_OF, R.id.img_right);
             }
+            rightTextParams.setMarginEnd(defaultPMValue);
         } else {
             rightTextParams.addRule(ALIGN_PARENT_RIGHT);
+            rightTextParams.setMarginEnd(marginRight);
         }
-        rightTextParams.setMarginEnd(defaultPMValue);
         rightTV.setLayoutParams(rightTextParams);
         rightTV.setId(R.id.tv_right);
-
         rightTV.setText(rightText);
         rightTV.setTextSize(TypedValue.COMPLEX_UNIT_PX, rightTextSize);
         if (rightTextColor != null) {
@@ -596,31 +648,35 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initRightTopText() {
         rightTopTV = new AppCompatTextView(mContext);
-        rightTopTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        if (checkBox != null || switchCompat != null || rightImg != null) {
+        LayoutParams rightTopTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        if (checkBox != null || switchCompat != null || rightImg != null || radioButton != null) {
             if (checkBox != null) {
                 rightTopTextParams.addRule(LEFT_OF, R.id.check_box_right);
             }
             if (switchCompat != null) {
                 rightTopTextParams.addRule(LEFT_OF, R.id.switch_right);
             }
+            if (radioButton != null) {
+                rightTopTextParams.addRule(LEFT_OF, R.id.radioButton_right);
+            }
             if (rightImg != null) {
                 rightTopTextParams.addRule(LEFT_OF, R.id.img_right);
             }
+            rightTopTextParams.setMarginEnd(defaultPMValue);
         } else {
             rightTopTextParams.addRule(ALIGN_PARENT_RIGHT);
+            rightTopTextParams.setMarginEnd(marginRight);
         }
         if (rightTV != null) {
             rightTopTextParams.addRule(ABOVE, R.id.tv_right);
-            rightTopTextParams.bottomMargin = defaultPMValue;
+            rightTopTextParams.bottomMargin = topMarginBottom;
         } else {
             rightTopTextParams.addRule(ALIGN_PARENT_TOP);
-            rightTopTextParams.topMargin = defaultPMValue;
+            rightTopTextParams.topMargin = marginTop;
         }
-        rightTopTextParams.setMarginEnd(defaultPMValue);
         rightTopTV.setLayoutParams(rightTopTextParams);
         rightTopTV.setId(R.id.tv_right_top);
-
+        rightTopTV.setText(rightTopText);
         rightTopTV.setTextSize(TypedValue.COMPLEX_UNIT_PX, rightTopTextSize);
         if (rightTopTextColor != null) {
             rightTopTV.setTextColor(rightTopTextColor);
@@ -634,35 +690,35 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initRightBottomText() {
         rightBottomTV = new AppCompatTextView(mContext);
-        rightBottomTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        if (checkBox != null || switchCompat != null || rightImg != null) {
+        LayoutParams rightBottomTextParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        if (checkBox != null || switchCompat != null || rightImg != null || radioButton != null) {
             if (checkBox != null) {
                 rightBottomTextParams.addRule(LEFT_OF, R.id.check_box_right);
             }
             if (switchCompat != null) {
                 rightBottomTextParams.addRule(LEFT_OF, R.id.switch_right);
             }
+            if (radioButton != null) {
+                rightBottomTextParams.addRule(LEFT_OF, R.id.radioButton_right);
+            }
             if (rightImg != null) {
                 rightBottomTextParams.addRule(LEFT_OF, R.id.img_right);
             }
-
+            rightBottomTextParams.setMarginEnd(defaultPMValue);
         } else {
             rightBottomTextParams.addRule(ALIGN_PARENT_RIGHT);
+            rightBottomTextParams.setMarginEnd(marginRight);
         }
-        if (rightTopTV != null || rightTV != null) {
-            if (rightTV != null) {
-                rightBottomTextParams.addRule(BELOW, R.id.tv_right);
-            } else {
-                rightBottomTextParams.addRule(BELOW, R.id.tv_right_top);
-            }
-            rightBottomTextParams.topMargin = defaultPMValue;
+        if (rightTV != null) {
+            rightBottomTextParams.addRule(BELOW, R.id.tv_right);
+            rightBottomTextParams.topMargin = bottomMarginTop;
         } else {
             rightBottomTextParams.addRule(ALIGN_PARENT_BOTTOM);
-            rightBottomTextParams.bottomMargin = defaultPMValue;
+            rightBottomTextParams.bottomMargin = marginBottom;
         }
-        rightBottomTextParams.setMarginEnd(defaultPMValue);
         rightBottomTV.setLayoutParams(rightBottomTextParams);
         rightBottomTV.setId(R.id.tv_right_bottom);
+        rightBottomTV.setText(rightBottomText);
         rightBottomTV.setTextSize(TypedValue.COMPLEX_UNIT_PX, rightBottomTextSize);
         if (rightBottomTextColor != null) {
             rightBottomTV.setTextColor(rightBottomTextColor);
@@ -676,7 +732,7 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initTopLine() {
         topLine = new View(mContext);
-        topLineParams = new LayoutParams(LayoutParams.MATCH_PARENT, topLineHeight);
+        LayoutParams topLineParams = new LayoutParams(LayoutParams.MATCH_PARENT, topLineHeight);
         topLineParams.addRule(ALIGN_PARENT_TOP);
         topLineParams.setMargins(topLineMarginLeft, 0, topLineMarginRight, 0);
         topLine.setLayoutParams(topLineParams);
@@ -690,7 +746,7 @@ public class CommonLayoutView extends RelativeLayout {
      */
     private void initBottomLine() {
         bottomLine = new View(mContext);
-        bottomLineParams = new LayoutParams(LayoutParams.MATCH_PARENT, bottomLineHeight);
+        LayoutParams bottomLineParams = new LayoutParams(LayoutParams.MATCH_PARENT, bottomLineHeight);
         bottomLineParams.addRule(ALIGN_PARENT_BOTTOM);
         bottomLineParams.setMargins(bottomLineMarginLeft, 0, bottomLineMarginRight, 0);
         bottomLine.setLayoutParams(bottomLineParams);
@@ -826,5 +882,12 @@ public class CommonLayoutView extends RelativeLayout {
             initSwitch();
         }
         return switchCompat;
+    }
+
+    public AppCompatRadioButton getRadioButton() {
+        if (radioButton == null) {
+            initRadioButton();
+        }
+        return radioButton;
     }
 }

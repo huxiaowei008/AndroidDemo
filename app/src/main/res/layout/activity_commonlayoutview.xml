@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.hxw.frame.widget.CommonLayoutView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            app:isShowSwitch="true"
+            app:leftImgRes="@drawable/ic_person"
+            app:leftText="用户信息"
+            app:leftTextColor="@color/textBlack_text"
+            app:leftTextSize="@dimen/body"
+            app:marginLeft="8dp" />
+
+        <com.hxw.frame.widget.CommonLayoutView
+            android:layout_width="match_parent"
+            android:layout_height="84dp"
+            app:bottomMarginTop="4dp"
+            app:isShowCheckBox="true"
+            app:leftBottomText="1562364"
+            app:leftImgHeight="40dp"
+            app:leftImgRes="@drawable/ic_person"
+            app:leftImgWidth="40dp"
+            app:leftTopText="张三丰"
+            app:leftTopTextColor="@color/textBlack_text"
+            app:leftTopTextSize="@dimen/body"
+            app:marginLeft="8dp"
+            app:marginRight="8dp"
+            app:marginBottom="16dp"
+            app:marginTop="16dp"
+            app:rightText="选择框" />
+
+        <com.hxw.frame.widget.CommonLayoutView
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            app:centerText="宗师"
+            app:isShowRadio="true"
+            app:leftBottomText="1562364"
+            app:leftImgHeight="40dp"
+            app:leftImgRes="@drawable/ic_person"
+            app:leftImgWidth="40dp"
+            app:leftTopText="张三丰"
+            app:leftTopTextColor="@color/textBlack_text"
+            app:leftTopTextSize="@dimen/body"
+            app:marginLeft="8dp"
+            app:marginRight="8dp"
+            app:rightBottomText="掌门"
+            app:rightBottomTextSize="@dimen/caption"
+            app:rightText=""
+            app:rightTextSize="0sp"
+            app:rightTopText="武当"
+            app:rightTopTextSize="@dimen/caption" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+            <com.hxw.frame.widget.CommonLayoutView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:isShowRadio="true"
+                app:leftBottomText="789"
+                app:leftBottomTextSize="@dimen/caption"
+                app:leftText="456"
+                app:leftTextSize="@dimen/caption"
+                app:leftTopText="123"
+                app:leftTopTextSize="@dimen/caption"
+                app:marginRight="16dp"
+                app:radioButtonRes="@drawable/selector_check" />
+
+            <com.hxw.frame.widget.CommonLayoutView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:centerBottomText="789"
+                app:centerBottomTextSize="@dimen/body"
+                app:centerText="456"
+                app:centerTextSize="@dimen/caption"
+                app:centerTopText="123"
+                app:centerTopTextSize="@dimen/caption"
+                app:checkBoxRes="@drawable/selector_check"
+                app:isShowCheckBox="true" />
+
+            <com.hxw.frame.widget.CommonLayoutView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:isShowSwitch="true"
+                app:rightBottomText="789"
+                app:rightBottomTextSize="@dimen/caption"
+                app:rightText="456"
+                app:rightTextSize="@dimen/caption"
+                app:rightTopText="123"
+                app:rightTopTextSize="@dimen/body"
+                app:thumbRes="@drawable/flyme_thumb_drawable"
+                app:trackRes="@drawable/flyme_track_drawable" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+            <com.hxw.frame.widget.CommonLayoutView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:centerBottomText="猜猜我是"
+                app:centerTopImgRes="@drawable/ic_person"
+                app:marginTop="4dp" />
+
+            <com.hxw.frame.widget.CommonLayoutView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:bottomMarginTop="4dp"
+                app:centerBottomImgRes="@drawable/ic_home"
+                app:centerTopText="谁啊" />
+
+            <com.hxw.frame.widget.CommonLayoutView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:bottomMarginTop="8dp"
+                app:leftBottomText="654321"
+                app:leftTopText="123456"
+                app:marginRight="8dp"
+                app:rightImgRes="@drawable/ic_home" />
+        </LinearLayout>
+    <com.hxw.frame.widget.CommonLayoutView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:leftTopText="姓名"
+        app:leftBottomText="欧阳锋"
+        app:centerTopText="年龄"
+        app:centerBottomText="20"
+        app:rightTopText="文化水平"
+        app:rightBottomText="本科"
+        app:marginLeft="8dp"
+        app:marginRight="8dp"
+        app:bottomMarginTop="8dp"
+        app:marginTop="8dp"
+        />
+
+
+
+    </LinearLayout>
+</ScrollView>
