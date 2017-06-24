@@ -29,15 +29,16 @@ android {
     // Resolved versions for app (3.0.1) and test app (2.0.1) differ.
     // See http://g.co/androidstudio/app-test-app-conflict for details.
     //的问题引进的,这是测试包和RxLifecycle引入的jsr305的版本不一样，这里统一成3.0.1
-    configurations.all {
-        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
-    }
+//    configurations.all {
+//        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
+//    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs'
     })
     compile rootProject.ext.dependencies["appcompat"]
     compile rootProject.ext.dependencies["constraint-layout"]
