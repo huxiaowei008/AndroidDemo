@@ -31,6 +31,11 @@ public abstract class BaseFragment extends RxFragment implements IFragment {
         return mRootView;
     }
 
+    /**
+     * 是否使用eventBus,默认为不使用(false)，
+     *
+     * @return
+     */
     @Override
     public boolean useEventBus() {
         return false;

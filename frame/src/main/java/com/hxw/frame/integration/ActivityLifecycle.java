@@ -55,7 +55,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
                 activityDelegate = new ActivityDelegate(activity);
                 activity.getIntent().putExtra(IActivityDelegate.ACTIVITY_DELEGATE, activityDelegate);
             }
-            Timber.e("onCreated" + activityDelegate.toString());
+            Timber.d("onCreated" + activityDelegate.toString());
             activityDelegate.onCreate(savedInstanceState);
         }
 
@@ -87,7 +87,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
     public void onActivityStarted(Activity activity) {
         IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
-            Timber.e("onStart" + activityDelegate.toString());
+            Timber.d("onStart" + activityDelegate.toString());
             activityDelegate.onStart();
         }
     }
@@ -98,7 +98,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
 
         IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
-            Timber.e("onResume" + activityDelegate.toString());
+            Timber.d("onResume" + activityDelegate.toString());
             activityDelegate.onResume();
         }
     }
@@ -108,7 +108,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
 
         IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
-            Timber.e("onPaused" + activityDelegate.toString());
+            Timber.d("onPaused" + activityDelegate.toString());
             activityDelegate.onPause();
         }
     }
@@ -120,7 +120,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
         }
         IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
-            Timber.e("onStop" + activityDelegate.toString());
+            Timber.d("onStop" + activityDelegate.toString());
             activityDelegate.onStop();
         }
     }
@@ -129,7 +129,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
         IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
-            Timber.e("onSaveInstanceState" + activityDelegate.toString());
+            Timber.d("onSaveInstanceState" + activityDelegate.toString());
             activityDelegate.onSaveInstanceState(outState);
         }
     }
@@ -140,7 +140,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
 
         IActivityDelegate activityDelegate = fetchActivityDelegate(activity);
         if (activityDelegate != null) {
-            Timber.e("onDestroy" + activityDelegate.toString());
+            Timber.d("onDestroy" + activityDelegate.toString());
             activityDelegate.onDestroy();
             activity.getIntent().removeExtra(IActivityDelegate.ACTIVITY_DELEGATE);
         }
@@ -173,7 +173,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
                     fragmentDelegate = new FragmentDelegate(fm, f);
                     f.getArguments().putParcelable(IFragmentDelegate.FRAGMENT_DELEGATE, fragmentDelegate);
                 }
-                Timber.e("onFragmentAttach" + fragmentDelegate.toString());
+                Timber.d("onFragmentAttach" + fragmentDelegate.toString());
                 fragmentDelegate.onAttach(context);
             }
         }
@@ -183,7 +183,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             super.onFragmentCreated(fm, f, savedInstanceState);
             IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
-                Timber.e("onFragmentCreate" + fragmentDelegate.toString());
+                Timber.d("onFragmentCreate" + fragmentDelegate.toString());
                 fragmentDelegate.onCreate(savedInstanceState);
             }
         }
@@ -193,7 +193,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             super.onFragmentViewCreated(fm, f, v, savedInstanceState);
             IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
-                Timber.e("onFragmentViewCreate" + fragmentDelegate.toString());
+                Timber.d("onFragmentViewCreate" + fragmentDelegate.toString());
                 fragmentDelegate.onCreateView(v, savedInstanceState);
             }
         }
@@ -203,7 +203,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             super.onFragmentActivityCreated(fm, f, savedInstanceState);
             IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
-                Timber.e("onFragmentActivityCreate" + fragmentDelegate.toString());
+                Timber.d("onFragmentActivityCreate" + fragmentDelegate.toString());
                 fragmentDelegate.onActivityCreate(savedInstanceState);
             }
         }
@@ -213,7 +213,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             super.onFragmentStarted(fm, f);
             IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
-                Timber.e("onFragmentStart" + fragmentDelegate.toString());
+                Timber.d("onFragmentStart" + fragmentDelegate.toString());
                 fragmentDelegate.onStart();
             }
         }
@@ -223,7 +223,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             super.onFragmentResumed(fm, f);
             IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
-                Timber.e("onFragmentResume" + fragmentDelegate.toString());
+                Timber.d("onFragmentResume" + fragmentDelegate.toString());
                 fragmentDelegate.onResume();
             }
         }
@@ -233,7 +233,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             super.onFragmentPaused(fm, f);
             IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
-                Timber.e("onFragmentPause" + fragmentDelegate.toString());
+                Timber.d("onFragmentPause" + fragmentDelegate.toString());
                 fragmentDelegate.onPause();
             }
         }
@@ -243,7 +243,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             super.onFragmentStopped(fm, f);
             IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
-                Timber.e("onFragmentStop" + fragmentDelegate.toString());
+                Timber.d("onFragmentStop" + fragmentDelegate.toString());
                 fragmentDelegate.onStop();
             }
         }
@@ -253,7 +253,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             super.onFragmentSaveInstanceState(fm, f, outState);
             IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
-                Timber.e("onFragmentSaveInstanceState" + fragmentDelegate.toString());
+                Timber.d("onFragmentSaveInstanceState" + fragmentDelegate.toString());
                 fragmentDelegate.onSaveInstanceState(outState);
             }
         }
@@ -263,7 +263,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             super.onFragmentViewDestroyed(fm, f);
             IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
-                Timber.e("onFragmentViewDestroy" + fragmentDelegate.toString());
+                Timber.d("onFragmentViewDestroy" + fragmentDelegate.toString());
                 fragmentDelegate.onDestroyView();
             }
         }
@@ -273,7 +273,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             super.onFragmentDestroyed(fm, f);
             IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
-                Timber.e("onFragmentDestroy" + fragmentDelegate.toString());
+                Timber.d("onFragmentDestroy" + fragmentDelegate.toString());
                 fragmentDelegate.onDestroy();
             }
         }
@@ -283,7 +283,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             super.onFragmentDetached(fm, f);
             IFragmentDelegate fragmentDelegate = fetchFragmentDelegate(f);
             if (fragmentDelegate != null) {
-                Timber.e("onFragmentDetach" + fragmentDelegate.toString());
+                Timber.d("onFragmentDetach" + fragmentDelegate.toString());
                 fragmentDelegate.onDetach();
                 f.getArguments().clear();
             }

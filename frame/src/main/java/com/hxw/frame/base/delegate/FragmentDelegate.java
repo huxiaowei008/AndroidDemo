@@ -86,7 +86,7 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onDestroyView() {
-        if (mUnBinder != null &&mUnBinder != Unbinder.EMPTY) {
+        if (mUnBinder != null && mUnBinder != Unbinder.EMPTY) {
             try {
                 mUnBinder.unbind();
             } catch (IllegalStateException e) {
@@ -99,7 +99,7 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onDestroy() {
-        if (iFragment.useEventBus()) {
+        if (iFragment != null && iFragment.useEventBus()) {
             EventBus.getDefault().unregister(mFragment);
         }
         this.mUnBinder = null;

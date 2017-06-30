@@ -200,26 +200,4 @@ public class UIUtils {
         }
     }
 
-    /**
-     * 改变状态栏字体颜色
-     *
-     * @param activity
-     * @param bDark
-     */
-    public static void setStatusBarMode(Activity activity, boolean bDark) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            View decorView = activity.getWindow().getDecorView();
-            if (decorView != null) {
-                int vis = decorView.getSystemUiVisibility();
-                if (bDark) {
-                    //字体黑色
-                    vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                } else {
-                    //字体白色
-                    vis &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-                }
-                decorView.setSystemUiVisibility(vis);
-            }
-        }
-    }
 }
