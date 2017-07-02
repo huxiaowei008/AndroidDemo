@@ -294,8 +294,9 @@ public class AppManager {
             //关闭所有activity
             Iterator<Activity> iterator = getActivityList().iterator();
             while (iterator.hasNext()) {
-                iterator.next().finish();
+                Activity next = iterator.next();
                 iterator.remove();
+                next.finish();
             }
 
 

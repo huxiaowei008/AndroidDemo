@@ -19,6 +19,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements IActiv
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        init(savedInstanceState);
 
     }
 

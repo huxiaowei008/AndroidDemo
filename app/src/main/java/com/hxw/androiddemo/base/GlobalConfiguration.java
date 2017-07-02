@@ -51,7 +51,7 @@ public class GlobalConfiguration implements ConfigModule {
                         /* 这里可以先客户端一步拿到每一次http请求的结果,可以解析成json,做一些操作,如检测到token过期后
                            重新请求token,并重新执行请求 */
 //                        try {
-//                            if (!TextUtils.isEmpty(httpResult) && RequestInterceptor.isJson(response.body())) {
+//                            if (!TextUtils.isEmpty(httpResult) && RequestInterceptor.isJson(response.body().contentType())) {
 //                                JSONArray array = new JSONArray(httpResult);
 //                                JSONObject object = (JSONObject) array.get(0);
 //                                String login = object.getString("login");
@@ -198,8 +198,12 @@ public class GlobalConfiguration implements ConfigModule {
              */
             @Override
             public void onFragmentDestroyed(FragmentManager fm, Fragment f) {
-                ((RefWatcher) ((App) f.getActivity().getApplication()).getAppComponent()
-                        .extras().get(RefWatcher.class.getName())).watch(f);
+                ((RefWatcher) ((App) f.getActivity()
+                        .getApplication())
+                        .getAppComponent()
+                        .extras()
+                        .get(RefWatcher.class.getName()))
+                        .watch(f);
             }
         });
     }

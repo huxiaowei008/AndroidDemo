@@ -1,6 +1,8 @@
 package com.hxw.frame.base.delegate;
 
 import android.app.Application;
+import android.content.ComponentCallbacks2;
+import android.content.res.Configuration;
 
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.di.DaggerAppComponent;
@@ -25,15 +27,17 @@ import javax.inject.Inject;
  */
 
 public class AppDelegate {
+
+    //这个activity生命周期回调是本框架内部代码的实现,与外部无关
+    @Inject
+    protected ActivityLifecycle mActivityLifecycle;
     private Application mApplication;
     private AppComponent mAppComponent;
     private List<Lifecycle> mLifecycles = new ArrayList<>();//application的生命内容外部拓展
     //这里的activity生命周期回调是给外面拓展用的,在外面写好逻辑后通过注册这个直接使用
     private List<Application.ActivityLifecycleCallbacks> mActivityLifecycles = new ArrayList<>();//activity的生命内容外部拓展
     private final List<ConfigModule> mModules;
-    //这个activity生命周期回调是本框架内部代码的实现,与外部无关
-    @Inject
-    protected ActivityLifecycle mActivityLifecycle;
+    private ComponentCallbacks2 mComponentCallback;
 
     public AppDelegate(Application application) {
         this.mApplication = application;
@@ -70,12 +74,19 @@ public class AppDelegate {
         for (Lifecycle lifecycle : mLifecycles) {
             lifecycle.onCreate(mApplication);
         }
+
+        mComponentCallback = new AppComponentCallbacks(mApplication, mAppComponent);
+
+        mApplication.registerComponentCallbacks(mComponentCallback);
     }
 
     public void onTerminate() {
         if (mActivityLifecycle != null) {//释放资源
             mApplication.unregisterActivityLifecycleCallbacks(mActivityLifecycle);
             mActivityLifecycle.release();
+        }
+        if (mComponentCallback != null) {
+            mApplication.unregisterComponentCallbacks(mComponentCallback);
         }
         if (mActivityLifecycles != null && mActivityLifecycles.size() > 0) {
             for (Application.ActivityLifecycleCallbacks lifecycle : mActivityLifecycles) {
@@ -88,6 +99,7 @@ public class AppDelegate {
         this.mAppComponent = null;
         this.mActivityLifecycle = null;
         this.mActivityLifecycles = null;
+        this.mComponentCallback = null;
         this.mLifecycles = null;
         this.mApplication = null;
 
@@ -124,5 +136,32 @@ public class AppDelegate {
         void onCreate(Application application);
 
         void onTerminate(Application application);
+    }
+
+    private static class AppComponentCallbacks implements ComponentCallbacks2 {
+        private Application mApplication;
+        private AppComponent mAppComponent;
+
+        public AppComponentCallbacks(Application application, AppComponent appComponent) {
+            this.mApplication = application;
+            this.mAppComponent = appComponent;
+        }
+
+        @Override
+        public void onTrimMemory(int level) {
+
+        }
+
+        @Override
+        public void onConfigurationChanged(Configuration newConfig) {
+
+        }
+
+        @Override
+        public void onLowMemory() {
+            //内存不足时清理图片请求框架的内存缓存
+            mAppComponent.imageLoader()
+                    .clear(mApplication);
+        }
     }
 }

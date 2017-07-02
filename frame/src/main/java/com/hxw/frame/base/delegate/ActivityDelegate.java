@@ -37,7 +37,7 @@ public class ActivityDelegate implements IActivityDelegate {
         mActivity.setContentView(iActivity.getLayoutId());
         //绑定到butterknife
         mUnBinder = ButterKnife.bind(mActivity);
-        iActivity.init(savedInstanceState);
+
     }
 
     @Override
@@ -72,10 +72,10 @@ public class ActivityDelegate implements IActivityDelegate {
 
     @Override
     public void onDestroy() {
-        if (iActivity.useEventBus()) {
+        if (iActivity != null && iActivity.useEventBus()) {
             EventBus.getDefault().unregister(mActivity);
         }
-        if (mUnBinder != Unbinder.EMPTY) {
+        if (mUnBinder != null && mUnBinder != Unbinder.EMPTY) {
             mUnBinder.unbind();
         }
         this.mUnBinder = null;

@@ -1,5 +1,6 @@
 package com.hxw.frame.widget.imageloader;
 
+import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
@@ -26,4 +27,10 @@ public interface IImageLoader {
      * @param res
      */
     void displayRes(@NonNull ImageView img, @DrawableRes int res);
+
+    /**
+     * 清除内存缓存
+     * @param context
+     */
+    void clear(Context context);
 }

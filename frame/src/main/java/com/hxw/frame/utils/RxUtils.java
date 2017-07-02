@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.base.BaseFragment;
 import com.hxw.frame.mvp.IView;
+import com.trello.rxlifecycle2.LifecycleProvider;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.android.FragmentEvent;
@@ -37,10 +38,8 @@ public class RxUtils {
      * @return
      */
     public static <T> LifecycleTransformer<T> bindToLifecycle(IView view) {
-        if (view instanceof RxAppCompatActivity) {
-            return ((RxAppCompatActivity) view).bindToLifecycle();
-        } else if (view instanceof RxFragment) {
-            return ((RxFragment) view).bindToLifecycle();
+        if (view instanceof LifecycleProvider) {
+            return ((LifecycleProvider) view).bindToLifecycle();
         } else {
             throw new IllegalArgumentException("view isn't activity or fragment");
         }

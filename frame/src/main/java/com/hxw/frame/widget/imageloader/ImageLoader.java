@@ -1,5 +1,6 @@
 package com.hxw.frame.widget.imageloader;
 
+import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
@@ -27,4 +28,7 @@ public class ImageLoader {
         mLoader.displayRes(img, res);
     }
 
+    public void clear(Context context){
+        mLoader.clear(context);
+    }
 }

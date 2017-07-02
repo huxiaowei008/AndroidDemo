@@ -118,11 +118,11 @@ http://blog.csdn.net/aiynmimi/article/details/53382567
 //    compile rootProject.ext.dependencies["rxbinding-design"]
 //    compile rootProject.ext.dependencies["rxbinding-recyclerview-v7"]
     //2版本的
-    compile rootProject.ext.dependencies["rxbinding2"]
-    compile rootProject.ext.dependencies["rxbinding2-support-v4"]
-    compile rootProject.ext.dependencies["rxbinding2-appcompat-v7"]
-    compile rootProject.ext.dependencies["rxbinding2-design"]
-    compile rootProject.ext.dependencies["rxbinding2-recyclerview-v7"]
+//    compile rootProject.ext.dependencies["rxbinding2"]
+//    compile rootProject.ext.dependencies["rxbinding2-support-v4"]
+//    compile rootProject.ext.dependencies["rxbinding2-appcompat-v7"]
+//    compile rootProject.ext.dependencies["rxbinding2-design"]
+//    compile rootProject.ext.dependencies["rxbinding2-recyclerview-v7"]
 
 //AndroidEventBus https://github.com/hehonghui/AndroidEventBus
     compile rootProject.ext.dependencies["androideventbus"]

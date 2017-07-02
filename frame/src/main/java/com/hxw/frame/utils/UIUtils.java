@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.hxw.frame.base.BaseApplication;
-
 import org.simple.eventbus.EventBus;
 
 import butterknife.ButterKnife;
@@ -37,7 +35,6 @@ public class UIUtils {
     }
 
 
-
     /**
      * 获得资源
      *
@@ -53,7 +50,7 @@ public class UIUtils {
      * @param stringID
      * @return
      */
-    public static String getString(Context context,int stringID) {
+    public static String getString(Context context, int stringID) {
         return context.getString(stringID);
     }
 
@@ -64,8 +61,8 @@ public class UIUtils {
      * @param rId
      * @return
      */
-    public static int getColor(Context context,int rId) {
-        return ContextCompat.getColor(context,rId);
+    public static int getColor(Context context, int rId) {
+        return ContextCompat.getColor(context, rId);
     }
 
     /**
@@ -73,7 +70,7 @@ public class UIUtils {
      *
      * @param string
      */
-    public static void makeText(Context context,String string) {
+    public static void makeText(Context context, String string) {
         if (mToast == null) {
             mToast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
         }
@@ -202,4 +199,5 @@ public class UIUtils {
             decorView.setSystemUiVisibility(uiOptions);
         }
     }
+
 }

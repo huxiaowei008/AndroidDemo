@@ -35,15 +35,15 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onAttach(Context context) {
-        if (iFragment.useEventBus()) {
-            EventBus.getDefault().register(mFragment);//注册到事件主线
-        }
-        iFragment.componentInject(((App) mFragment.getActivity().getApplication()).getAppComponent());
+
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-
+        if (iFragment.useEventBus()) {
+            EventBus.getDefault().register(mFragment);//注册到事件主线
+        }
+        iFragment.componentInject(((App) mFragment.getActivity().getApplication()).getAppComponent());
     }
 
     @Nullable
@@ -86,7 +86,7 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onDestroyView() {
-        if (mUnBinder != null &&mUnBinder != Unbinder.EMPTY) {
+        if (mUnBinder != null && mUnBinder != Unbinder.EMPTY) {
             try {
                 mUnBinder.unbind();
             } catch (IllegalStateException e) {
@@ -99,7 +99,7 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onDestroy() {
-        if (iFragment.useEventBus()) {
+        if (iFragment != null && iFragment.useEventBus()) {
             EventBus.getDefault().unregister(mFragment);
         }
         this.mUnBinder = null;
