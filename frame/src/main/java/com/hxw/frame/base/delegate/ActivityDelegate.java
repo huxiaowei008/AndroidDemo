@@ -20,7 +20,6 @@ import butterknife.Unbinder;
 public class ActivityDelegate implements IActivityDelegate {
     private Activity mActivity;
     private IActivity iActivity;
-    private Unbinder mUnBinder;
 
     public ActivityDelegate(Activity activity) {
         this.mActivity = activity;
@@ -34,10 +33,6 @@ public class ActivityDelegate implements IActivityDelegate {
             EventBus.getDefault().register(mActivity);//注册到事件主线
         }
         iActivity.componentInject(((App) mActivity.getApplication()).getAppComponent());
-        mActivity.setContentView(iActivity.getLayoutId());
-        //绑定到butterknife
-        mUnBinder = ButterKnife.bind(mActivity);
-
     }
 
     @Override
@@ -75,10 +70,6 @@ public class ActivityDelegate implements IActivityDelegate {
         if (iActivity != null && iActivity.useEventBus()) {
             EventBus.getDefault().unregister(mActivity);
         }
-        if (mUnBinder != null && mUnBinder != Unbinder.EMPTY) {
-            mUnBinder.unbind();
-        }
-        this.mUnBinder = null;
         this.iActivity = null;
         this.mActivity = null;
     }
@@ -96,7 +87,6 @@ public class ActivityDelegate implements IActivityDelegate {
     protected ActivityDelegate(Parcel in) {
         this.mActivity = in.readParcelable(Activity.class.getClassLoader());
         this.iActivity = in.readParcelable(IActivity.class.getClassLoader());
-        this.mUnBinder = in.readParcelable(Unbinder.class.getClassLoader());
     }
 
     public static final Creator<IActivityDelegate> CREATOR = new Creator<IActivityDelegate>() {

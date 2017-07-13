@@ -2,6 +2,7 @@ package com.hxw.frame.base.delegate;
 
 import android.app.Application;
 import android.content.ComponentCallbacks2;
+import android.content.Context;
 import android.content.res.Configuration;
 
 import com.hxw.frame.di.AppComponent;
@@ -33,23 +34,29 @@ public class AppDelegate {
     protected ActivityLifecycle mActivityLifecycle;
     private Application mApplication;
     private AppComponent mAppComponent;
-    private List<Lifecycle> mLifecycles = new ArrayList<>();//application的生命内容外部拓展
+    private List<Lifecycle> mAppLifecycles = new ArrayList<>();//application的生命内容外部拓展
     //这里的activity生命周期回调是给外面拓展用的,在外面写好逻辑后通过注册这个直接使用
     private List<Application.ActivityLifecycleCallbacks> mActivityLifecycles = new ArrayList<>();//activity的生命内容外部拓展
     private final List<ConfigModule> mModules;
     private ComponentCallbacks2 mComponentCallback;
 
-    public AppDelegate(Application application) {
-        this.mApplication = application;
+    public AppDelegate(Context context) {
         //解析清单文件配置的自定义ConfigModule的metadata标签，返回一个ConfigModule集合
-        this.mModules = new ManifestParser(mApplication).parse();
+        this.mModules = new ManifestParser(context).parse();
         for (ConfigModule module : mModules) {
-            module.injectAppLifecycle(mApplication, mLifecycles);
-            module.injectActivityLifecycle(mApplication, mActivityLifecycles);
+            module.injectAppLifecycle(context, mAppLifecycles);
+            module.injectActivityLifecycle(context, mActivityLifecycles);
         }
     }
 
-    public void onCreate() {
+    public void attachBaseContext(Context base){
+        for (Lifecycle lifecycle : mAppLifecycles) {
+            lifecycle.attachBaseContext(base);
+        }
+    }
+
+    public void onCreate(Application application) {
+        this.mApplication = application;
         mAppComponent = DaggerAppComponent
                 .builder()
                 .appModule(new AppModule(mApplication))////提供application
@@ -71,7 +78,7 @@ public class AppDelegate {
             module.registerComponents(mApplication, mAppComponent.repositoryManager());
         }
 
-        for (Lifecycle lifecycle : mLifecycles) {
+        for (Lifecycle lifecycle : mAppLifecycles) {
             lifecycle.onCreate(mApplication);
         }
 
@@ -93,14 +100,14 @@ public class AppDelegate {
                 mApplication.unregisterActivityLifecycleCallbacks(lifecycle);
             }
         }
-        for (Lifecycle lifecycle : mLifecycles) {
+        for (Lifecycle lifecycle : mAppLifecycles) {
             lifecycle.onTerminate(mApplication);
         }
         this.mAppComponent = null;
         this.mActivityLifecycle = null;
         this.mActivityLifecycles = null;
         this.mComponentCallback = null;
-        this.mLifecycles = null;
+        this.mAppLifecycles = null;
         this.mApplication = null;
 
 
@@ -112,7 +119,7 @@ public class AppDelegate {
      *
      * @return
      */
-    private GlobalConfigModule getGlobeConfigModule(Application context, List<ConfigModule> modules) {
+    private GlobalConfigModule getGlobeConfigModule(Context context, List<ConfigModule> modules) {
         GlobalConfigModule.Builder builder = GlobalConfigModule.builder();
         //循环集合，执行ConfigModule 实现类中的方法
         for (ConfigModule module : modules) {
@@ -133,6 +140,8 @@ public class AppDelegate {
     }
 
     public interface Lifecycle {
+        void attachBaseContext(Context base);
+
         void onCreate(Application application);
 
         void onTerminate(Application application);

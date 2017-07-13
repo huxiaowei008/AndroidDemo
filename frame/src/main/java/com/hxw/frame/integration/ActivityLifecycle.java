@@ -33,7 +33,7 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
 
     private AppManager mAppManager;
     private Application mApplication;
-    private FragmentLifecycle mFragmentLifecycle;//fragment的生命本框架内部代码的实现
+    private FragmentManager.FragmentLifecycleCallbacks mFragmentLifecycle;//fragment的生命本框架内部代码的实现
     private List<FragmentManager.FragmentLifecycleCallbacks> mFragmentLifecycles;//fragment的生命外部拓展
     private Map<String, Object> mExtras;
 

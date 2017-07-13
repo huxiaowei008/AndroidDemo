@@ -1,6 +1,5 @@
 package com.hxw.frame.http;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.hxw.frame.utils.StringUtils;
@@ -120,8 +119,9 @@ public class RequestInterceptor implements Interceptor {
             //解析response content
             bodyString = parseContent(responseBody, encoding, clone);
 
-            Timber.tag(getTag(request, "Response_Result"))
-                    .w(isJson(responseBody.contentType()) ? StringUtils.jsonFormat(bodyString) : bodyString);
+            Timber.tag(getTag(request, "Response_Result")).w(isJson(responseBody.contentType()) ?
+                    StringUtils.jsonFormat(bodyString) : isXml(responseBody.contentType()) ?
+                    StringUtils.xmlFormat(bodyString) : bodyString);
 
         } else {
             Timber.tag(getTag(request, "Response_Result"))

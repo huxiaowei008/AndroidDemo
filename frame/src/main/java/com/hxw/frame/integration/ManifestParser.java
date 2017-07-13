@@ -1,6 +1,5 @@
 package com.hxw.frame.integration;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -19,7 +18,7 @@ public final class ManifestParser {
     private static final String MODULE_VALUE = "ConfigModule";
     private final Context context;
 
-    public ManifestParser(Application context) {
+    public ManifestParser(Context context) {
         this.context = context;
     }
 
@@ -47,22 +46,22 @@ public final class ManifestParser {
     }
 
     @SuppressWarnings("deprecation")
-    private static ConfigModule parseModule(String className){
+    private static ConfigModule parseModule(String className) {
         Class<?> clazz;
         try {
             clazz = Class.forName(className);
-        }catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Unable to find ConfigModule implementation", e);
         }
 
         Object module;
-        try{
+        try {
             module = clazz.newInstance();
-        }catch (InstantiationException e){
+        } catch (InstantiationException e) {
             throw new RuntimeException("Unable to instantiate ConfigModule implementation for " + clazz,
                     e);
             // These can't be combined until API minimum is 19.
-        }catch (IllegalAccessException e){
+        } catch (IllegalAccessException e) {
             throw new RuntimeException("Unable to instantiate ConfigModule implementation for " + clazz,
                     e);
         }
