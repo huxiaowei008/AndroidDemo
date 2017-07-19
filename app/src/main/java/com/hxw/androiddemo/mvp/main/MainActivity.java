@@ -1,13 +1,7 @@
 package com.hxw.androiddemo.mvp.main;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.hxw.androiddemo.R;
@@ -18,11 +12,11 @@ import com.hxw.androiddemo.mvp.bottomnavigation.BottomNavigationActivity;
 import com.hxw.androiddemo.mvp.guide.GuideActivity;
 import com.hxw.androiddemo.mvp.photopicker.PhotoPickerActivity;
 import com.hxw.androiddemo.mvp.recyclerviewh.RecyclerVeiwHActivity;
+import com.hxw.androiddemo.mvp.zxing.ZxingActivity;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.update.OnUpdateListener;
 import com.hxw.frame.update.UpdateManager;
-import com.hxw.frame.utils.UIUtils;
 
 import javax.inject.Inject;
 
@@ -65,7 +59,8 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7,R.id.btn_8})
+    @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7,
+            R.id.btn_8, R.id.btn_9})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_1:
@@ -106,6 +101,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_8:
                 goTo(8, CommonLayoutViewActivity.class);
+                break;
+            case R.id.btn_9:
+                goTo(9, ZxingActivity.class);
                 break;
         }
     }

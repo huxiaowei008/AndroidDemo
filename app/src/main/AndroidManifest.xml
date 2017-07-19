@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>//震动
 
     <application
         android:name="com.hxw.frame.base.BaseApplication"
@@ -33,6 +34,7 @@
         <activity android:name=".mvp.recyclerviewh.RecyclerVeiwHActivity" />
         <activity android:name=".mvp.photo.PhotoPickActivity" />
         <activity android:name=".mvp.CommonLayoutViewActivity"/>
+        <activity android:name=".mvp.zxing.ZxingActivity"/>
         <!--glide配置-->
         <meta-data
             android:name="com.hxw.frame.widget.imageloader.glide.GlideConfiguration"
