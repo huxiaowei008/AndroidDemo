@@ -69,6 +69,7 @@ public class PhotoPickerActivity extends BaseActivity {
     Button btnCamera;
 
     private Uri tempUri;
+    private Uri cropUri;
 
     /**
      * @return 返回布局资源ID
@@ -300,7 +301,7 @@ public class PhotoPickerActivity extends BaseActivity {
                 return;
             }
             //前后设置的uri相同的话，虽然内容改变了，但imageView不会放上新图
-            imgHead.setImageURI(tempUri);
+            imgHead.setImageURI(cropUri);
         }
     }
 
@@ -331,7 +332,7 @@ public class PhotoPickerActivity extends BaseActivity {
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true);// 取消人脸识别
         //是否将数据保留在Bitmap中返回,也可以说是是否返回数据
-        //为false时需和intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri)一同使用
+        //为false时需和intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)一同使用
         intent.putExtra("return-data", false);// true:不返回uri，false：返回uri
         //是否缩放
         intent.putExtra("scale", true);
@@ -340,12 +341,12 @@ public class PhotoPickerActivity extends BaseActivity {
         //是否是圆形裁剪区域，设置了也不一定有效
 //        intent.putExtra("circleCrop", true);
 
-        tempUri = Uri.fromFile(new File(cacheFile, DateUtils
+        cropUri = Uri.fromFile(new File(cacheFile, DateUtils
                 .date2String(new Date(), "yyMMddHHmmss") + "head.jpg"));//file uri
 
         //return-data为false时使用
         // 指定照片保存路径（SD卡），head.jpg为一个临时文件，每次拍照后这个图片都会被替换
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, tempUri);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
         startActivityForResult(intent, CROP);
     }
 

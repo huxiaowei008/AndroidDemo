@@ -34,8 +34,7 @@ public class ZxingView extends RelativeLayout implements SurfaceHolder.Callback 
     private Activity mActivity;
     private CaptureActivityHandler handler;
     private ZxingResultListener listener;
-
-    private Builder builder = new Builder();
+    private FrontLightMode lightMode = FrontLightMode.OFF;//设置闪光灯模式
 
     public ZxingView(Context context) {
         this(context, null);
@@ -86,11 +85,10 @@ public class ZxingView extends RelativeLayout implements SurfaceHolder.Callback 
         // want to open the camera driver and measure the screen size if we're going to show the help on
         // first launch. That led to bugs where the scanning rectangle was the wrong size and partially
         // off screen.
-        cameraManager = new CameraManager(mActivity.getApplication(), builder.autoFocus,
-                builder.disableExposure);
+        cameraManager = new CameraManager(mActivity.getApplication());
         inactivityTimer.onResume();
         viewfinderView.setCameraManager(cameraManager);
-        ambientLightManager.start(cameraManager, builder.lightMode);
+        ambientLightManager.start(cameraManager, lightMode);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
         if (hasSurface) {
             // The activity was paused but not stopped, so the surface still exists. Therefore
@@ -161,7 +159,7 @@ public class ZxingView extends RelativeLayout implements SurfaceHolder.Callback 
             return;
         }
         try {
-            cameraManager.openDriver(surfaceHolder, builder.lightMode);
+            cameraManager.openDriver(surfaceHolder, lightMode);
             // Creating the handler starts the preview, which can also throw a RuntimeException.
             if (handler == null) {
                 handler = new CaptureActivityHandler(this, cameraManager);
@@ -244,15 +242,6 @@ public class ZxingView extends RelativeLayout implements SurfaceHolder.Callback 
         this.listener = listener;
     }
 
-    /**
-     * 获取builder重新设置属性后需要调用onPause,onResume
-     *
-     * @return
-     */
-    public Builder getBuilder() {
-        return builder;
-    }
-
     interface ZxingResultListener {
         void result(Result rawResult, Bitmap barcode, float scaleFactor);
     }
@@ -268,53 +257,7 @@ public class ZxingView extends RelativeLayout implements SurfaceHolder.Callback 
         beepManager.setting(isBeep, isVibrate);
     }
 
-
-    public static class Builder {
-        private FrontLightMode lightMode = FrontLightMode.OFF;//设置闪光灯模式
-        private boolean autoFocus = true;//自动对焦
-        private boolean invertScan = false;//反色,扫描黑色背景上的白色条码。仅适用于部分设备。
-        private boolean disableContinuousFocus = true;//不持续对焦,使用标准对焦模式
-        private boolean disableExposure = true;//不曝光
-        private boolean disableMetering = true;//不使用距离测量
-        private boolean disableBarcodeSceneMode = true;//不进行条形码场景匹配
-
-        public Builder() {
-
-        }
-
-        public Builder setLightMode(FrontLightMode lightMode) {
-            this.lightMode = lightMode;
-            return this;
-        }
-
-        public Builder setAutoFocus(boolean autoFocus) {
-            this.autoFocus = autoFocus;
-            return this;
-        }
-
-        public Builder setInvertScan(boolean invertScan) {
-            this.invertScan = invertScan;
-            return this;
-        }
-
-        public Builder setDisableContinuousFocus(boolean disableContinuousFocus) {
-            this.disableContinuousFocus = disableContinuousFocus;
-            return this;
-        }
-
-        public Builder setDisableExposure(boolean disableExposure) {
-            this.disableExposure = disableExposure;
-            return this;
-        }
-
-        public Builder setDisableMetering(boolean disableMetering) {
-            this.disableMetering = disableMetering;
-            return this;
-        }
-
-        public Builder setDisableBarcodeSceneMode(boolean disableBarcodeSceneMode) {
-            this.disableBarcodeSceneMode = disableBarcodeSceneMode;
-            return this;
-        }
+    public void setLightMode(FrontLightMode lightMode) {
+        this.lightMode = lightMode;
     }
 }

@@ -44,7 +44,7 @@ final class CameraConfigurationManager {
     private Point cameraResolution;
     private Point bestPreviewSize;
     private Point previewSizeOnScreen;
-
+    boolean disExposure=true;//不曝光
 
     CameraConfigurationManager(Context context) {
         this.context = context;
@@ -138,7 +138,7 @@ final class CameraConfigurationManager {
     }
 
     void setDesiredCameraParameters(boolean autoFocus, boolean invertScan, boolean disContinuousFocus,
-                                    boolean disMetering, boolean disBarcodeSceneMode,boolean disExposure,
+                                    boolean disMetering, boolean disBarcodeSceneMode,
                                     FrontLightMode mode, OpenCamera camera, boolean safeMode) {
 
         Camera theCamera = camera.getCamera();
@@ -155,7 +155,7 @@ final class CameraConfigurationManager {
             Log.w(TAG, "In camera config safe mode -- most settings will not be honored");
         }
 
-        initializeTorch(parameters, mode, safeMode,disExposure);
+        initializeTorch(parameters, mode, safeMode);
 
         CameraConfigurationUtils.setFocus(
                 parameters,
@@ -229,20 +229,19 @@ final class CameraConfigurationManager {
         return false;
     }
 
-    void setTorch(Camera camera, boolean newSetting, boolean disExposure) {
+    void setTorch(Camera camera, boolean newSetting) {
         Camera.Parameters parameters = camera.getParameters();
-        doSetTorch(parameters, newSetting, false, disExposure);
+        doSetTorch(parameters, newSetting, false);
         camera.setParameters(parameters);
     }
 
     private void initializeTorch(Camera.Parameters parameters, FrontLightMode mode,
-                                 boolean safeMode, boolean disExposure) {
+                                 boolean safeMode) {
         boolean currentSetting = mode == FrontLightMode.ON;
-        doSetTorch(parameters, currentSetting, safeMode, disExposure);
+        doSetTorch(parameters, currentSetting, safeMode);
     }
 
-    private void doSetTorch(Camera.Parameters parameters, boolean newSetting, boolean safeMode,
-                            boolean disExposure) {
+    private void doSetTorch(Camera.Parameters parameters, boolean newSetting, boolean safeMode) {
         CameraConfigurationUtils.setTorch(parameters, newSetting);
         if (!safeMode && !disExposure) {
             CameraConfigurationUtils.setBestExposure(parameters, newSetting);

@@ -25,7 +25,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 
 import com.google.zxing.PlanarYUVLuminanceSource;
-import com.hxw.androiddemo.mvp.zxing.ZxingView;
 import com.hxw.androiddemo.mvp.zxing.camera.open.OpenCamera;
 import com.hxw.androiddemo.mvp.zxing.camera.open.OpenCameraInterface;
 
@@ -60,7 +59,6 @@ public final class CameraManager {
     private int requestedFramingRectWidth;
     private int requestedFramingRectHeight;
     private boolean autoFocus = true;//自动对焦
-    private boolean disExposure = true;//不曝光
 
     /**
      * Preview frames are delivered here, which we pass on to the registered handler. Make sure to
@@ -69,12 +67,10 @@ public final class CameraManager {
      */
     private final PreviewCallback previewCallback;
 
-    public CameraManager(Context context, boolean autoFocus, boolean disExposure) {
+    public CameraManager(Context context) {
         this.context = context;
         this.configManager = new CameraConfigurationManager(context);
         previewCallback = new PreviewCallback(configManager);
-        this.autoFocus = autoFocus;
-        this.disExposure = disExposure;
     }
 
     /**
@@ -109,7 +105,7 @@ public final class CameraManager {
         String parametersFlattened = parameters == null ? null : parameters.flatten(); // Save these, temporarily
         try {
             configManager.setDesiredCameraParameters(autoFocus, false, true,
-                    true, true, disExposure, mode, theCamera, false);
+                    true, true, mode, theCamera, false);
         } catch (RuntimeException re) {
             // Driver failed
             Log.w(TAG, "Camera rejected parameters. Setting only minimal safe-mode parameters");
@@ -121,7 +117,7 @@ public final class CameraManager {
                 try {
                     cameraObject.setParameters(parameters);
                     configManager.setDesiredCameraParameters(autoFocus, false, true,
-                            true, true, disExposure, mode, theCamera, true);
+                            true, true, mode, theCamera, true);
                 } catch (RuntimeException re2) {
                     // Well, darn. Give up
                     Log.w(TAG, "Camera rejected even safe-mode parameters! No configuration");
@@ -160,7 +156,7 @@ public final class CameraManager {
         if (theCamera != null && !previewing) {
             theCamera.getCamera().startPreview();
             previewing = true;
-            autoFocusManager = new AutoFocusManager(context, theCamera.getCamera(), autoFocus);
+            autoFocusManager = new AutoFocusManager(theCamera.getCamera(), true);
         }
     }
 
@@ -193,9 +189,9 @@ public final class CameraManager {
                 autoFocusManager.stop();
                 autoFocusManager = null;
             }
-            configManager.setTorch(theCamera.getCamera(), newSetting, disExposure);
+            configManager.setTorch(theCamera.getCamera(), newSetting);
             if (wasAutoFocusManager) {
-                autoFocusManager = new AutoFocusManager(context, theCamera.getCamera(), autoFocus);
+                autoFocusManager = new AutoFocusManager(theCamera.getCamera(), autoFocus);
                 autoFocusManager.start();
             }
         }
