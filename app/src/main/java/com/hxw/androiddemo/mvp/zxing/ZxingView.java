@@ -242,7 +242,7 @@ public class ZxingView extends RelativeLayout implements SurfaceHolder.Callback 
         this.listener = listener;
     }
 
-    interface ZxingResultListener {
+    public interface ZxingResultListener {
         void result(Result rawResult, Bitmap barcode, float scaleFactor);
     }
 

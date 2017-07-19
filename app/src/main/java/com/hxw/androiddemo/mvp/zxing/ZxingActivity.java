@@ -15,6 +15,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
+ * 注意相机权限
  * Created by hxw on 2017/7/18.
  */
 
