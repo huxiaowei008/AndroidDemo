@@ -7,6 +7,8 @@ import com.hxw.frame.base.delegate.AppDelegate;
 import com.hxw.frame.di.module.AppModule;
 import com.hxw.frame.di.module.ClientModule;
 import com.hxw.frame.di.module.GlobalConfigModule;
+import com.hxw.frame.http.ErrorHandler;
+import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.integration.AppManager;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.update.UpdateManager;
@@ -54,5 +56,10 @@ public interface AppComponent {
     //用来存取一些整个App公用的数据,切勿大量存放大容量数据
     Map<String, Object> extras();
 
+    //错误处理管理类
+    ErrorHandler errorHandler();
+
     void inject(AppDelegate delegate);
+
+
 }

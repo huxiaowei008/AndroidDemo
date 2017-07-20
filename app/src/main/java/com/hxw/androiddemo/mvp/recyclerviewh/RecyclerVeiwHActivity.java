@@ -13,6 +13,7 @@ import com.hxw.frame.di.AppComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 
@@ -41,7 +42,7 @@ public class RecyclerVeiwHActivity extends BaseActivity {
     /**
      * 依赖注入的入口,提供AppComponent(提供所有的单例对象)给子类，进行Component依赖
      *
-     * @param appComponent
+     * @param appComponent 基础注入器
      */
     @Override
     public void componentInject(AppComponent appComponent) {
@@ -81,7 +82,7 @@ public class RecyclerVeiwHActivity extends BaseActivity {
                     case RecyclerView.SCROLL_STATE_IDLE://静止没有滚动
                         int position = ((LinearLayoutManager) recyclerView.getLayoutManager())
                                 .findFirstVisibleItemPosition();
-                        tvPosition.setText(position + "");
+                        tvPosition.setText(String.format(Locale.SIMPLIFIED_CHINESE,"%d",position));
                         break;
                     case RecyclerView.SCROLL_STATE_DRAGGING://正在被外部拖拽,一般为用户正在用手指滚动
                         break;
@@ -94,4 +95,9 @@ public class RecyclerVeiwHActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        rvH.clearOnScrollListeners();
+        super.onDestroy();
+    }
 }

@@ -2,11 +2,14 @@ package com.hxw.androiddemo.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.net.ParseException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonParseException;
 import com.hxw.androiddemo.BuildConfig;
 import com.hxw.androiddemo.api.ComAPI;
 import com.hxw.androiddemo.api.ComCache;
@@ -23,11 +26,16 @@ import com.hxw.frame.utils.UIUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import org.json.JSONException;
+
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.HttpException;
 import timber.log.Timber;
 
 /**
@@ -91,11 +99,23 @@ public class GlobalConfiguration implements ConfigModule {
                 })
                 .responseErrorListener(new OnResponseErrorListener() {
                     @Override
-                    public void handleResponseError(Exception e) {
-                             /* 用来提供处理所有错误的监听
-                       rxjava必要要使用ErrorHandleSubscriber(默认实现Subscriber的onError方法),此监听才生效 */
-                        Timber.w("------------>" + e.getMessage());
-                        UIUtils.showSnackBar("net error", 0);
+                    public void handleResponseError(Context context, Throwable t) {
+                        /* 用来提供处理所有错误的监听
+                       rxjava必要要使用ErrorSubscriber(默认实现Subscriber的onError方法),此监听才生效 */
+                        Timber.tag("Catch-Error").w(t.getMessage());
+                        //这里不光是只能打印错误,还可以根据不同的错误作出不同的逻辑处理
+                        String msg = "未知错误";
+                        if (t instanceof UnknownHostException) {
+                            msg = "网络不可用";
+                        } else if (t instanceof SocketTimeoutException) {
+                            msg = "请求网络超时";
+                        } else if (t instanceof HttpException) {
+                            HttpException httpException = (HttpException) t;
+                            msg = convertStatusCode(httpException);
+                        } else if (t instanceof JsonParseException || t instanceof ParseException || t instanceof JSONException || t instanceof JsonIOException) {
+                            msg = "数据解析错误";
+                        }
+                        UIUtils.showSnackBar(msg, 0);
                     }
                 })
                 .gsonConfiguration(new AppModule.GsonConfiguration() {
@@ -212,5 +232,19 @@ public class GlobalConfiguration implements ConfigModule {
         });
     }
 
-
+    private String convertStatusCode(HttpException httpException) {
+        String msg;
+        if (httpException.code() == 500) {
+            msg = "服务器发生错误";
+        } else if (httpException.code() == 404) {
+            msg = "请求地址不存在";
+        } else if (httpException.code() == 403) {
+            msg = "请求被服务器拒绝";
+        } else if (httpException.code() == 307) {
+            msg = "请求被重定向到其他页面";
+        } else {
+            msg = httpException.message();
+        }
+        return msg;
+    }
 }

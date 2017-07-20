@@ -84,7 +84,7 @@ public class ActivityDelegate implements IActivityDelegate {
 
     }
 
-    protected ActivityDelegate(Parcel in) {
+    private ActivityDelegate(Parcel in) {
         this.mActivity = in.readParcelable(Activity.class.getClassLoader());
         this.iActivity = in.readParcelable(IActivity.class.getClassLoader());
     }

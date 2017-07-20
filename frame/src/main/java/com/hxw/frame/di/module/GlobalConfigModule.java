@@ -143,7 +143,6 @@ public class GlobalConfigModule {
 
     /**
      * 提供处理Rxjava错误的管理器的回调
-     * 暂时没什么用
      *
      * @return
      */

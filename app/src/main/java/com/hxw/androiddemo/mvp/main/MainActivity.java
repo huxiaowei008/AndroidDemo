@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.hxw.androiddemo.R;
+import com.hxw.androiddemo.api.ComAPI;
 import com.hxw.androiddemo.base.Constant;
 import com.hxw.androiddemo.mvp.CommonLayoutViewActivity;
 import com.hxw.androiddemo.mvp.StateActivity;
@@ -15,18 +16,30 @@ import com.hxw.androiddemo.mvp.recyclerviewh.RecyclerVeiwHActivity;
 import com.hxw.androiddemo.mvp.zxing.ZxingActivity;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
+import com.hxw.frame.http.ErrorHandler;
+import com.hxw.frame.http.ErrorSubscriber;
+import com.hxw.frame.http.OnResponseErrorListener;
+import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.update.OnUpdateListener;
 import com.hxw.frame.update.UpdateManager;
+import com.hxw.frame.utils.UIUtils;
 
 import javax.inject.Inject;
 
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity {
 
     @Inject
     UpdateManager updateManager;
-
+    @Inject
+    IRepositoryManager repositoryManager;
+    @Inject
+    ErrorHandler handler;
     private int reCode = 8;
 
     /**
@@ -40,7 +53,7 @@ public class MainActivity extends BaseActivity {
     /**
      * 依赖注入的入口,提供AppComponent(提供所有的单例对象)给子类，进行Component依赖
      *
-     * @param appComponent
+     * @param appComponent 基础注入器
      */
     @Override
     public void componentInject(AppComponent appComponent) {
@@ -56,7 +69,28 @@ public class MainActivity extends BaseActivity {
      */
     @Override
     public void init(Bundle savedInstanceState) {
+        repositoryManager.getRetrofitService(ComAPI.class)
+                .getSetMeal("00001903")
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .compose(this.<String>bindToLifecycle())
+                .subscribe(new ErrorSubscriber<String>(handler) {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onNext(@NonNull String s) {
+                            UIUtils.makeText(MainActivity.this,"成功");
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7,

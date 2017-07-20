@@ -11,10 +11,10 @@ import java.util.Set;
 
 /**
  * SharedPreferences工具类
+ * 其实没有必要,这主要是存放用户信息的
  * Created by hxw on 2017/2/25.
  */
 public class SPUtils {
-    private final String SP_NAME = "frame";
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private Context mContext;
@@ -40,9 +40,13 @@ public class SPUtils {
 
     private SPUtils(Context context) {
         mContext = context;
-        sharedPreferences = mContext.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = mContext.getSharedPreferences(getSPName(context), Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         editor.apply();
+    }
+
+    private String getSPName(Context context) {
+        return context.getPackageName() + "user";
     }
 
     /**
