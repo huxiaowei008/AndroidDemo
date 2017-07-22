@@ -21,6 +21,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
 
 /**
  * Created by hxw on 2017/2/8.
@@ -45,6 +46,8 @@ public interface AppComponent {
     Gson gson();
 
     OkHttpClient okHttpClient();
+
+    Retrofit retrofit();
 
     //缓存文件根目录(RxCache和Glide的的缓存都已经作为子文件夹在这个目录里),
     //应该将所有缓存放到这个根目录里,便于管理和清理,可在GlobeConfigModule里配置

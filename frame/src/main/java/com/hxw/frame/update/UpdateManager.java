@@ -71,9 +71,7 @@ public class UpdateManager {
     public void checkUpdate(Context aContext, OnUpdateListener onUpdateListener) {
         this.mContext = aContext;
         this.update = onUpdateListener;
-        rxDownload = RxDownload.getInstance(aContext)
-                .retrofit(retrofit)
-                .defaultSavePath(cacheFile.getPath());
+
         check();
     }
 
@@ -194,6 +192,9 @@ public class UpdateManager {
                 .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        rxDownload = RxDownload.getInstance(mContext)
+                                .retrofit(retrofit)
+                                .defaultSavePath(cacheFile.getPath());
                         dialogInterface.dismiss();
                         downloadAPK();
                     }
