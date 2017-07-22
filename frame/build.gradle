@@ -124,18 +124,20 @@ http://blog.csdn.net/aiynmimi/article/details/53382567
 //    compile rootProject.ext.dependencies["rxbinding2-design"]
 //    compile rootProject.ext.dependencies["rxbinding2-recyclerview-v7"]
 
-//AndroidEventBus https://github.com/hehonghui/AndroidEventBus
+    //AndroidEventBus https://github.com/hehonghui/AndroidEventBus
     compile rootProject.ext.dependencies["androideventbus"]
 
-//dagger2 https://github.com/google/dagger
+    //dagger2 https://github.com/google/dagger
     compile rootProject.ext.dependencies["dagger"]
     annotationProcessor rootProject.ext.dependencies["dagger-compiler"]
 
-//leakcanary内存泄露检测工具 https://github.com/square/leakcanary
+    //leakcanary内存泄露检测工具 https://github.com/square/leakcanary
     debugCompile rootProject.ext.dependencies["leakcanary-debug"]
     releaseCompile rootProject.ext.dependencies["leakcanary-release"]
     testCompile rootProject.ext.dependencies["leakcanary-release"]
 
     //代码家的视图动画 https://github.com/daimajia/AndroidViewAnimations
     compile rootProject.ext.dependencies["androidanimations"]
+    //RxDownload https://github.com/ssseasonnn/RxDownload
+    compile rootProject.ext.dependencies["rxdownload"]
 }

@@ -69,6 +69,8 @@ ext {
             "rxbinding2-appcompat-v7"   : 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0',
             "rxbinding2-design"         : 'com.jakewharton.rxbinding2:rxbinding-design:2.0.0',
             "rxbinding2-recyclerview-v7": 'com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:2.0.0',
+            //RxDownload https://github.com/ssseasonnn/RxDownload
+            "rxdownload"                : 'zlc.season:rxdownload2:2.0.4',
             //AndroidEventBus https://github.com/hehonghui/AndroidEventBus
             "androideventbus"           : 'org.simple:androideventbus:1.0.5.1',
             //dagger2 https://github.com/google/dagger
