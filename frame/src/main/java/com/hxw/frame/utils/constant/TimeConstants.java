@@ -13,7 +13,7 @@ import java.lang.annotation.RetentionPolicy;
 public final class TimeConstants {
 
     /**
-     * 秒与毫秒的倍数
+     * 毫秒与毫秒的倍数
      */
     public static final int MSEC = 1;
     /**

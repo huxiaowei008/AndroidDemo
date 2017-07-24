@@ -217,12 +217,44 @@
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 
+-dontwarn rx.internal.util.unsafe.**
+
 -keep class io.reactivex.schedulers.Schedulers {
     public static <methods>;
 }
 -keep class io.reactivex.schedulers.TestScheduler {
     public <methods>;
 }
+
+-keep class io.reactivex.schedulers.Schedulers {
+    public static <methods>;
+}
+-keep class io.reactivex.schedulers.ImmediateScheduler {
+    public <methods>;
+}
+-keep class io.reactivex.schedulers.TestScheduler {
+    public <methods>;
+}
+-keep class io.reactivex.schedulers.Schedulers {
+    public static ** test();
+}
+-keepclassmembers class io.reactivex.internal.util.unsafe.*ArrayQueue*Field* {
+    long producerIndex;
+    long consumerIndex;
+}
+-keepclassmembers class io.reactivex.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    long producerNode;
+    long consumerNode;
+}
+
+-keepclassmembers class io.reactivex.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    io.reactivex.internal.util.atomic.LinkedQueueNode producerNode;
+}
+-keepclassmembers class io.reactivex.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    io.reactivex.internal.util.atomic.LinkedQueueNode consumerNode;
+}
+
+-dontwarn io.reactivex.internal.util.unsafe.**
 
 ################RxLifeCycle#################
 -keep class com.trello.rxlifecycle.** { *; }
@@ -232,10 +264,15 @@
 
 ################RxCache#################
 -dontwarn io.rx_cache.internal.**
--keepclassmembers enum io.rx_cache.Source { *; }
+-keep class io.rx_cache.internal.Record { *; }
+-keep class io.rx_cache.Source { *; }
 
 -dontwarn io.rx_cache2.internal.**
--keepclassmembers enum io.rx_cache2.Source { *; }
+-keep class io.rx_cache2.internal.Record { *; }
+-keep class io.rx_cache2.Source { *; }
+
+-keep class io.victoralbertos.jolyglot.** { *; }
+-keep interface io.victoralbertos.jolyglot.** { *; }
 
 ################AndroidEventBus################
 -keep class org.simple.** { *; }

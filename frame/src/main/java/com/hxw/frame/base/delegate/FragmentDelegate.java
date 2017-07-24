@@ -40,13 +40,12 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        if (iFragment.useEventBus()) {
+        if (iFragment != null && iFragment.useEventBus()) {
             EventBus.getDefault().register(mFragment);//注册到事件主线
         }
         iFragment.componentInject(((App) mFragment.getActivity().getApplication()).getAppComponent());
     }
 
-    @Nullable
     @Override
     public void onCreateView(View view, @Nullable Bundle savedInstanceState) {
         //绑定到butterknife
@@ -115,7 +114,7 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public boolean isAdded() {
-        return mFragment == null ? false : mFragment.isAdded();
+        return mFragment != null && mFragment.isAdded();
     }
 
     @Override
@@ -128,7 +127,7 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     }
 
-    protected FragmentDelegate(Parcel in) {
+    private FragmentDelegate(Parcel in) {
         this.mFragmentManager = in.readParcelable(FragmentManager.class.getClassLoader());
         this.mFragment = in.readParcelable(Fragment.class.getClassLoader());
         this.iFragment = in.readParcelable(IFragment.class.getClassLoader());

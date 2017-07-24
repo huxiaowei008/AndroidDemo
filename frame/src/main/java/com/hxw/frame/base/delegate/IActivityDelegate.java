@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 public interface IActivityDelegate extends Parcelable {
     String ACTIVITY_DELEGATE = "activity_delegate";
 
-    @Nullable
     void onCreate(@Nullable Bundle savedInstanceState);
 
     void onStart();

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.hxw.frame.http.ErrorHandler;
 import com.hxw.frame.http.GlobalHttpHandler;
+import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.http.RequestInterceptor;
 import com.hxw.frame.utils.FileUtils;
 
@@ -158,4 +160,9 @@ public class ClientModule {
         return FileUtils.makeDirs(cacheDirectory);
     }
 
+    @Singleton
+    @Provides
+    ErrorHandler provideErrorHandler(Application application, OnResponseErrorListener listener) {
+        return new ErrorHandler(application, listener);
+    }
 }

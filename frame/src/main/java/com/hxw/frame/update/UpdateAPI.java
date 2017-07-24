@@ -28,14 +28,14 @@ public interface UpdateAPI {
             @Url String url,
             @Query("json") String json
     );
-
-    /**
-     * 下载的接口
-     *
-     * @param url 下载的地址
-     * @return
-     */
-    @Streaming
-    @GET()
-    Flowable<Response<ResponseBody>> download(@Url String url);
+//
+//    /**
+//     * 下载的接口
+//     *
+//     * @param url 下载的地址
+//     * @return
+//     */
+//    @Streaming
+//    @GET()
+//    Flowable<Response<ResponseBody>> download(@Url String url);
 }

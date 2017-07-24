@@ -18,7 +18,7 @@ public interface IActivity {
     /**
      * 依赖注入的入口,提供AppComponent(提供所有的单例对象)给子类，进行Component依赖
      *
-     * @param appComponent
+     * @param appComponent 基础注入器
      */
     void componentInject(AppComponent appComponent);
 

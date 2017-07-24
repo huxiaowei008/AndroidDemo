@@ -1,8 +1,10 @@
 package com.hxw.frame.base;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.hxw.frame.base.delegate.AppDelegate;
+import com.hxw.frame.base.delegate.AppLifecycles;
 import com.hxw.frame.di.AppComponent;
 
 /**
@@ -11,13 +13,26 @@ import com.hxw.frame.di.AppComponent;
 
 public class BaseApplication extends Application implements App{
     protected final String TAG = this.getClass().getSimpleName();
-    private AppDelegate mAppDelegate;
+    private AppLifecycles mAppDelegate;
+
+    /**
+     * 这里会在 {@link BaseApplication#onCreate} 之前被调用,可以做一些较早的初始化
+     * 常用于 MultiDex 以及插件化框架的初始化
+     *
+     * @param base
+     */
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        this.mAppDelegate = new AppDelegate(base);
+        this.mAppDelegate.attachBaseContext(base);
+    }
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-        this.mAppDelegate = new AppDelegate(this);
-        this.mAppDelegate.onCreate();
+        this.mAppDelegate.onCreate(this);
     }
 
     /**
@@ -26,7 +41,7 @@ public class BaseApplication extends Application implements App{
     @Override
     public void onTerminate() {
         super.onTerminate();
-        this.mAppDelegate.onTerminate();
+        this.mAppDelegate.onTerminate(this);
     }
 
 
@@ -37,6 +52,6 @@ public class BaseApplication extends Application implements App{
      */
     @Override
     public AppComponent getAppComponent() {
-        return mAppDelegate.getAppComponent();
+        return ((App) mAppDelegate).getAppComponent();
     }
 }

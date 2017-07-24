@@ -2,39 +2,44 @@ package com.hxw.androiddemo.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.net.ParseException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonParseException;
 import com.hxw.androiddemo.BuildConfig;
-import com.hxw.androiddemo.api.ComAPI;
-import com.hxw.androiddemo.api.ComCache;
 import com.hxw.frame.base.App;
-import com.hxw.frame.base.delegate.AppDelegate;
+import com.hxw.frame.base.delegate.AppLifecycles;
 import com.hxw.frame.di.module.AppModule;
 import com.hxw.frame.di.module.GlobalConfigModule;
 import com.hxw.frame.http.GlobalHttpHandler;
 import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.integration.ConfigModule;
-import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.utils.NullStringToEmptyAdapterFactory;
 import com.hxw.frame.utils.UIUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import org.json.JSONException;
+
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.HttpException;
 import timber.log.Timber;
 
 /**
  * Created by hxw on 2017/4/14.
  */
 
-public class GlobalConfiguration implements ConfigModule {
+public final class GlobalConfiguration implements ConfigModule {
     /**
      * 使用{@link GlobalConfigModule.Builder}给框架配置一些配置参数
      *
@@ -91,11 +96,23 @@ public class GlobalConfiguration implements ConfigModule {
                 })
                 .responseErrorListener(new OnResponseErrorListener() {
                     @Override
-                    public void handleResponseError(Exception e) {
-                             /* 用来提供处理所有错误的监听
-                       rxjava必要要使用ErrorHandleSubscriber(默认实现Subscriber的onError方法),此监听才生效 */
-                        Timber.w("------------>" + e.getMessage());
-                        UIUtils.showSnackBar("net error", 0);
+                    public void handleResponseError(Context context, Throwable t) {
+                        /* 用来提供处理所有错误的监听
+                       rxjava必要要使用ErrorSubscriber(默认实现Subscriber的onError方法),此监听才生效 */
+                        Timber.tag("Catch-Error").w(t.getMessage());
+                        //这里不光是只能打印错误,还可以根据不同的错误作出不同的逻辑处理
+                        String msg = "未知错误";
+                        if (t instanceof UnknownHostException) {
+                            msg = "网络不可用";
+                        } else if (t instanceof SocketTimeoutException) {
+                            msg = "请求网络超时";
+                        } else if (t instanceof HttpException) {
+                            HttpException httpException = (HttpException) t;
+                            msg = convertStatusCode(httpException);
+                        } else if (t instanceof JsonParseException || t instanceof ParseException || t instanceof JSONException || t instanceof JsonIOException) {
+                            msg = "数据解析错误";
+                        }
+                        UIUtils.showSnackBar(msg, 0);
                     }
                 })
                 .gsonConfiguration(new AppModule.GsonConfiguration() {
@@ -108,31 +125,21 @@ public class GlobalConfiguration implements ConfigModule {
     }
 
     /**
-     * 使用{@link IRepositoryManager}给框架注入一些网络请求和数据缓存等服务
-     *
-     * @param context
-     * @param repositoryManager
-     */
-    @Override
-    public void registerComponents(Context context, IRepositoryManager repositoryManager) {
-        repositoryManager.injectRetrofitService(ComAPI.class);
-        repositoryManager.injectCacheService(ComCache.class);
-
-    }
-
-    /**
-     * 使用{@link AppDelegate.Lifecycle}在Application的声明周期中注入一些操作
+     * 使用{@link AppLifecycles}在Application的声明周期中注入一些操作
      *
      * @param context
      * @param lifecycles
      * @return
      */
     @Override
-    public void injectAppLifecycle(Context context, List<AppDelegate.Lifecycle> lifecycles) {
-        // AppDelegate.Lifecycle 的所有方法都会在BaseApplication对应的生命周期中被调用,
+    public void injectAppLifecycle(Context context, List<AppLifecycles> lifecycles) {
+        // AppLifecycles 的所有方法都会在BaseApplication对应的生命周期中被调用,
         // 所以在对应的方法中可以扩展一些自己需要的逻辑
-        lifecycles.add(new AppDelegate.Lifecycle() {
-
+        lifecycles.add(new AppLifecycles() {
+            @Override
+            public void attachBaseContext(Context base) {
+//                MultiDex.install(base);  //这里比 onCreate 先执行,常用于 MultiDex 初始化,插件化框架的初始化
+            }
 
             @Override
             public void onCreate(Application application) {
@@ -144,7 +151,18 @@ public class GlobalConfiguration implements ConfigModule {
 
                 //Timber日志打印
                 if (BuildConfig.LOG_DEBUG) {
+                    //Timber 是一个日志框架容器,外部使用统一的Api,内部可以动态的切换成任何日志框架(打印策略)进行日志打印
+                    //并且支持添加多个日志框架(打印策略),做到外部调用一次 Api,内部却可以做到同时使用多个策略
+                    //比如添加三个策略,一个打印日志,一个将日志保存本地,一个将日志上传服务器
                     Timber.plant(new Timber.DebugTree());
+                    // 如果你想将框架切换为 Logger 来打印日志,请使用下面的代码,如想切换为其他日志框架请根据下面的方式扩展
+//                    Logger.addLogAdapter(new AndroidLogAdapter());
+//                    Timber.plant(new Timber.DebugTree() {
+//                        @Override
+//                        protected void log(int priority, String tag, String message, Throwable t) {
+//                            Logger.log(priority, tag, message, t);
+//                        }
+//                    });
                 }
 
                 //安装leakCanary检测内存泄露
@@ -185,6 +203,7 @@ public class GlobalConfiguration implements ConfigModule {
             public void onFragmentCreated(FragmentManager fm, Fragment f, Bundle savedInstanceState) {
                 // 在配置变化的时候将这个 Fragment 保存下来,在 Activity 由于配置变化重建是重复利用已经创建的Fragment。
                 // https://developer.android.com/reference/android/app/Fragment.html?hl=zh-cn#setRetainInstance(boolean)
+                // 如果在 XML 中使用 <Fragment/> 标签,的方式创建 Fragment 请务必在标签中加上 android:id 或者 android:tag 属性,否则 setRetainInstance(true) 无效
                 // 在 Activity 中绑定少量的 Fragment 建议这样做,如果需要绑定较多的 Fragment 不建议设置此参数,如 ViewPager 需要展示较多 Fragment
                 f.setRetainInstance(true);
             }
@@ -208,5 +227,19 @@ public class GlobalConfiguration implements ConfigModule {
         });
     }
 
-
+    private String convertStatusCode(HttpException httpException) {
+        String msg;
+        if (httpException.code() == 500) {
+            msg = "服务器发生错误";
+        } else if (httpException.code() == 404) {
+            msg = "请求地址不存在";
+        } else if (httpException.code() == 403) {
+            msg = "请求被服务器拒绝";
+        } else if (httpException.code() == 307) {
+            msg = "请求被重定向到其他页面";
+        } else {
+            msg = httpException.message();
+        }
+        return msg;
+    }
 }

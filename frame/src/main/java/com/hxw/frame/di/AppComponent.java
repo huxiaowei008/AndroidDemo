@@ -7,6 +7,8 @@ import com.hxw.frame.base.delegate.AppDelegate;
 import com.hxw.frame.di.module.AppModule;
 import com.hxw.frame.di.module.ClientModule;
 import com.hxw.frame.di.module.GlobalConfigModule;
+import com.hxw.frame.http.ErrorHandler;
+import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.integration.AppManager;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.update.UpdateManager;
@@ -19,6 +21,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
 
 /**
  * Created by hxw on 2017/2/8.
@@ -44,6 +47,8 @@ public interface AppComponent {
 
     OkHttpClient okHttpClient();
 
+    Retrofit retrofit();
+
     //缓存文件根目录(RxCache和Glide的的缓存都已经作为子文件夹在这个目录里),
     //应该将所有缓存放到这个根目录里,便于管理和清理,可在GlobeConfigModule里配置
     File cacheFile();
@@ -54,5 +59,10 @@ public interface AppComponent {
     //用来存取一些整个App公用的数据,切勿大量存放大容量数据
     Map<String, Object> extras();
 
+    //错误处理管理类
+    ErrorHandler errorHandler();
+
     void inject(AppDelegate delegate);
+
+
 }

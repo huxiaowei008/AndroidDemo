@@ -6,7 +6,7 @@ package com.hxw.androiddemo.base;
 
 public class Constant {
     //域名
-    public final static String BASE_URL="https://api.github.com/";
+    public final static String BASE_URL="http://www.modou-iot.com:28081/";
 
     public final static String INDEX="index";
 

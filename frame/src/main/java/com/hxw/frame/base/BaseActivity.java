@@ -5,6 +5,9 @@ import android.support.annotation.Nullable;
 
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 
 /**
  * 因为java只能单继承,所以如果有需要继承特定Activity的三方库,那你就需要自己自定义Activity
@@ -15,17 +18,28 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 public abstract class BaseActivity extends RxAppCompatActivity implements IActivity {
     protected final String TAG = this.getClass().getSimpleName();
 
+    private Unbinder mUnBinder;
+
     @Nullable
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init(savedInstanceState);
+        if (getLayoutId() != 0) {
+            setContentView(getLayoutId());
+            //绑定到butterknife
+            mUnBinder = ButterKnife.bind(this);
+        }
 
+        init(savedInstanceState);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mUnBinder != null && mUnBinder != Unbinder.EMPTY) {
+            mUnBinder.unbind();
+        }
+        this.mUnBinder = null;
     }
 
     @Override

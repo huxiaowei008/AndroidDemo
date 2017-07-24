@@ -1,6 +1,5 @@
 package com.hxw.frame.http;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.hxw.frame.utils.StringUtils;
@@ -79,7 +78,7 @@ public class RequestInterceptor implements Interceptor {
 //        }
 
         //打印响应结果
-        String bodyString = printResult(request, originalResponse);
+        String bodyString = printResult(request, originalResponse.newBuilder().build());
 
         if (mHandler != null)//这里可以比客户端提前一步拿到服务器返回的结果,可以做一些操作,比如token超时,重新获取
             return mHandler.onHttpResultResponse(bodyString, chain, originalResponse);
@@ -95,33 +94,39 @@ public class RequestInterceptor implements Interceptor {
      * 打印响应结果
      *
      * @param request
-     * @param originalResponse
+     * @param response
      * @return
      * @throws IOException
      */
     @Nullable
-    private String printResult(Request request, Response originalResponse) throws IOException {
+    private String printResult(Request request, Response response) throws IOException {
         //读取服务器返回的结果
-        ResponseBody responseBody = originalResponse.body();
+        ResponseBody responseBody = response.body();
         String bodyString = null;
         if (isParseable(responseBody.contentType())) {
-            BufferedSource source = responseBody.source();
-            source.request(Long.MAX_VALUE); // Buffer the entire body.
-            Buffer buffer = source.buffer();
+            try {
+                BufferedSource source = responseBody.source();
+                source.request(Long.MAX_VALUE); // Buffer the entire body.
+                Buffer buffer = source.buffer();
 
-            //获取content的压缩类型
-            String encoding = originalResponse
-                    .headers()
-                    .get("Content-Encoding");
+                //获取content的压缩类型
+                String encoding = response
+                        .headers()
+                        .get("Content-Encoding");
 
-            Buffer clone = buffer.clone();
+                Buffer clone = buffer.clone();
 
 
-            //解析response content
-            bodyString = parseContent(responseBody, encoding, clone);
+                //解析response content
+                bodyString = parseContent(responseBody, encoding, clone);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            Timber.tag(getTag(request, "Response_Result"))
-                    .w(isJson(responseBody.contentType()) ? StringUtils.jsonFormat(bodyString) : bodyString);
+
+            Timber.tag(getTag(request, "Response_Result")).w(isJson(responseBody.contentType()) ?
+                    StringUtils.jsonFormat(bodyString) : isXml(responseBody.contentType()) ?
+                    StringUtils.xmlFormat(bodyString) : bodyString);
 
         } else {
             Timber.tag(getTag(request, "Response_Result"))
