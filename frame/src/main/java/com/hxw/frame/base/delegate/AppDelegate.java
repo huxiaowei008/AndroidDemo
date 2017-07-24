@@ -5,6 +5,7 @@ import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.res.Configuration;
 
+import com.hxw.frame.base.App;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.di.DaggerAppComponent;
 import com.hxw.frame.di.module.AppModule;
@@ -21,20 +22,20 @@ import javax.inject.Inject;
 
 /**
  * AppDelegate可以代理Application的生命周期,在对应的生命周期,执行对应的逻辑,因为Java只能单继承
- * 而我的框架要求Application要继承于BaseApplication
- * 所以当遇到某些三方库需要继承于它的Application的时候,就只有自定义Application继承于三方库的Application
- * 再将BaseApplication的代码复制进去,而现在就不用在复制代码,只用在对应的生命周期调用AppDelegate对应的方法,
+ * 所以当遇到某些三方库需要继承于它的Application的时候,就只有自定义Application并继承于三方库的Application,
+ * 这时就不用再继承BaseApplication只用在自定义Application中对应的生命周期调用AppDelegate
+ * 对应的方法(Application一定要实现APP接口),框架就能照常运行
  * Created by hxw on 2017/4/25.
  */
 
-public class AppDelegate {
+public class AppDelegate implements App, AppLifecycles {
 
     //这个activity生命周期回调是本框架内部代码的实现,与外部无关
     @Inject
     protected ActivityLifecycle mActivityLifecycle;
     private Application mApplication;
     private AppComponent mAppComponent;
-    private List<Lifecycle> mAppLifecycles = new ArrayList<>();//application的生命内容外部拓展
+    private List<AppLifecycles> mAppLifecycles = new ArrayList<>();//application的生命内容外部拓展
     //这里的activity生命周期回调是给外面拓展用的,在外面写好逻辑后通过注册这个直接使用
     private List<Application.ActivityLifecycleCallbacks> mActivityLifecycles = new ArrayList<>();//activity的生命内容外部拓展
     private final List<ConfigModule> mModules;
@@ -49,12 +50,14 @@ public class AppDelegate {
         }
     }
 
-    public void attachBaseContext(Context base){
-        for (Lifecycle lifecycle : mAppLifecycles) {
+    @Override
+    public void attachBaseContext(Context base) {
+        for (AppLifecycles lifecycle : mAppLifecycles) {
             lifecycle.attachBaseContext(base);
         }
     }
 
+    @Override
     public void onCreate(Application application) {
         this.mApplication = application;
         mAppComponent = DaggerAppComponent
@@ -74,11 +77,7 @@ public class AppDelegate {
             mApplication.registerActivityLifecycleCallbacks(lifecycle);
         }
 
-        for (ConfigModule module : mModules) {
-            module.registerComponents(mApplication, mAppComponent.repositoryManager());
-        }
-
-        for (Lifecycle lifecycle : mAppLifecycles) {
+        for (AppLifecycles lifecycle : mAppLifecycles) {
             lifecycle.onCreate(mApplication);
         }
 
@@ -87,7 +86,8 @@ public class AppDelegate {
         mApplication.registerComponentCallbacks(mComponentCallback);
     }
 
-    public void onTerminate() {
+    @Override
+    public void onTerminate(Application application) {
         if (mActivityLifecycle != null) {//释放资源
             mApplication.unregisterActivityLifecycleCallbacks(mActivityLifecycle);
             mActivityLifecycle.release();
@@ -100,8 +100,10 @@ public class AppDelegate {
                 mApplication.unregisterActivityLifecycleCallbacks(lifecycle);
             }
         }
-        for (Lifecycle lifecycle : mAppLifecycles) {
-            lifecycle.onTerminate(mApplication);
+        if (mAppLifecycles != null && mAppLifecycles.size() > 0) {
+            for (AppLifecycles lifecycle : mAppLifecycles) {
+                lifecycle.onTerminate(mApplication);
+            }
         }
         this.mAppComponent = null;
         this.mActivityLifecycle = null;
@@ -135,17 +137,11 @@ public class AppDelegate {
      *
      * @return
      */
+    @Override
     public AppComponent getAppComponent() {
         return mAppComponent;
     }
 
-    public interface Lifecycle {
-        void attachBaseContext(Context base);
-
-        void onCreate(Application application);
-
-        void onTerminate(Application application);
-    }
 
     private static class AppComponentCallbacks implements ComponentCallbacks2 {
         private Application mApplication;

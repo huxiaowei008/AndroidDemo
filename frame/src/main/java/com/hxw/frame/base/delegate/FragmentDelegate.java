@@ -40,7 +40,7 @@ public class FragmentDelegate implements IFragmentDelegate {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        if (iFragment.useEventBus()) {
+        if (iFragment != null && iFragment.useEventBus()) {
             EventBus.getDefault().register(mFragment);//注册到事件主线
         }
         iFragment.componentInject(((App) mFragment.getActivity().getApplication()).getAppComponent());

@@ -4,12 +4,14 @@ import android.content.Context;
 
 import com.hxw.frame.utils.Preconditions;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.Lazy;
 import io.rx_cache2.internal.RxCache;
 import retrofit2.Retrofit;
 
@@ -20,42 +22,15 @@ import retrofit2.Retrofit;
  */
 @Singleton
 public class RepositoryManager implements IRepositoryManager {
-    private Retrofit mRetrofit;
-    private RxCache mRxCache;
-    private Map<String, Object> mRetrofitServiceCache = new LinkedHashMap<>();
-    private Map<String, Object> mCacheServiceCache = new LinkedHashMap<>();
+    private Lazy<Retrofit> mRetrofit;
+    private Lazy<RxCache> mRxCache;
+    private final Map<String, Object> mRetrofitServiceCache =  new HashMap<>();
+    private final Map<String, Object> mCacheServiceCache =  new HashMap<>();
 
     @Inject
-    public RepositoryManager(Retrofit retrofit, RxCache rxCache) {
+    public RepositoryManager(Lazy<Retrofit> retrofit, Lazy<RxCache> rxCache) {
         this.mRetrofit = retrofit;
         this.mRxCache = rxCache;
-    }
-
-    /**
-     * 注入RetrofitService,在{@link ConfigModule#registerComponents(Context, IRepositoryManager)}中进行注入
-     *
-     * @param services
-     */
-    @Override
-    public void injectRetrofitService(Class<?>... services) {
-        for (Class<?> service : services) {
-            if (mRetrofitServiceCache.containsKey(service.getName())) continue;
-            mRetrofitServiceCache.put(service.getName(), mRetrofit.create(service));
-        }
-    }
-
-
-    /**
-     * 注入CacheService,在{@link ConfigModule#registerComponents(Context, IRepositoryManager)}中进行注入
-     *
-     * @param services
-     */
-    @Override
-    public void injectCacheService(Class<?>... services) {
-        for (Class<?> service : services) {
-            if (mCacheServiceCache.containsKey(service.getName())) continue;
-            mCacheServiceCache.put(service.getName(), mRxCache.using(service));
-        }
     }
 
     /**
@@ -66,10 +41,15 @@ public class RepositoryManager implements IRepositoryManager {
      */
     @Override
     public <T> T getRetrofitService(Class<T> service) {
-        Preconditions.checkState(mRetrofitServiceCache.containsKey(service.getName())
-                , "Unable to find %s,first call injectRetrofitService(%s) in ConfigModule",
-                service.getName(), service.getSimpleName());
-        return (T) mRetrofitServiceCache.get(service.getName());
+        T retrofitService;
+        synchronized (mRetrofitServiceCache) {
+            retrofitService = (T) mRetrofitServiceCache.get(service.getName());
+            if (retrofitService == null) {
+                retrofitService = mRetrofit.get().create(service);
+                mRetrofitServiceCache.put(service.getName(), retrofitService);
+            }
+        }
+        return retrofitService;
     }
 
     /**
@@ -80,9 +60,22 @@ public class RepositoryManager implements IRepositoryManager {
      */
     @Override
     public <T> T getCacheService(Class<T> cache) {
-        Preconditions.checkState(mCacheServiceCache.containsKey(cache.getName())
-                , "Unable to find %s,first call injectCacheService(%s) in ConfigModule",
-                cache.getName(), cache.getSimpleName());
-        return (T) mCacheServiceCache.get(cache.getName());
+        T cacheService;
+        synchronized (mCacheServiceCache) {
+            cacheService = (T) mCacheServiceCache.get(cache.getName());
+            if (cacheService == null) {
+                cacheService = mRxCache.get().using(cache);
+                mCacheServiceCache.put(cache.getName(), cacheService);
+            }
+        }
+        return cacheService;
+    }
+
+    /**
+     * 清理所有缓存
+     */
+    @Override
+    public void clearAllCache() {
+        mRxCache.get().evictAll();
     }
 }

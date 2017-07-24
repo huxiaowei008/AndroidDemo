@@ -10,9 +10,6 @@ import com.hxw.frame.base.IActivity;
 
 import org.simple.eventbus.EventBus;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
  * Created by hxw on 2017/5/3.
  */
@@ -29,7 +26,7 @@ public class ActivityDelegate implements IActivityDelegate {
     @Nullable
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        if (iActivity.useEventBus()) {
+        if (iActivity != null && iActivity.useEventBus()) {
             EventBus.getDefault().register(mActivity);//注册到事件主线
         }
         iActivity.componentInject(((App) mActivity.getApplication()).getAppComponent());
