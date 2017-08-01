@@ -22,41 +22,53 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="闪屏页" />
+
         <Button
             android:id="@+id/btn_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="页面状态"/>
+            android:text="页面状态" />
+
         <Button
             android:id="@+id/btn_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="BottomNavigation使用"/>
+            android:text="BottomNavigation使用" />
+
         <Button
             android:id="@+id/btn_5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="检查更新"/>
+            android:text="检查更新" />
+
         <Button
             android:id="@+id/btn_6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="头像选择"/>
+            android:text="头像选择" />
+
         <Button
             android:id="@+id/btn_7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="recyclerView横向滑动"/>
+            android:text="recyclerView横向滑动" />
+
         <Button
             android:id="@+id/btn_8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="自定义常用布局控件"/>
+            android:text="自定义常用布局控件" />
 
         <Button
             android:id="@+id/btn_9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="二维码扫描"/>
+            android:text="二维码扫描" />
+
+        <Button
+            android:id="@+id/btn_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="倒计时" />
     </LinearLayout>
 </ScrollView>

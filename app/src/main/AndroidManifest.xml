@@ -36,6 +36,7 @@
         <activity android:name=".mvp.photo.PhotoPickActivity" />
         <activity android:name=".mvp.CommonLayoutViewActivity"/>
         <activity android:name=".mvp.zxing.ZxingActivity"/>
+        <activity android:name=".mvp.CDActivity"/>
         <!--glide配置-->
         <meta-data
             android:name="com.hxw.frame.widget.imageloader.glide.GlideConfiguration"

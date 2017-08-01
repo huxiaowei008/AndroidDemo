@@ -7,6 +7,7 @@ import android.view.View;
 import com.hxw.androiddemo.R;
 import com.hxw.androiddemo.api.ComAPI;
 import com.hxw.androiddemo.base.Constant;
+import com.hxw.androiddemo.mvp.CDActivity;
 import com.hxw.androiddemo.mvp.CommonLayoutViewActivity;
 import com.hxw.androiddemo.mvp.StateActivity;
 import com.hxw.androiddemo.mvp.bottomnavigation.BottomNavigationActivity;
@@ -18,7 +19,6 @@ import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.http.ErrorHandler;
 import com.hxw.frame.http.ErrorSubscriber;
-import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.update.OnUpdateListener;
 import com.hxw.frame.update.UpdateManager;
@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void onNext(@NonNull String s) {
-                            UIUtils.makeText(MainActivity.this,"成功");
+                        UIUtils.makeText(MainActivity.this, "成功");
                     }
 
                     @Override
@@ -94,7 +94,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7,
-            R.id.btn_8, R.id.btn_9})
+            R.id.btn_8, R.id.btn_9, R.id.btn_10})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_1:
@@ -138,6 +138,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_9:
                 goTo(9, ZxingActivity.class);
+                break;
+            case R.id.btn_10:
+                goTo(10, CDActivity.class);
                 break;
         }
     }
