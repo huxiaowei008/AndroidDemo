@@ -143,6 +143,8 @@
 -dontwarn okhttp3.**
 # Okio
 -dontwarn okio.**
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
 
 ################Timber#################
 -dontwarn org.jetbrains.annotations.**
