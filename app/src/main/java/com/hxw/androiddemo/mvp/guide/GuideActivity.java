@@ -19,10 +19,7 @@ import io.reactivex.disposables.Disposable;
  */
 
 public class GuideActivity extends BaseActivity {
-    @BindView(R.id.banner_background)
-    BGABanner bannerBackground;
-    @BindView(R.id.banner_foreground)
-    BGABanner bannerForeground;
+
     @BindView(R.id.tv_cd)
     TextView tvCd;
 
@@ -86,24 +83,24 @@ public class GuideActivity extends BaseActivity {
          * 在 BGABanner 里已经帮开发者处理了防止重复点击事件
          * 在 BGABanner 里已经帮开发者处理了「跳过按钮」和「进入按钮」的显示与隐藏
          */
-        bannerBackground.setEnterSkipViewIdAndDelegate(R.id.btn_guide, 0, new BGABanner.GuideDelegate() {
-            @Override
-            public void onClickEnterOrSkip() {
-                finish();
-            }
-        });
-
-        // 设置数据源
-        bannerBackground.setData(R.mipmap.uoko_guide_background_1,
-                R.mipmap.uoko_guide_background_2, R.mipmap.uoko_guide_background_3);
-
-        bannerForeground.setData(R.mipmap.uoko_guide_foreground_1,
-                R.mipmap.uoko_guide_foreground_2, R.mipmap.uoko_guide_foreground_3);
+//        bannerBackground.setEnterSkipViewIdAndDelegate(R.id.btn_guide, 0, new BGABanner.GuideDelegate() {
+//            @Override
+//            public void onClickEnterOrSkip() {
+//                finish();
+//            }
+//        });
+//
+//        // 设置数据源
+//        bannerBackground.setData(R.mipmap.uoko_guide_background_1,
+//                R.mipmap.uoko_guide_background_2, R.mipmap.uoko_guide_background_3);
+//
+//        bannerForeground.setData(R.mipmap.uoko_guide_foreground_1,
+//                R.mipmap.uoko_guide_foreground_2, R.mipmap.uoko_guide_foreground_3);
     }
 
     private void initSplash() {
 
-        bannerForeground.setData(R.mipmap.uoko_guide_background_1);
+//        bannerForeground.setData(R.mipmap.uoko_guide_background_1);
         RxUtils.countdown(3)
                 .compose(this.<Integer>bindToLifecycle())
                 .subscribe(new Observer<Integer>() {

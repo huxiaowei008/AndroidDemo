@@ -1,40 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <cn.bingoogolapple.bgabanner.BGAGuideLinkageLayout
+    <com.tmall.ultraviewpager.UltraViewPager
+        android:id="@+id/ultra_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <cn.bingoogolapple.bgabanner.BGABanner
-            android:id="@+id/banner_background"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:banner_pageChangeDuration="1000"
-            app:banner_pointAutoPlayAble="false"
-            app:banner_pointContainerBackground="@android:color/transparent"
-            app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
-            app:banner_pointTopBottomMargin="15dp"
-            app:banner_transitionEffect="fade">
-
-        </cn.bingoogolapple.bgabanner.BGABanner>
-
-        <cn.bingoogolapple.bgabanner.BGABanner
-            android:id="@+id/banner_foreground"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:banner_pageChangeDuration="1000"
-            app:banner_pointAutoPlayAble="false"
-            app:banner_pointContainerBackground="@android:color/transparent"
-            app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
-            app:banner_pointTopBottomMargin="15dp"
-            app:banner_transitionEffect="alpha">
-
-        </cn.bingoogolapple.bgabanner.BGABanner>
-    </cn.bingoogolapple.bgabanner.BGAGuideLinkageLayout>
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/tv_cd"

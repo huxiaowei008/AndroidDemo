@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.hxw.androiddemo.R;
 import com.hxw.frame.loader.media.AlbumEntity;
 import com.hxw.frame.loader.media.ImageMedia;
+import com.hxw.frame.widget.imageloader.glide.GlideApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,10 +77,10 @@ public class AlbumAdapter extends RecyclerView.Adapter {
             albumViewHolder.mNameTxt.setText(album.mBucketName);
             ImageMedia media = album.mImageList.get(0);
             if (media != null) {
-                Glide.with(albumViewHolder.mCheckedImg.getContext())
+
+                GlideApp.with(albumViewHolder.mCheckedImg.getContext())
                         .load("file://" + media.getPath())
                         .placeholder(R.drawable.ic_placeholder)
-                        .crossFade()
                         .centerCrop()
                         .override(48, 48)
                         .into(albumViewHolder.mCoverImg);

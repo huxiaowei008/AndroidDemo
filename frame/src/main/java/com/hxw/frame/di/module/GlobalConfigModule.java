@@ -77,7 +77,7 @@ public class GlobalConfigModule {
 
 
     /**
-     * 打印请求信息
+     *
      *
      * @return
      */

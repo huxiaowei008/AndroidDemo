@@ -28,11 +28,14 @@ import android.widget.Toast;
 
 import com.bilibili.boxing.Boxing;
 import com.bilibili.boxing.BoxingMediaLoader;
+import com.bilibili.boxing.model.config.BoxingConfig;
 import com.bilibili.boxing.model.entity.BaseMedia;
 import com.bilibili.boxing.model.entity.impl.ImageMedia;
 import com.bilibili.boxing.utils.ImageCompressor;
+import com.bilibili.boxing_impl.ui.BoxingActivity;
 import com.bumptech.glide.Glide;
 import com.hxw.androiddemo.R;
+import com.hxw.androiddemo.mvp.photo.PhotoPickActivity;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.utils.DateUtils;
@@ -184,7 +187,7 @@ public class PhotoPickerActivity extends BaseActivity {
 //        Boxing.of(singleImgConfig).withIntent(this, BoxingActivity.class)
 //                .start(this, COMPRESS_REQUEST_CODE);
 
-//        startActivityForResult(new Intent(this, PhotoPickActivity.class),MYDIY);
+        startActivityForResult(new Intent(this, PhotoPickActivity.class),MYDIY);
 
                 //调用系统取选取,只能单张,属于是文件选取
                 // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
@@ -200,9 +203,9 @@ public class PhotoPickerActivity extends BaseActivity {
                 // To search for all documents available via installed storage providers,
                 // it would be "*/*".
 
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, READ_REQUEST_CODE);
+//                Intent intent = new Intent(Intent.ACTION_PICK);
+//                intent.setType("image/*");
+//                startActivityForResult(intent, READ_REQUEST_CODE);
                 break;
             case R.id.btn_camera:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {

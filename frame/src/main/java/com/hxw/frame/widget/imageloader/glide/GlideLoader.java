@@ -14,7 +14,6 @@ import com.hxw.frame.widget.imageloader.IImageLoader;
  */
 public class GlideLoader implements IImageLoader {
 
-
     /**
      * 用于显示网络图或者文件夹中的图片
      *
@@ -25,11 +24,10 @@ public class GlideLoader implements IImageLoader {
     public void displayString(@NonNull ImageView img, @NonNull String uri) {
         try {
             // https://github.com/bumptech/glide/issues/1531
-            Glide.with(img.getContext())
+            GlideApp.with(img.getContext())
                     .load(uri)
                     .placeholder(R.drawable.ic_placeholder)
                     .error(R.drawable.ic_error)
-                    .crossFade()
                     .centerCrop()
                     .into(img);
 
@@ -45,11 +43,10 @@ public class GlideLoader implements IImageLoader {
      */
     @Override
     public void displayRes(@NonNull ImageView img, @DrawableRes int res) {
-        Glide.with(img.getContext())
+        GlideApp.with(img.getContext())
                 .load(res)
                 .placeholder(R.drawable.ic_placeholder)
                 .error(R.drawable.ic_error)
-                .crossFade()
                 .centerCrop()
                 .into(img);
     }

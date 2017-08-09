@@ -101,10 +101,10 @@ public class PhotoPickActivity extends BaseActivity {
 
     private void initRecyclerView() {
         mediaAdapter = new MediaAdapter(this, 3);
-        mediaAdapter.setOnMediaClickListener(new View.OnClickListener() {
+        mediaAdapter.setOnMediaClickListener(new MediaAdapter.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                ImageMedia imageMedia=(ImageMedia)v.getTag();
+            public void onClick(View view, int position) {
+                ImageMedia imageMedia=(ImageMedia) mediaAdapter.getData().get(position);
                 List<ImageMedia> list=new ArrayList<ImageMedia>();
                 list.add(imageMedia);
                 onFinish(list);

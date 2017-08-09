@@ -1,15 +1,19 @@
 package com.hxw.frame.widget.imageloader.glide;
 
+import android.support.annotation.NonNull;
+import android.util.Log;
+
 import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.ResourceDecoder;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.HttpException;
 import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.util.ContentLengthInputStream;
+import com.bumptech.glide.util.Synthetic;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 
 import okhttp3.Call;
 import okhttp3.Request;
@@ -23,10 +27,11 @@ import okhttp3.ResponseBody;
 
 public class OkHttpStreamFetcher implements DataFetcher<InputStream> {
 
+    private static final String TAG = "OkHttpFetcher";
     private final Call.Factory client;
     private final GlideUrl url;
-    private InputStream stream;
-    private ResponseBody responseBody;
+    @Synthetic InputStream stream;
+    @Synthetic ResponseBody responseBody;
     private volatile Call call;
 
     public OkHttpStreamFetcher(Call.Factory client, GlideUrl url) {
@@ -34,53 +39,39 @@ public class OkHttpStreamFetcher implements DataFetcher<InputStream> {
         this.url = url;
     }
 
-    /**
-     * Asynchronously fetch data from which a resource can be decoded. This will always be called on
-     * background thread so it is safe to perform long running tasks here. Any third party libraries called
-     * must be thread safe since this method will be called from a thread in a
-     * {@link ExecutorService} that may have more than one background thread.
-     * <p>
-     * This method will only be called when the corresponding resource is not in the cache.
-     * <p>
-     * <p>
-     * Note - this method will be run on a background thread so blocking I/O is safe.
-     * </p>
-     *
-     * @param priority The priority with which the request should be completed.
-     * @see #cleanup() where the data retuned will be cleaned up
-     */
     @Override
-    public InputStream loadData(Priority priority) throws Exception {
+    public void loadData(Priority priority, final DataCallback<? super InputStream> callback) {
         Request.Builder requestBuilder = new Request.Builder().url(url.toStringUrl());
-
         for (Map.Entry<String, String> headerEntry : url.getHeaders().entrySet()) {
             String key = headerEntry.getKey();
             requestBuilder.addHeader(key, headerEntry.getValue());
         }
         Request request = requestBuilder.build();
 
-        Response response;
         call = client.newCall(request);
-        response = call.execute();
-        responseBody = response.body();
-        if (!response.isSuccessful()) {
-            throw new IOException("Request failed with code: " + response.code());
-        }
+        call.enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (Log.isLoggable(TAG, Log.DEBUG)) {
+                    Log.d(TAG, "OkHttp failed to obtain result", e);
+                }
+                callback.onLoadFailed(e);
+            }
 
-        long contentLength = responseBody.contentLength();
-        stream = ContentLengthInputStream.obtain(responseBody.byteStream(), contentLength);
-        return stream;
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                responseBody = response.body();
+                if (response.isSuccessful()) {
+                    long contentLength = responseBody.contentLength();
+                    stream = ContentLengthInputStream.obtain(responseBody.byteStream(), contentLength);
+                    callback.onDataReady(stream);
+                } else {
+                    callback.onLoadFailed(new HttpException(response.message(), response.code()));
+                }
+            }
+        });
     }
 
-    /**
-     * Cleanup or recycle any resources used by this data fetcher. This method will be called in a finally block
-     * after the data returned by {@link #loadData(Priority)} has been decoded by the
-     * {@link ResourceDecoder}.
-     * <p>
-     * <p>
-     * Note - this method will be run on a background thread so blocking I/O is safe.
-     * </p>
-     */
     @Override
     public void cleanup() {
         try {
@@ -95,45 +86,23 @@ public class OkHttpStreamFetcher implements DataFetcher<InputStream> {
         }
     }
 
-    /**
-     * Returns a string uniquely identifying the data that this fetcher will fetch including the specific size.
-     * <p>
-     * <p>
-     * A hash of the bytes of the data that will be fetched is the ideal id but since that is in many cases
-     * impractical, urls, file paths, and uris are normally sufficient.
-     * </p>
-     * <p>
-     * <p>
-     * Note - this method will be run on the main thread so it should not perform blocking operations and should
-     * finish quickly.
-     * </p>
-     */
-    @Override
-    public String getId() {
-        return url.getCacheKey();
-    }
-
-    /**
-     * A method that will be called when a load is no longer relevant and has been cancelled. This method does not need
-     * to guarantee that any in process loads do not finish. It also may be called before a load starts or after it
-     * finishes.
-     * <p>
-     * <p>
-     * The best way to use this method is to cancel any loads that have not yet started, but allow those that are in
-     * process to finish since its we typically will want to display the same resource in a different view in
-     * the near future.
-     * </p>
-     * <p>
-     * <p>
-     * Note - this method will be run on the main thread so it should not perform blocking operations and should
-     * finish quickly.
-     * </p>
-     */
     @Override
     public void cancel() {
         Call local = call;
         if (local != null) {
             local.cancel();
         }
+    }
+
+    @NonNull
+    @Override
+    public Class<InputStream> getDataClass() {
+        return InputStream.class;
+    }
+
+    @NonNull
+    @Override
+    public DataSource getDataSource() {
+        return DataSource.REMOTE;
     }
 }

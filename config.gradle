@@ -101,6 +101,8 @@ ext {
             "super-text-view"               : 'com.github.lygttpod:SuperTextView:1.1.1',
             //BGABanner-Android https://github.com/bingoogolapple/BGABanner-Android
             "BGABanner"                     : 'cn.bingoogolapple:bga-banner:2.1.7@aar',
+            //UltraViewPager https://github.com/alibaba/UltraViewPager
+            "UltraViewPager"                : 'com.alibaba.android:ultraviewpager:1.0.6@aar',
             //AnimationEasingFunctions https://github.com/daimajia/AnimationEasingFunctions
             //代码家的作品,一个动画的帮助
             "easing"                        : 'com.daimajia.easing:library:2.0@aar',
