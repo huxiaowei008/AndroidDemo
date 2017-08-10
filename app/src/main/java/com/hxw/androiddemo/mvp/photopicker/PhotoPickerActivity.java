@@ -28,14 +28,11 @@ import android.widget.Toast;
 
 import com.bilibili.boxing.Boxing;
 import com.bilibili.boxing.BoxingMediaLoader;
-import com.bilibili.boxing.model.config.BoxingConfig;
 import com.bilibili.boxing.model.entity.BaseMedia;
 import com.bilibili.boxing.model.entity.impl.ImageMedia;
 import com.bilibili.boxing.utils.ImageCompressor;
-import com.bilibili.boxing_impl.ui.BoxingActivity;
 import com.bumptech.glide.Glide;
 import com.hxw.androiddemo.R;
-import com.hxw.androiddemo.mvp.photo.PhotoPickActivity;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.utils.DateUtils;
@@ -181,14 +178,17 @@ public class PhotoPickerActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_picker:
+                //方式一：
 //        BoxingConfig singleImgConfig = new BoxingConfig(BoxingConfig.Mode.SINGLE_IMG)//图片单选
 //                .needCamera(R.drawable.ic_photo_camera)
 //                .withMediaPlaceHolderRes(R.drawable.ic_crop_original);
 //        Boxing.of(singleImgConfig).withIntent(this, BoxingActivity.class)
 //                .start(this, COMPRESS_REQUEST_CODE);
-
-        startActivityForResult(new Intent(this, PhotoPickActivity.class),MYDIY);
-
+                //方式二：
+//                startActivityForResult(new Intent(this, PhotoPickActivity.class), MYDIY);
+                //方式三：
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                //方式四：
                 //调用系统取选取,只能单张,属于是文件选取
                 // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
                 // browser.
@@ -203,9 +203,9 @@ public class PhotoPickerActivity extends BaseActivity {
                 // To search for all documents available via installed storage providers,
                 // it would be "*/*".
 
-//                Intent intent = new Intent(Intent.ACTION_PICK);
-//                intent.setType("image/*");
-//                startActivityForResult(intent, READ_REQUEST_CODE);
+
+                intent.setType("image/*");
+                startActivityForResult(intent, READ_REQUEST_CODE);
                 break;
             case R.id.btn_camera:
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {

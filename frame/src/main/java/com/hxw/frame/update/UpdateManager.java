@@ -36,7 +36,7 @@ public class UpdateManager {
      * 企业点对点 287d4256a34742d6497f0b68f4824b49
      * 疲劳管家 9a20953243d779427d3e6a0acee03c9f
      */
-    private final String APP_CODE = "3a2036c0258126faa8f5ec67719be443";
+    private final String APP_CODE = "25fc9115c3801f8d98a3f0277614ab33";
     //通用运营系统接口
     private final String CHECK_VERSION_WIDE_NET_URL =
             "http://123.159.193.22:7444/yyxt/CommonQueryObject.action";

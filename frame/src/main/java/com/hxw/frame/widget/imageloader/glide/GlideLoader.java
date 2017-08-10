@@ -58,6 +58,6 @@ public class GlideLoader implements IImageLoader {
      */
     @Override
     public void clear(Context context) {
-        Glide.get(context).clearMemory();
+        GlideApp.get(context).clearMemory();
     }
 }
