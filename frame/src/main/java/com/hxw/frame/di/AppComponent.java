@@ -8,11 +8,10 @@ import com.hxw.frame.di.module.AppModule;
 import com.hxw.frame.di.module.ClientModule;
 import com.hxw.frame.di.module.GlobalConfigModule;
 import com.hxw.frame.http.ErrorHandler;
-import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.integration.AppManager;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.update.UpdateManager;
-import com.hxw.frame.widget.imageloader.ImageLoader;
+import com.hxw.frame.imageloader.ImageLoader;
 
 import java.io.File;
 import java.util.Map;

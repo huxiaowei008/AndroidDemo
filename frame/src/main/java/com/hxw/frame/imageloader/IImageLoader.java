@@ -1,4 +1,4 @@
-package com.hxw.frame.widget.imageloader;
+package com.hxw.frame.imageloader;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;

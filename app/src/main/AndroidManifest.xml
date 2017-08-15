@@ -39,7 +39,7 @@
         <activity android:name=".mvp.CDActivity"/>
         <!--glide配置-->
         <!--<meta-data-->
-            <!--android:name="com.hxw.frame.widget.imageloader.glide.GlideConfiguration"-->
+            <!--android:name="GlideConfiguration"-->
             <!--android:value="GlideModule" />-->
         <!--框架配置-->
         <meta-data

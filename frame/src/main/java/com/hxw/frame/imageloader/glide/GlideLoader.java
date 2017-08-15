@@ -1,13 +1,14 @@
-package com.hxw.frame.widget.imageloader.glide;
+package com.hxw.frame.imageloader.glide;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.hxw.frame.R;
-import com.hxw.frame.widget.imageloader.IImageLoader;
+import com.hxw.frame.imageloader.IImageLoader;
+import com.hxw.frame.widget.imageloader.glide.GlideApp;
 
 /**
  * Created by hxw on 2017/3/15.
@@ -28,6 +29,7 @@ public class GlideLoader implements IImageLoader {
                     .load(uri)
                     .placeholder(R.drawable.ic_placeholder)
                     .error(R.drawable.ic_error)
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .centerCrop()
                     .into(img);
 
@@ -47,6 +49,7 @@ public class GlideLoader implements IImageLoader {
                 .load(res)
                 .placeholder(R.drawable.ic_placeholder)
                 .error(R.drawable.ic_error)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .centerCrop()
                 .into(img);
     }

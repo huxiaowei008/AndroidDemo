@@ -67,13 +67,14 @@ public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks
             ((FragmentActivity) activity).getSupportFragmentManager()//注册内部代码
                     .registerFragmentLifecycleCallbacks(mFragmentLifecycle, true);
 
-            if (mFragmentLifecycles == null) {
+            if (mFragmentLifecycles == null && mExtras.containsKey(ConfigModule.class.getName())) {
                 mFragmentLifecycles = new ArrayList<>();
                 List<ConfigModule> modules = (List<ConfigModule>) mExtras
                         .get(ConfigModule.class.getName());
                 for (ConfigModule module : modules) {
                     module.injectFragmentLifecycle(mApplication, mFragmentLifecycles);
                 }
+                mExtras.put(ConfigModule.class.getName(), null);
             }
             //注册拓展的代码
             for (FragmentManager.FragmentLifecycleCallbacks fragmentLifecycle : mFragmentLifecycles) {

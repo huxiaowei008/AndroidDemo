@@ -2,6 +2,7 @@ package com.hxw.androiddemo.mvp.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.hxw.androiddemo.R;
@@ -122,8 +123,8 @@ public class MainActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void error() {
-
+                    public void error(Throwable throwable) {
+                        Log.e(TAG, "error: " + throwable.toString(), throwable);
                     }
                 });
                 break;

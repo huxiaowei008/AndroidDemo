@@ -18,5 +18,5 @@ public interface OnUpdateListener {
     /**
      * 错误
      */
-    void error();
+    void error(Throwable throwable);
 }

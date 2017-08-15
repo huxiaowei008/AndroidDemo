@@ -1,4 +1,4 @@
-package com.hxw.frame.widget.imageloader.glide;
+package com.hxw.frame.imageloader.glide;
 
 import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.model.GlideUrl;

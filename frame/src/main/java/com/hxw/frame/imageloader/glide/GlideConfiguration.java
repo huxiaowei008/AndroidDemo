@@ -1,4 +1,4 @@
-package com.hxw.frame.widget.imageloader.glide;
+package com.hxw.frame.imageloader.glide;
 
 import android.content.Context;
 
@@ -16,7 +16,6 @@ import com.bumptech.glide.module.AppGlideModule;
 import com.hxw.frame.base.BaseApplication;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.utils.FileUtils;
-import com.hxw.frame.widget.imageloader.glide.OkHttpUrlLoader;
 
 import java.io.File;
 import java.io.InputStream;

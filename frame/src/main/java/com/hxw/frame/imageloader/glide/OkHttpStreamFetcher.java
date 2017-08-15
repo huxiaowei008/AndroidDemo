@@ -1,4 +1,4 @@
-package com.hxw.frame.widget.imageloader.glide;
+package com.hxw.frame.imageloader.glide;
 
 import android.support.annotation.NonNull;
 import android.util.Log;

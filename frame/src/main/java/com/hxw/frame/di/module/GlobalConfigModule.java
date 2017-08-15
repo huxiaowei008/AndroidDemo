@@ -8,8 +8,8 @@ import com.hxw.frame.http.GlobalHttpHandler;
 import com.hxw.frame.http.OnResponseErrorListener;
 import com.hxw.frame.utils.FileUtils;
 import com.hxw.frame.utils.Preconditions;
-import com.hxw.frame.widget.imageloader.IImageLoader;
-import com.hxw.frame.widget.imageloader.glide.GlideLoader;
+import com.hxw.frame.imageloader.IImageLoader;
+import com.hxw.frame.imageloader.glide.GlideLoader;
 
 import java.io.File;
 import java.util.ArrayList;
