@@ -10,9 +10,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.hxw.androiddemo.R;
+import com.hxw.frame.imageloader.glide.GlideApp;
 import com.hxw.frame.loader.media.AlbumEntity;
 import com.hxw.frame.loader.media.ImageMedia;
-import com.hxw.frame.widget.imageloader.glide.GlideApp;
+
 
 import java.util.ArrayList;
 import java.util.List;

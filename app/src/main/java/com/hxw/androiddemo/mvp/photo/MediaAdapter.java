@@ -9,8 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.hxw.androiddemo.R;
+import com.hxw.frame.base.App;
+import com.hxw.frame.di.AppComponent;
+import com.hxw.frame.imageloader.ImageLoader;
+import com.hxw.frame.imageloader.glide.GlideApp;
 import com.hxw.frame.loader.media.ImageMedia;
-import com.hxw.frame.widget.imageloader.glide.GlideApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +28,14 @@ public class MediaAdapter extends RecyclerView.Adapter {
     private LayoutInflater mInflater;
     private int imageSize;//图片的大小
     private OnClickListener mOnMediaClickListener;
+    private ImageLoader imageLoader;
 
     public MediaAdapter(Context context, int count) {
         this.mInflater = LayoutInflater.from(context);
         this.mMedias = new ArrayList<>();
         this.imageSize = getImageItemWidth(context, count);
+        AppComponent appComponent = ((App) context.getApplicationContext()).getAppComponent();
+        this.imageLoader = appComponent.imageLoader();
     }
 
     @Override
@@ -58,7 +64,7 @@ public class MediaAdapter extends RecyclerView.Adapter {
         mediaHolder.img_media.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnMediaClickListener.onClick(v,position);
+                mOnMediaClickListener.onClick(v, position);
             }
         });
     }

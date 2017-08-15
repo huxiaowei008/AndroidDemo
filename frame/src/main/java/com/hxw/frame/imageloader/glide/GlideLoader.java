@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.hxw.frame.R;
 import com.hxw.frame.imageloader.IImageLoader;
-import com.hxw.frame.widget.imageloader.glide.GlideApp;
+
 
 /**
  * Created by hxw on 2017/3/15.

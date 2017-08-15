@@ -32,7 +32,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.hxw.androiddemo.R;
-import com.hxw.frame.widget.imageloader.glide.GlideApp;
+import com.hxw.frame.imageloader.glide.GlideApp;
+
 
 /**
  * use https://github.com/bumptech/glide as media loader.
@@ -47,7 +48,12 @@ public class BoxingGlideLoader implements IBoxingMediaLoader {
         String path = "file://" + absPath;
         try {
             // https://github.com/bumptech/glide/issues/1531
-            GlideApp.with(img.getContext()).load(path).placeholder(R.drawable.ic_crop_original).centerCrop().override(width, height).into(img);
+            GlideApp.with(img.getContext())
+                    .load(path)
+                    .placeholder(R.drawable.ic_crop_original)
+                    .centerCrop()
+                    .override(width, height)
+                    .into(img);
         } catch (IllegalArgumentException ignore) {
         }
 
