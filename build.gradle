@@ -9,8 +9,7 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        
         //hugo https://github.com/JakeWharton/hugo
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
     }
