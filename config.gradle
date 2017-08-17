@@ -2,7 +2,7 @@ ext {
 
 
     compileSdkVersion = 25
-    buildToolsVersion = "25.0.2"
+    buildToolsVersion = "25.0.3"
     minSdkVersion = 19
     targetSdkVersion = 25
     versionCode = 1
@@ -49,9 +49,9 @@ ext {
             "rxlifecycle-android"           : 'com.trello:rxlifecycle-android:1.0',
             "rxlifecycle-components"        : 'com.trello:rxlifecycle-components:1.0',
             "rxlifecycle2"                  : 'com.trello.rxlifecycle2:rxlifecycle:2.1.0',
-            "rxlifecycle-android2"          : 'com.trello.rxlifecycle2:rxlifecycle-android:2.1.0',
-            "rxlifecycle-components2"       : 'com.trello.rxlifecycle2:rxlifecycle-components:2.1.0',
-            "rxlifecycle-android-lifecycle2": 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.1.0',
+            "rxlifecycle2-android"          : 'com.trello.rxlifecycle2:rxlifecycle-android:2.1.0',
+            "rxlifecycle2-components"       : 'com.trello.rxlifecycle2:rxlifecycle-components:2.1.0',
+            "rxlifecycle2-android-lifecycle": 'com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:2.1.0',
             //RxPermissions https://github.com/tbruyelle/RxPermissions/tree/2.x
             "rxpermissions"                 : 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar',
             "rxpermissions2"                : 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar',
