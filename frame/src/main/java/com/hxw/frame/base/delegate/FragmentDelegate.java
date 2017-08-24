@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.hxw.frame.base.App;
 import com.hxw.frame.base.IFragment;
+import com.hxw.frame.utils.UIUtils;
 
 import org.simple.eventbus.EventBus;
 
@@ -43,7 +44,7 @@ public class FragmentDelegate implements IFragmentDelegate {
         if (iFragment != null && iFragment.useEventBus()) {
             EventBus.getDefault().register(mFragment);//注册到事件主线
         }
-        iFragment.componentInject(((App) mFragment.getActivity().getApplication()).getAppComponent());
+        iFragment.componentInject(UIUtils.getAppComponentFromContext(mFragment.getActivity()));
     }
 
     @Override

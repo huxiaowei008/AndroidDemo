@@ -16,6 +16,7 @@ import com.bumptech.glide.module.AppGlideModule;
 import com.hxw.frame.base.BaseApplication;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.utils.FileUtils;
+import com.hxw.frame.utils.UIUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -33,8 +34,7 @@ public class GlideConfiguration extends AppGlideModule {
 
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
-        final AppComponent appComponent = ((BaseApplication) context
-                .getApplicationContext()).getAppComponent();
+        final AppComponent appComponent = UIUtils.getAppComponentFromContext(context);
         builder.setDiskCache(new DiskCache.Factory() {
             @Override
             public DiskCache build() {
@@ -66,7 +66,7 @@ public class GlideConfiguration extends AppGlideModule {
     public void registerComponents(Context context, Glide glide, Registry registry) {
         //Glide默认使用HttpURLConnection做网络请求,
         //用了OkHttpUrlLoader.Factory()后会换成OKhttp请求，在这放入我们自己创建的Okhttp
-        AppComponent appComponent = ((BaseApplication) context.getApplicationContext()).getAppComponent();
+        AppComponent appComponent = UIUtils.getAppComponentFromContext(context);
         registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(appComponent.okHttpClient()));
     }
 }

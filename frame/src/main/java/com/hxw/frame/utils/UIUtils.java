@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.hxw.frame.base.App;
+import com.hxw.frame.di.AppComponent;
+
 import org.simple.eventbus.EventBus;
 
 import butterknife.ButterKnife;
@@ -198,6 +201,11 @@ public class UIUtils {
             int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             decorView.setSystemUiVisibility(uiOptions);
         }
+    }
+
+    public static AppComponent getAppComponentFromContext(Context context) {
+        Preconditions.checkState(context.getApplicationContext() instanceof App, "Application does not implements App");
+        return ((App) context.getApplicationContext()).getAppComponent();
     }
 
 }
