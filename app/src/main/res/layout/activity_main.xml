@@ -70,5 +70,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="倒计时" />
+
+        <Button
+            android:id="@+id/btn_11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="转场动画"/>
     </LinearLayout>
 </ScrollView>
