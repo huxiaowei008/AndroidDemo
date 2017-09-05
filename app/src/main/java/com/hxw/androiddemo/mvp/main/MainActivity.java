@@ -10,6 +10,7 @@ import com.hxw.androiddemo.api.ComAPI;
 import com.hxw.androiddemo.base.Constant;
 import com.hxw.androiddemo.mvp.CDActivity;
 import com.hxw.androiddemo.mvp.CommonLayoutViewActivity;
+import com.hxw.androiddemo.mvp.DrawerActivity;
 import com.hxw.androiddemo.mvp.ShareImageActivity;
 import com.hxw.androiddemo.mvp.StateActivity;
 import com.hxw.androiddemo.mvp.bottomnavigation.BottomNavigationActivity;
@@ -96,7 +97,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7,
-            R.id.btn_8, R.id.btn_9, R.id.btn_10, R.id.btn_11})
+            R.id.btn_8, R.id.btn_9, R.id.btn_10, R.id.btn_11, R.id.btn_12})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_1:
@@ -146,6 +147,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_11:
                 goTo(11, ShareImageActivity.class);
+                break;
+            case R.id.btn_12:
+                goTo(12, DrawerActivity.class);
                 break;
         }
     }

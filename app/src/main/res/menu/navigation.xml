@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/group1">
+        <item
+            android:id="@+id/favorite"
+            android:checkable="true"
+            android:icon="@drawable/ic_favorite"
+            android:title="收藏" />
+        <item
+            android:id="@+id/wallet"
+            android:checkable="true"
+            android:icon="@drawable/ic_wallet"
+            android:title="钱包" />
+        <item
+            android:id="@+id/fingerprint"
+            android:checkable="true"
+            android:icon="@drawable/ic_fingerprint"
+            android:title="指纹" />
+    </group>
+    <group android:id="@+id/group2">
+        <item
+            android:id="@+id/other"
+            android:checkable="true"
+            android:icon="@drawable/ic_other"
+            android:title="其他" />
+        <item
+            android:id="@+id/exit"
+            android:checkable="true"
+            android:icon="@drawable/ic_exit_to_app"
+            android:title="退出" />
+    </group>
+</menu>

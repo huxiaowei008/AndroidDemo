@@ -39,6 +39,7 @@
         <activity android:name=".mvp.CDActivity" />
         <activity android:name=".mvp.ShareImageActivity" />
         <activity android:name=".mvp.imagedetail.ImageDetailActivity" />
+        <activity android:name=".mvp.DrawerActivity"/>
         <!--glide配置-->
         <!--<meta-data-->
         <!--android:name="GlideConfiguration"-->
