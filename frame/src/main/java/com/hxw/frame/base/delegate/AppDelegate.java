@@ -32,9 +32,11 @@ public class AppDelegate implements App, AppLifecycles {
 
     //这个activity生命周期回调是本框架内部代码的实现,与外部无关
     @Inject
-    protected ActivityLifecycle mActivityLifecycle;
+    ActivityLifecycle mActivityLifecycle;
+    @Inject
+    AppComponent mAppComponent;
+
     private Application mApplication;
-    private AppComponent mAppComponent;
     private List<AppLifecycles> mAppLifecycles = new ArrayList<>();//application的生命内容外部拓展
     //这里的activity生命周期回调是给外面拓展用的,在外面写好逻辑后通过注册这个直接使用
     private List<Application.ActivityLifecycleCallbacks> mActivityLifecycles = new ArrayList<>();//activity的生命内容外部拓展
@@ -60,13 +62,12 @@ public class AppDelegate implements App, AppLifecycles {
     @Override
     public void onCreate(Application application) {
         this.mApplication = application;
-        mAppComponent = DaggerAppComponent
+         DaggerAppComponent
                 .builder()
                 .appModule(new AppModule(mApplication))////提供application
                 .clientModule(new ClientModule())//用于提供okhttp和retrofit的单例
                 .globalConfigModule(getGlobeConfigModule(mApplication, mModules))
-                .build();
-        mAppComponent.inject(this);
+                .build().inject(this);
 
         mAppComponent.extras().put(ConfigModule.class.getName(), mModules);
 
