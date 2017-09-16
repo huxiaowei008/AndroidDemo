@@ -50,7 +50,7 @@ dependencies {
     //这是编译需要,否则注入不会自动生成文件(annotationProcessor 引入的话估计在各个library中都需要,只要是
     //需要编译生成文件)
     annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
-    annotationProcessor rootProject.ext.dependencies["glide.compiler"]
+//    annotationProcessor rootProject.ext.dependencies["glide.compiler"]
     compile project(':frame')
 
     //BaseRecyclerViewAdapterHelper https://github.com/CymChad/BaseRecyclerViewAdapterHelper

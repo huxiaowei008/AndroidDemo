@@ -77,6 +77,9 @@ ext {
             //dagger2 https://github.com/google/dagger
             "dagger"                        : 'com.google.dagger:dagger:2.11',
             "dagger-compiler"               : 'com.google.dagger:dagger-compiler:2.11',
+            "dagger-android"                       : 'com.google.dagger:dagger-android:2.11',
+            "dagger-android-support"               : 'com.google.dagger:dagger-android-support:2.11',
+            "dagger-android-processor"             : 'com.google.dagger:dagger-android-processor:2.11',
             //leakcanary内存泄露检测工具 https://github.com/square/leakcanary
             "leakcanary-debug"              : 'com.squareup.leakcanary:leakcanary-android:1.5.1',
             "leakcanary-release"            : 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1',
