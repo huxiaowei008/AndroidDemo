@@ -11,6 +11,7 @@ import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.ThreadMode;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,8 +64,21 @@ public class AppManager {
      */
     public Activity getCurrentActivity() {
         return mCurrentActivity != null ?
-                mCurrentActivity : mActivityList != null && mActivityList.size() > 0 ?
-                mActivityList.get(mActivityList.size() - 1) : null;
+                mCurrentActivity : null;
+    }
+
+    /**
+     * 获取位于栈顶的 activity,此方法不保证获取到的 acticity 正处于可见状态,即使 App 进入后台也会返回当前栈顶的 activity
+     * 因此基本不会出现 null 的情况,比较适合大部分的使用场景,如 startActivity,Glide 加载图片
+     *
+     * @return
+     */
+    public Activity getTopActivity() {
+        if (mActivityList == null) {
+            Timber.tag(TAG).w("mActivityList == null when getTopActivity()");
+            return null;
+        }
+        return mActivityList.size() > 0 ? mActivityList.get(mActivityList.size() - 1) : null;
     }
 
     /**
@@ -253,14 +267,14 @@ public class AppManager {
      * @param intent
      */
     private void startActivity(Intent intent) {
-        if (getCurrentActivity() == null) {
-            Timber.tag(TAG).w("mCurrentActivity == null when startActivity(Intent)");
+        if (getTopActivity() == null) {
+            Timber.tag(TAG).w("topActivity == null when startActivity(Intent)");
             //如果没有前台的activity就使用new_task模式启动activity
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mApplication.startActivity(intent);
             return;
         }
-        getCurrentActivity().startActivity(intent);
+        getTopActivity().startActivity(intent);
     }
 
     /**
@@ -269,12 +283,7 @@ public class AppManager {
      * @param activityClass
      */
     private void startActivity(Class activityClass) {
-        if (getCurrentActivity() == null) {
-            Timber.tag(TAG).w("mCurrentActivity == null when startActivity(Class)");
-            startActivity(new Intent(mApplication, activityClass));
-            return;
-        }
-        startActivity(new Intent(getCurrentActivity(), activityClass));
+        startActivity(new Intent(mApplication, activityClass));
     }
 
     /**
@@ -289,22 +298,45 @@ public class AppManager {
     }
 
     /**
+     * 关闭所有 activity
+     */
+    public void killAll(){
+        //关闭所有activity
+        Iterator<Activity> iterator = getActivityList().iterator();
+        while (iterator.hasNext()) {
+            Activity next = iterator.next();
+            iterator.remove();
+            next.finish();
+        }
+    }
+
+    /**
+     * 关闭所有 activity,排除指定的 activity
+     *
+     * @param excludeActivityClasses activity class
+     */
+    public void killAll(Class<?>... excludeActivityClasses) {
+        List<Class<?>> excludeList = Arrays.asList(excludeActivityClasses);
+        Iterator<Activity> iterator = getActivityList().iterator();
+        while (iterator.hasNext()) {
+            Activity next = iterator.next();
+
+            if (excludeList.contains(next.getClass()))
+                continue;
+
+            iterator.remove();
+            next.finish();
+        }
+    }
+
+    /**
      * 退出应用程序
      */
     private void exitApp() {
         try {
-            //关闭所有activity
-            Iterator<Activity> iterator = getActivityList().iterator();
-            while (iterator.hasNext()) {
-                Activity next = iterator.next();
-                iterator.remove();
-                next.finish();
-            }
 
-
-            if (mActivityList != null) {
-                mActivityList = null;
-            }
+            killAll();
+            release();
 
             //退出JVM(java虚拟机),释放所占内存资源,0表示正常退出(非0的都为异常退出)
             System.exit(0);

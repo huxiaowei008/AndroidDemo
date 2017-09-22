@@ -2,15 +2,13 @@ package com.hxw.frame.utils;
 
 import android.support.annotation.NonNull;
 
-import com.hxw.frame.base.BaseActivity;
-import com.hxw.frame.base.BaseFragment;
+import com.hxw.frame.integration.lifecycle.ActivityLifecycleable;
+import com.hxw.frame.integration.lifecycle.FragmentLifecycleable;
 import com.hxw.frame.mvp.IView;
 import com.trello.rxlifecycle2.LifecycleProvider;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.android.FragmentEvent;
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
-import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import java.util.concurrent.TimeUnit;
 
@@ -55,8 +53,8 @@ public class RxUtils {
      */
     public static <T> LifecycleTransformer<T> bindUntilEvent(IView view,
                                                              @NonNull ActivityEvent event) {
-        if (view instanceof RxAppCompatActivity) {
-            return ((RxAppCompatActivity) view).bindUntilEvent(event);
+        if (view instanceof ActivityLifecycleable) {
+            return ((ActivityLifecycleable) view).bindUntilEvent(event);
         } else {
             throw new IllegalArgumentException("view isn't activity");
         }
@@ -72,8 +70,8 @@ public class RxUtils {
      */
     public static <T> LifecycleTransformer<T> bindUntilEvent(IView view,
                                                              @NonNull FragmentEvent event) {
-        if (view instanceof RxFragment) {
-            return ((RxFragment) view).bindUntilEvent(event);
+        if (view instanceof FragmentLifecycleable) {
+            return ((FragmentLifecycleable) view).bindUntilEvent(event);
         } else {
             throw new IllegalArgumentException("view isn't fragment");
         }
