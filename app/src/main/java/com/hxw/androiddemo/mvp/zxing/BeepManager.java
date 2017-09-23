@@ -18,7 +18,6 @@ package com.hxw.androiddemo.mvp.zxing;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -53,7 +52,7 @@ final class BeepManager implements MediaPlayer.OnErrorListener, Closeable {
     }
 
     public void setting(boolean beep, boolean vibrate) {
-        this.playBeep = shouldBeep(beep,activity);
+        this.playBeep = shouldBeep(beep, activity);
         this.vibrate = vibrate;
         restartPlayer();
     }

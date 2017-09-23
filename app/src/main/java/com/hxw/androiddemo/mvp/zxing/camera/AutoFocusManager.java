@@ -16,14 +16,9 @@
 
 package com.hxw.androiddemo.mvp.zxing.camera;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
-
-import com.hxw.androiddemo.mvp.zxing.ZxingConstant;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,11 +48,11 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
     private final Camera camera;
     private AsyncTask<?, ?, ?> outstandingTask;
 
-    AutoFocusManager(Camera camera,boolean autoFocus) {
+    AutoFocusManager(Camera camera, boolean autoFocus) {
         this.camera = camera;
         String currentFocusMode = camera.getParameters().getFocusMode();
         useAutoFocus = autoFocus &&
-                        FOCUS_MODES_CALLING_AF.contains(currentFocusMode);
+                FOCUS_MODES_CALLING_AF.contains(currentFocusMode);
         Log.i(TAG, "Current focus mode '" + currentFocusMode + "'; use auto focus? " + useAutoFocus);
         start();
     }

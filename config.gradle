@@ -90,6 +90,8 @@ ext {
             "constraint-layout"             : 'com.android.support.constraint:constraint-layout:1.0.2',
             //zxing核心库 https://github.com/zxing/zxing
             "zxing-core"                    : 'com.google.zxing:core:3.3.0',
+            //QRCodeReaderView https://github.com/dlazaro66/QRCodeReaderView
+            "QRCodeReaderView"              : 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.2',
             //Material风格的dialog https://github.com/afollestad/material-dialogs
             "material-dialogs"              : 'com.afollestad.material-dialogs:core:0.9.4.7',
             //material-dialogs 的共享库,里面的不是每人都需要的,上面的是核心库

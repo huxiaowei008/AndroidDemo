@@ -63,4 +63,7 @@ dependencies {
     compile (rootProject.ext.dependencies["UltraViewPager"]) {
         transitive = true
     }
+
+    //QRCodeReaderView https://github.com/dlazaro66/QRCodeReaderView
+    compile rootProject.ext.dependencies["QRCodeReaderView"]
 }

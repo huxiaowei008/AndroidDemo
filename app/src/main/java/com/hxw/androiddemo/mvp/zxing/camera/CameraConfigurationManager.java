@@ -44,7 +44,7 @@ final class CameraConfigurationManager {
     private Point cameraResolution;
     private Point bestPreviewSize;
     private Point previewSizeOnScreen;
-    boolean disExposure=true;//不曝光
+    boolean disExposure = true;//不曝光
 
     CameraConfigurationManager(Context context) {
         this.context = context;
