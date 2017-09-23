@@ -91,9 +91,9 @@ ext {
             //zxing核心库 https://github.com/zxing/zxing
             "zxing-core"                    : 'com.google.zxing:core:3.3.0',
             //Material风格的dialog https://github.com/afollestad/material-dialogs
-            "material-dialogs"              : 'com.afollestad.material-dialogs:core:0.9.4.5',
+            "material-dialogs"              : 'com.afollestad.material-dialogs:core:0.9.4.7',
             //material-dialogs 的共享库,里面的不是每人都需要的,上面的是核心库
-            "material-dialogs-commons"      : 'com.afollestad.material-dialogs:commons:0.9.4.5',
+            "material-dialogs-commons"      : 'com.afollestad.material-dialogs:commons:0.9.4.7',
             //material风格的控件库 https://github.com/rey5137/material
             "material"                      : 'com.github.rey5137:material:1.2.4',
             //BottomNavigation https://github.com/Ashok-Varma/BottomNavigation/wiki/Usage
