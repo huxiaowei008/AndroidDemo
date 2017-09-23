@@ -2,13 +2,15 @@ package com.hxw.frame.utils;
 
 import android.support.annotation.NonNull;
 
+import com.hxw.frame.base.IActivity;
+import com.hxw.frame.base.IFragment;
 import com.hxw.frame.integration.lifecycle.ActivityLifecycleable;
 import com.hxw.frame.integration.lifecycle.FragmentLifecycleable;
 import com.hxw.frame.mvp.IView;
-import com.trello.rxlifecycle2.LifecycleProvider;
 import com.trello.rxlifecycle2.LifecycleTransformer;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.trello.rxlifecycle2.android.RxLifecycleAndroid;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,13 +33,15 @@ public class RxUtils {
     /**
      * 绑定生命周期
      *
-     * @param view
      * @param <T>
+     * @param view
      * @return
      */
     public static <T> LifecycleTransformer<T> bindToLifecycle(IView view) {
-        if (view instanceof LifecycleProvider) {
-            return ((LifecycleProvider) view).bindToLifecycle();
+        if (view instanceof ActivityLifecycleable) {
+            return RxLifecycleAndroid.bindActivity(((ActivityLifecycleable) view).provideLifecycleSubject());
+        } else if (view instanceof FragmentLifecycleable) {
+            return RxLifecycleAndroid.bindFragment(((FragmentLifecycleable) view).provideLifecycleSubject());
         } else {
             throw new IllegalArgumentException("view isn't activity or fragment");
         }
@@ -51,7 +55,7 @@ public class RxUtils {
      * @param <T>
      * @return
      */
-    public static <T> LifecycleTransformer<T> bindUntilEvent(IView view,
+    public static <T> LifecycleTransformer<T> bindUntilEvent(IActivity view,
                                                              @NonNull ActivityEvent event) {
         if (view instanceof ActivityLifecycleable) {
             return ((ActivityLifecycleable) view).bindUntilEvent(event);
@@ -68,7 +72,7 @@ public class RxUtils {
      * @param <T>
      * @return
      */
-    public static <T> LifecycleTransformer<T> bindUntilEvent(IView view,
+    public static <T> LifecycleTransformer<T> bindUntilEvent(IFragment view,
                                                              @NonNull FragmentEvent event) {
         if (view instanceof FragmentLifecycleable) {
             return ((FragmentLifecycleable) view).bindUntilEvent(event);

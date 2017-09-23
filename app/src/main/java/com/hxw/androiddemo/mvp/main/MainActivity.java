@@ -25,7 +25,9 @@ import com.hxw.frame.http.ErrorSubscriber;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.update.OnUpdateListener;
 import com.hxw.frame.update.UpdateManager;
+import com.hxw.frame.utils.RxUtils;
 import com.hxw.frame.utils.UIUtils;
+import com.trello.rxlifecycle2.LifecycleProvider;
 
 import javax.inject.Inject;
 
