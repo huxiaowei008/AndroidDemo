@@ -41,6 +41,7 @@
         <activity android:name=".mvp.imagedetail.ImageDetailActivity" />
         <activity android:name=".mvp.DrawerActivity"/>
         <activity android:name=".mvp.QRActivity"/>
+        <activity android:name=".mvp.newzxing.NewZxingActivity"/>
         <!--glide配置-->
         <!--<meta-data-->
         <!--android:name="GlideConfiguration"-->

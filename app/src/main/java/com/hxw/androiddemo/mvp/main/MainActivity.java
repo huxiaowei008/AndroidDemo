@@ -16,6 +16,7 @@ import com.hxw.androiddemo.mvp.ShareImageActivity;
 import com.hxw.androiddemo.mvp.StateActivity;
 import com.hxw.androiddemo.mvp.bottomnavigation.BottomNavigationActivity;
 import com.hxw.androiddemo.mvp.guide.GuideActivity;
+import com.hxw.androiddemo.mvp.newzxing.NewZxingActivity;
 import com.hxw.androiddemo.mvp.photopicker.PhotoPickerActivity;
 import com.hxw.androiddemo.mvp.recyclerviewh.RecyclerVeiwHActivity;
 import com.hxw.androiddemo.mvp.zxing.ZxingActivity;
@@ -98,7 +99,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7,
-            R.id.btn_8, R.id.btn_9, R.id.btn_10, R.id.btn_11, R.id.btn_12, R.id.btn_13})
+            R.id.btn_8, R.id.btn_9, R.id.btn_10, R.id.btn_11, R.id.btn_12, R.id.btn_13, R.id.btn_14})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_1:
@@ -154,6 +155,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_13:
                 goTo(13, QRActivity.class);
+                break;
+            case R.id.btn_14:
+                goTo(14, NewZxingActivity.class);
                 break;
         }
     }

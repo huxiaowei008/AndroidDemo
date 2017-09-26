@@ -87,5 +87,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="使用QR扫描"/>
+        <Button
+            android:id="@+id/btn_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="新二维码扫描"/>
     </LinearLayout>
 </ScrollView>

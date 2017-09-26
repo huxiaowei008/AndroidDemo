@@ -25,6 +25,8 @@ import android.os.Message;
 import com.google.zxing.Result;
 import com.hxw.androiddemo.mvp.zxing.camera.CameraManager;
 
+import timber.log.Timber;
+
 /**
  * This class handles all the messaging which comprises the state machine for capture.
  *
@@ -62,6 +64,7 @@ public final class CaptureActivityHandler extends Handler {
 
     @Override
     public void handleMessage(Message message) {
+        Timber.d("识别结果:" + message.what);
         switch (message.what) {
             case ZxingConstant.restart_preview:
                 restartPreviewAndDecode();
