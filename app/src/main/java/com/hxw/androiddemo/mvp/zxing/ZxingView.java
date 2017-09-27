@@ -180,7 +180,6 @@ public class ZxingView extends RelativeLayout implements SurfaceHolder.Callback 
     /**
      * 无法启动相机，提示并退出
      */
-
     private void displayFrameworkBugMessageAndExit() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setTitle("温馨提示");

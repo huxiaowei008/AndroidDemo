@@ -21,16 +21,16 @@ public class ZxingResult {
         int[] pixels = source.renderThumbnail();
         int width = source.getThumbnailWidth();
         int height = source.getThumbnailHeight();
-        Bitmap bitmap = Bitmap.createBitmap(pixels, 0, width, width, height, Bitmap.Config.ARGB_8888);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
-
-        byte[] compressedBitmap = out.toByteArray();
-        if (compressedBitmap != null) {
-            barcode = BitmapFactory.decodeByteArray(compressedBitmap, 0, compressedBitmap.length, null);
-            // Mutable copy:
-            barcode = barcode.copy(Bitmap.Config.ARGB_8888, true);
-        }
+        barcode = Bitmap.createBitmap(pixels, 0, width, width, height, Bitmap.Config.ARGB_8888);
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+//
+//        byte[] compressedBitmap = out.toByteArray();
+//        if (compressedBitmap != null) {
+//            barcode = BitmapFactory.decodeByteArray(compressedBitmap, 0, compressedBitmap.length, null);
+//            // Mutable copy:
+//            barcode = barcode.copy(Bitmap.Config.ARGB_8888, true);
+//        }
         scaleFactor = (float) width / source.getWidth();
     }
 }
