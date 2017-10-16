@@ -24,8 +24,12 @@ import android.support.annotation.Nullable;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
 
@@ -84,7 +88,9 @@ public class ThreadExecutor {
 
     private void ensureWorkerHandlerNotNull() {
         if (mExecutorService == null) {
-            mExecutorService = Executors.newCachedThreadPool();
+            mExecutorService = new ThreadPoolExecutor(1, 8,
+                    30L, TimeUnit.MILLISECONDS,
+                    new LinkedBlockingQueue<Runnable>(1024), new ThreadPoolExecutor.AbortPolicy());
         }
     }
 

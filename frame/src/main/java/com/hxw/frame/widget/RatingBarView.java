@@ -129,7 +129,7 @@ public class RatingBarView extends LinearLayout {
      */
     public interface OnRatingListener {
 
-        void onRating(Object bindObject, int RatingScore);
+        void onRating(Object bindObject, int ratingScore);
 
     }
 }

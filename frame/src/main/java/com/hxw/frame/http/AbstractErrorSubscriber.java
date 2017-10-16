@@ -4,15 +4,17 @@ import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 
 /**
- * Created by hxw on 2017/7/20.
+ *
+ * @author hxw
+ * @date 2017/7/20
  */
 
-public abstract class ErrorSubscriber<T> implements Observer<T> {
+public abstract class AbstractErrorSubscriber<T> implements Observer<T> {
 
 
     private ErrorHandler handler;
 
-    protected ErrorSubscriber(ErrorHandler handler) {
+    protected AbstractErrorSubscriber(ErrorHandler handler) {
         this.handler = handler;
     }
 

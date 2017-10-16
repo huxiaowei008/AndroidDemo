@@ -891,7 +891,9 @@ public class SpanUtils {
     }
 
     private void updateCharCharSequence() {
-        if (mText.length() == 0) return;
+        if (mText.length() == 0) {
+            return;
+        }
         int start = mBuilder.length();
         mBuilder.append(mText);
         int end = mBuilder.length();
@@ -991,13 +993,13 @@ public class SpanUtils {
         mBuilder.append("<img>");
         int end = start + 5;
         if (imageBitmap != null) {
-            mBuilder.setSpan(new CustomImageSpan(context, imageBitmap, alignImage), start, end, flag);
+            mBuilder.setSpan(new AbstractCustomImageSpan(context, imageBitmap, alignImage), start, end, flag);
         } else if (imageDrawable != null) {
-            mBuilder.setSpan(new CustomImageSpan(imageDrawable, alignImage), start, end, flag);
+            mBuilder.setSpan(new AbstractCustomImageSpan(imageDrawable, alignImage), start, end, flag);
         } else if (imageUri != null) {
-            mBuilder.setSpan(new CustomImageSpan(context, imageUri, alignImage), start, end, flag);
+            mBuilder.setSpan(new AbstractCustomImageSpan(context, imageUri, alignImage), start, end, flag);
         } else if (imageResourceId != -1) {
-            mBuilder.setSpan(new CustomImageSpan(context, imageResourceId, alignImage), start, end, flag);
+            mBuilder.setSpan(new AbstractCustomImageSpan(context, imageResourceId, alignImage), start, end, flag);
         }
     }
 
@@ -1115,10 +1117,12 @@ public class SpanUtils {
             this.gapWidth = gapWidth;
         }
 
+        @Override
         public int getLeadingMargin(boolean first) {
             return stripeWidth + gapWidth;
         }
 
+        @Override
         public void drawLeadingMargin(Canvas c, Paint p, int x, int dir,
                                       int top, int baseline, int bottom,
                                       CharSequence text, int start, int end,
@@ -1153,10 +1157,12 @@ public class SpanUtils {
             this.gapWidth = gapWidth;
         }
 
+        @Override
         public int getLeadingMargin(boolean first) {
             return 2 * radius + gapWidth;
         }
 
+        @Override
         public void drawLeadingMargin(Canvas c, Paint p, int x, int dir,
                                       int top, int baseline, int bottom,
                                       CharSequence text, int start, int end,
@@ -1271,10 +1277,12 @@ public class SpanUtils {
 
         }
 
+        @Override
         public int getLeadingMargin(boolean first) {
             return mBitmap.getWidth() + mPad;
         }
 
+        @Override
         public void drawLeadingMargin(Canvas c, Paint p, int x, int dir,
                                       int top, int baseline, int bottom,
                                       CharSequence text, int start, int end,
@@ -1282,8 +1290,9 @@ public class SpanUtils {
             int st = ((Spanned) text).getSpanStart(this);
             int itop = layout.getLineTop(layout.getLineForOffset(st));
 
-            if (dir < 0)
+            if (dir < 0) {
                 x -= mBitmap.getWidth();
+            }
 
             int delta = totalHeight - mBitmap.getHeight();
 
@@ -1300,6 +1309,7 @@ public class SpanUtils {
             }
         }
 
+        @Override
         public void chooseHeight(CharSequence text, int start, int end, int istartv, int v, Paint.FontMetricsInt fm) {
             if (lineHeight == 0) {
                 lineHeight = v - istartv;
@@ -1315,33 +1325,57 @@ public class SpanUtils {
                 if (mVerticalAlignment == ALIGN_TOP) {
                     // the rest space should be filled with the end of line
                     if (end == ((Spanned) text).getSpanEnd(this)) {
-                        if (need0 > 0) fm.descent += need0;
-                        if (need1 > 0) fm.bottom += need1;
+                        if (need0 > 0) {
+                            fm.descent += need0;
+                        }
+                        if (need1 > 0) {
+                            fm.bottom += need1;
+                        }
                     }
                 } else if (mVerticalAlignment == ALIGN_CENTER) {
                     if (start == ((Spanned) text).getSpanStart(this)) {
-                        if (need0 > 0) fm.ascent -= need0 / 2;
-                        if (need1 > 0) fm.top -= need1 / 2;
+                        if (need0 > 0) {
+                            fm.ascent -= need0 / 2;
+                        }
+                        if (need1 > 0) {
+                            fm.top -= need1 / 2;
+                        }
                     } else {
                         if (!flag) {
-                            if (need0 > 0) fm.ascent += need0 / 2;
-                            if (need1 > 0) fm.top += need1 / 2;
+                            if (need0 > 0) {
+                                fm.ascent += need0 / 2;
+                            }
+                            if (need1 > 0) {
+                                fm.top += need1 / 2;
+                            }
                             flag = true;
                         }
                     }
                     if (end == ((Spanned) text).getSpanEnd(this)) {
-                        if (need0 > 0) fm.descent += need0 / 2;
-                        if (need1 > 0) fm.bottom += need1 / 2;
+                        if (need0 > 0) {
+                            fm.descent += need0 / 2;
+                        }
+                        if (need1 > 0) {
+                            fm.bottom += need1 / 2;
+                        }
                     }
                 } else {
                     // the top space should be filled with the first of line
                     if (start == ((Spanned) text).getSpanStart(this)) {
-                        if (need0 > 0) fm.ascent -= need0;
-                        if (need1 > 0) fm.top -= need1;
+                        if (need0 > 0) {
+                            fm.ascent -= need0;
+                        }
+                        if (need1 > 0) {
+                            fm.top -= need1;
+                        }
                     } else {
                         if (!flag) {
-                            if (need0 > 0) fm.ascent += need0;
-                            if (need1 > 0) fm.top += need1;
+                            if (need0 > 0) {
+                                fm.ascent += need0;
+                            }
+                            if (need1 > 0) {
+                                fm.top += need1;
+                            }
                             flag = true;
                         }
                     }
@@ -1394,37 +1428,37 @@ public class SpanUtils {
         }
     }
 
-    class CustomImageSpan extends CustomDynamicDrawableSpan {
+    class AbstractCustomImageSpan extends AbstractCustomDynamicDrawableSpan {
         private Drawable mDrawable;
         private Uri      mContentUri;
         private int      mResourceId;
         private Context  mContext;
 
-        CustomImageSpan(Context context, Bitmap b, int verticalAlignment) {
+        AbstractCustomImageSpan(Context context, Bitmap b, int verticalAlignment) {
             super(verticalAlignment);
             mContext = context;
             mDrawable = context != null
                     ? new BitmapDrawable(context.getResources(), b)
-                    : new BitmapDrawable(b);
+                    : new BitmapDrawable(null,b);
             int width = mDrawable.getIntrinsicWidth();
             int height = mDrawable.getIntrinsicHeight();
             mDrawable.setBounds(0, 0, width > 0 ? width : 0, height > 0 ? height : 0);
         }
 
-        CustomImageSpan(Drawable d, int verticalAlignment) {
+        AbstractCustomImageSpan(Drawable d, int verticalAlignment) {
             super(verticalAlignment);
             mDrawable = d;
             mDrawable.setBounds(0, 0, mDrawable.getIntrinsicWidth(),
                     mDrawable.getIntrinsicHeight());
         }
 
-        CustomImageSpan(Context context, Uri uri, int verticalAlignment) {
+        AbstractCustomImageSpan(Context context, Uri uri, int verticalAlignment) {
             super(verticalAlignment);
             mContext = context;
             mContentUri = uri;
         }
 
-        CustomImageSpan(Context context, @DrawableRes int resourceId, int verticalAlignment) {
+        AbstractCustomImageSpan(Context context, @DrawableRes int resourceId, int verticalAlignment) {
             super(verticalAlignment);
             mContext = context;
             mResourceId = resourceId;
@@ -1463,7 +1497,7 @@ public class SpanUtils {
         }
     }
 
-    abstract class CustomDynamicDrawableSpan extends ReplacementSpan {
+    abstract class AbstractCustomDynamicDrawableSpan extends ReplacementSpan {
 
         static final int ALIGN_BOTTOM = 0;
 
@@ -1475,11 +1509,11 @@ public class SpanUtils {
 
         final int mVerticalAlignment;
 
-        CustomDynamicDrawableSpan() {
+        AbstractCustomDynamicDrawableSpan() {
             mVerticalAlignment = ALIGN_BOTTOM;
         }
 
-        CustomDynamicDrawableSpan(int verticalAlignment) {
+        AbstractCustomDynamicDrawableSpan(int verticalAlignment) {
             mVerticalAlignment = verticalAlignment;
         }
 
@@ -1536,8 +1570,9 @@ public class SpanUtils {
         private Drawable getCachedDrawable() {
             WeakReference<Drawable> wr = mDrawableRef;
             Drawable d = null;
-            if (wr != null)
+            if (wr != null) {
                 d = wr.get();
+            }
             if (d == null) {
                 d = getDrawable();
                 mDrawableRef = new WeakReference<>(d);

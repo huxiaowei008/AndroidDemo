@@ -95,7 +95,9 @@ public class FileUtils {
      * @return 文件拓展名
      */
     public static String getFileExtension(File file) {
-        if (file == null) return null;
+        if (file == null) {
+            return null;
+        }
         return getFileExtension(file.getPath());
     }
 
@@ -106,10 +108,14 @@ public class FileUtils {
      * @return 文件拓展名
      */
     public static String getFileExtension(String filePath) {
-        if (StringUtils.isSpace(filePath)) return filePath;
+        if (StringUtils.isSpace(filePath)) {
+            return filePath;
+        }
         int lastPoi = filePath.lastIndexOf('.');
         int lastSep = filePath.lastIndexOf(File.separator);
-        if (lastPoi == -1 || lastSep >= lastPoi) return "";
+        if (lastPoi == -1 || lastSep >= lastPoi) {
+            return "";
+        }
         return filePath.substring(lastPoi + 1);
     }
 

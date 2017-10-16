@@ -524,28 +524,28 @@ public class BarUtils {
     private static final String KEY_EMUI_CONFIG_HW_SYS_VERSION = "ro.confg.hw_systemversion";
 
     public static String getSystem(){
-        String SYS=SYS_OTHER;
+        String sys=SYS_OTHER;
         try {
             Properties prop= new Properties();
             prop.load(new FileInputStream(new File(Environment.getRootDirectory(), "build.prop")));
             if(prop.getProperty(KEY_MIUI_VERSION_CODE, null) != null
                     || prop.getProperty(KEY_MIUI_VERSION_NAME, null) != null
                     || prop.getProperty(KEY_MIUI_INTERNAL_STORAGE, null) != null){
-                SYS = SYS_MIUI;//小米
+                sys = SYS_MIUI;//小米
             }
             else if(prop.getProperty(KEY_EMUI_API_LEVEL, null) != null
                     ||prop.getProperty(KEY_EMUI_VERSION, null) != null
                     ||prop.getProperty(KEY_EMUI_CONFIG_HW_SYS_VERSION, null) != null){
-                SYS = SYS_EMUI;//华为
+                sys = SYS_EMUI;//华为
             }
             else if(getMeizuFlymeOSFlag().toLowerCase().contains("flyme")){
-                SYS = SYS_FLYME;//魅族
+                sys = SYS_FLYME;//魅族
             }
         } catch (IOException e){
             e.printStackTrace();
-            return SYS;
+            return sys;
         }
-        return SYS;
+        return sys;
     }
 
     public static String getMeizuFlymeOSFlag() {

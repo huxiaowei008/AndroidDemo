@@ -21,8 +21,8 @@ public class GlideCircleTransform extends BitmapTransformation {
     private static final String ID = "com.hxw.frame.glide.GlideCircleTransform";
 
 
-    public GlideCircleTransform(Context context) {
-        super(context);
+    public GlideCircleTransform() {
+        super();
     }
 
     @Override
@@ -31,7 +31,9 @@ public class GlideCircleTransform extends BitmapTransformation {
     }
 
     private Bitmap circleCrop(BitmapPool pool, Bitmap source) {
-        if (source == null) return null;
+        if (source == null) {
+            return null;
+        }
 
         int size = Math.min(source.getWidth(), source.getHeight());
         int x = (source.getWidth() - size) / 2;

@@ -23,14 +23,14 @@ public class MediaLoaderManager {
      * 静态内部类,一种单例模式的写法
      */
     private static class MediaHolder {
-        private static final MediaLoaderManager instance = new MediaLoaderManager();
+        private static final MediaLoaderManager INSTANCE = new MediaLoaderManager();
     }
 
     private MediaLoaderManager() {
     }
 
     public static MediaLoaderManager getInstance() {
-        return MediaHolder.instance;
+        return MediaHolder.INSTANCE;
     }
 
     public void loaderImage(FragmentActivity activity, LoaderCallbacks<ImageMedia> resultCallbacks) {
@@ -53,7 +53,7 @@ public class MediaLoaderManager {
      */
     public void loaderImage(FragmentActivity activity, Bundle args, String bucketId,
                             LoaderCallbacks<ImageMedia> resultCallbacks) {
-        if (bucketId == null || bucketId.equals("")) {
+        if (bucketId == null || "".equals(bucketId)) {
             activity.getSupportLoaderManager()
                     .initLoader(TYPE_IMAGE, args, new ImageLoader(activity, bucketId, resultCallbacks));
         } else {

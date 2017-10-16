@@ -35,7 +35,7 @@ public class StringUtils {
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     //emoji过滤器
-    public static final InputFilter emojiFilter = new InputFilter() {
+    public static final InputFilter EMOJI_FILTER = new InputFilter() {
         //关键的正则表达式
         Pattern emoji = Pattern.compile("[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\ud83e\udd00-\ud83e\udfff]|[\u2600-\u27ff]",
                 Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);

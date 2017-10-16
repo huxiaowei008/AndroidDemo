@@ -40,10 +40,10 @@ public class GlideConfiguration extends AppGlideModule {
             public DiskCache build() {
                 // Careful: the external cache directory doesn't enforce permissions
                 //图片磁盘缓存文件最大值为100Mb
-                int IMAGE_DISK_CACHE_MAX_SIZE = 100 * 1024 * 1024;
+                int imageDiskCacheMaxSize = 100 * 1024 * 1024;
                 File cacheDirectory = new File(appComponent.cacheFile(), "Glide");
                 return DiskLruCacheWrapper.get(FileUtils.makeDirs(cacheDirectory),
-                        IMAGE_DISK_CACHE_MAX_SIZE);
+                        imageDiskCacheMaxSize);
             }
         });
         MemorySizeCalculator calculator = new MemorySizeCalculator.Builder(context)

@@ -1,6 +1,5 @@
 package com.hxw.frame.imageloader.glide;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -24,12 +23,12 @@ public class GlideRoundTransform extends BitmapTransformation {
     private static final String ID = "com.hxw.frame.glide.GlideRoundTransform";
     private float radius = 0f;
 
-    public GlideRoundTransform(Context context) {
-        this(context, 4);
+    public GlideRoundTransform() {
+        this(4);
     }
 
-    public GlideRoundTransform(Context context, int dp) {
-        super(context);
+    public GlideRoundTransform(int dp) {
+        super();
         this.radius = Resources.getSystem().getDisplayMetrics().density * dp;
     }
 
@@ -40,7 +39,9 @@ public class GlideRoundTransform extends BitmapTransformation {
     }
 
     private Bitmap roundCrop(BitmapPool pool, Bitmap source) {
-        if (source == null) return null;
+        if (source == null) {
+            return null;
+        }
 
         Bitmap result = pool.get(source.getWidth(), source.getHeight(), Bitmap.Config.ARGB_8888);
         if (result == null) {

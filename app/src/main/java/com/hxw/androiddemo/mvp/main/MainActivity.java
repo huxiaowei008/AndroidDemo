@@ -24,7 +24,7 @@ import com.hxw.androiddemo.mvp.zxing.ZxingActivity;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.http.ErrorHandler;
-import com.hxw.frame.http.ErrorSubscriber;
+import com.hxw.frame.http.AbstractErrorSubscriber;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.update.OnUpdateListener;
 import com.hxw.frame.update.UpdateManager;
@@ -81,7 +81,7 @@ public class MainActivity extends BaseActivity {
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(this.<String>bindToLifecycle())
-                .subscribe(new ErrorSubscriber<String>(handler) {
+                .subscribe(new AbstractErrorSubscriber<String>(handler) {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
 

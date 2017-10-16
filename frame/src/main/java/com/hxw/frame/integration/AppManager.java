@@ -238,10 +238,11 @@ public class AppManager {
      * @param message
      */
     private void dispatchStart(Message message) {
-        if (message.obj instanceof Intent)
+        if (message.obj instanceof Intent) {
             startActivity((Intent) message.obj);
-        else if (message.obj instanceof Class)
+        } else if (message.obj instanceof Class) {
             startActivity((Class) message.obj);
+        }
         return;
     }
 
@@ -321,8 +322,9 @@ public class AppManager {
         while (iterator.hasNext()) {
             Activity next = iterator.next();
 
-            if (excludeList.contains(next.getClass()))
+            if (excludeList.contains(next.getClass())) {
                 continue;
+            }
 
             iterator.remove();
             next.finish();

@@ -81,7 +81,9 @@ public class RequestInterceptor implements Interceptor {
         String bodyString = printResult(request, originalResponse.newBuilder().build());
 
         if (mHandler != null)//这里可以比客户端提前一步拿到服务器返回的结果,可以做一些操作,比如token超时,重新获取
+        {
             return mHandler.onHttpResultResponse(bodyString, chain, originalResponse);
+        }
 
         return originalResponse;
     }
@@ -149,9 +151,9 @@ public class RequestInterceptor implements Interceptor {
         if (contentType != null) {
             charset = contentType.charset(charset);
         }
-        if (encoding != null && encoding.equalsIgnoreCase("gzip")) {//content使用gzip压缩
+        if (encoding != null && "gzip".equalsIgnoreCase(encoding)) {//content使用gzip压缩
             return ZipHelper.decompressForGzip(clone.readByteArray(), convertCharset(charset));//解压
-        } else if (encoding != null && encoding.equalsIgnoreCase("zlib")) {//content使用zlib压缩
+        } else if (encoding != null && "zlib".equalsIgnoreCase(encoding)) {//content使用zlib压缩
             return ZipHelper.decompressToStringForZlib(clone.readByteArray(), convertCharset(charset));//解压
         } else {//content没有被压缩
             return clone.readString(charset);
@@ -179,7 +181,9 @@ public class RequestInterceptor implements Interceptor {
     }
 
     public static boolean isParseable(MediaType mediaType) {
-        if (mediaType == null) return false;
+        if (mediaType == null) {
+            return false;
+        }
         return mediaType.toString().toLowerCase().contains("text")
                 || isJson(mediaType) || isForm(mediaType)
                 || isHtml(mediaType) || isXml(mediaType);

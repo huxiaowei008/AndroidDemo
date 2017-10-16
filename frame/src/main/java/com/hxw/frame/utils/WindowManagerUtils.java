@@ -29,16 +29,18 @@ import android.view.WindowManager;
 public class WindowManagerUtils {
     private static WindowManager getWindowManager(Context context) {
         Object service = context.getSystemService(Context.WINDOW_SERVICE);
-        if (service == null)
+        if (service == null) {
             return null;
+        }
 
         return (WindowManager) service;
     }
 
     private static Display getDefaultDisplay(Context context) {
         WindowManager wm = getWindowManager(context);
-        if (wm == null)
+        if (wm == null) {
             return null;
+        }
 
         return wm.getDefaultDisplay();
     }

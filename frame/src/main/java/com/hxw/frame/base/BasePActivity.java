@@ -9,7 +9,7 @@ import javax.inject.Inject;
  * Created by hxw on 2017/6/30.
  */
 
-public abstract class PActivity<P extends IPresenter> extends BaseActivity {
+public abstract class BasePActivity<P extends IPresenter> extends BaseActivity {
     @Inject
     protected P mPresenter;
 

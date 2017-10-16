@@ -128,20 +128,20 @@ public class UpdateManager {
                         List<UpdateItem.CommonQueryObjectBean> list = updateItem
                                 .getCommonQueryObject().get(0);
                         for (UpdateItem.CommonQueryObjectBean lItem : list) {
-                            if (lItem.getKey().equals("rjbbh")) {
+                            if ("rjbbh".equals(lItem.getKey())) {
                                 String lSvalue = lItem.getValue();
                                 mRemoteVersionName = lSvalue;
                                 mRemoteVersionCode = Integer.parseInt(lSvalue.replace(".", ""));
                             }
-                            if (lItem.getKey().equals("gxnr")) {
+                            if ("gxnr".equals(lItem.getKey())) {
                                 String lSvalue = lItem.getValue();
                                 mUpdateContent = lSvalue;
                             }
-                            if (lItem.getKey().equals("czrjidname")) {
+                            if ("czrjidname".equals(lItem.getKey())) {
                                 String lSvalue = lItem.getValue();
                                 mAppName = lSvalue;
                             }
-                            if (lItem.getKey().equals("appwj")) {
+                            if ("appwj".equals(lItem.getKey())) {
                                 String lSvalue = lItem.getValue();
                                 lSvalue.replace(";", "");
                                 mRemoteResourceName = lSvalue;

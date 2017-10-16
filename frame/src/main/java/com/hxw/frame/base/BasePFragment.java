@@ -9,7 +9,7 @@ import javax.inject.Inject;
  * Created by hxw on 2017/6/30.
  */
 
-public abstract class PFragment<P extends IPresenter> extends BaseFragment {
+public abstract class BasePFragment<P extends IPresenter> extends BaseFragment {
     @Inject
     protected P mPresenter;
 
