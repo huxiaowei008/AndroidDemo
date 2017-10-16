@@ -228,6 +228,7 @@ public class ZxingView extends RelativeLayout implements SurfaceHolder.Callback 
         return cameraManager;
     }
 
+    @Override
     public Handler getHandler() {
         return handler;
     }
