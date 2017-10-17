@@ -46,7 +46,7 @@ final class AmbientLightManager implements SensorEventListener {
         this.context = context;
     }
 
-    void start(CameraManager cameraManager,FrontLightMode mode) {
+    void start(CameraManager cameraManager, FrontLightMode mode) {
         this.cameraManager = cameraManager;
 
         if (mode == FrontLightMode.AUTO) {

@@ -3,6 +3,7 @@ package com.hxw.androiddemo.mvp.zxing;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -179,13 +180,22 @@ public class ZxingView extends RelativeLayout implements SurfaceHolder.Callback 
     /**
      * 无法启动相机，提示并退出
      */
-
     private void displayFrameworkBugMessageAndExit() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setTitle("温馨提示");
         builder.setMessage("很遗憾，Android 相机出现问题。你可能需要重启设备。");
-        builder.setPositiveButton("确定", new FinishListener(mActivity));
-        builder.setOnCancelListener(new FinishListener(mActivity));
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mActivity.finish();
+            }
+        });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                mActivity.finish();
+            }
+        });
         builder.show();
     }
 
@@ -218,6 +228,7 @@ public class ZxingView extends RelativeLayout implements SurfaceHolder.Callback 
         return cameraManager;
     }
 
+    @Override
     public Handler getHandler() {
         return handler;
     }

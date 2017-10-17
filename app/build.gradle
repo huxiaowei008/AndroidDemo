@@ -50,14 +50,20 @@ dependencies {
     //这是编译需要,否则注入不会自动生成文件(annotationProcessor 引入的话估计在各个library中都需要,只要是
     //需要编译生成文件)
     annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
+//    annotationProcessor rootProject.ext.dependencies["glide.compiler"]
     compile project(':frame')
 
-    //轮播图 https://github.com/bingoogolapple/BGABanner-Android
-    compile rootProject.ext.dependencies["BGABanner"]
     //BaseRecyclerViewAdapterHelper https://github.com/CymChad/BaseRecyclerViewAdapterHelper
     compile rootProject.ext.dependencies["base-recyclerview-adapter"]
     //boxing https://github.com/Bilibili/boxing bilibili的多媒体选择器
     compile rootProject.ext.dependencies["boxing"]
     //zxing核心库 https://github.com/zxing/zxing
     compile rootProject.ext.dependencies["zxing-core"]
+    //UltraViewPager https://github.com/alibaba/UltraViewPager
+    compile (rootProject.ext.dependencies["UltraViewPager"]) {
+        transitive = true
+    }
+
+    //QRCodeReaderView https://github.com/dlazaro66/QRCodeReaderView
+    compile rootProject.ext.dependencies["QRCodeReaderView"]
 }

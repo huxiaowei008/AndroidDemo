@@ -36,7 +36,7 @@ public class UpdateManager {
      * 企业点对点 287d4256a34742d6497f0b68f4824b49
      * 疲劳管家 9a20953243d779427d3e6a0acee03c9f
      */
-    private final String APP_CODE = "3a2036c0258126faa8f5ec67719be443";
+    private final String APP_CODE = "25fc9115c3801f8d98a3f0277614ab33";
     //通用运营系统接口
     private final String CHECK_VERSION_WIDE_NET_URL =
             "http://123.159.193.22:7444/yyxt/CommonQueryObject.action";
@@ -128,20 +128,20 @@ public class UpdateManager {
                         List<UpdateItem.CommonQueryObjectBean> list = updateItem
                                 .getCommonQueryObject().get(0);
                         for (UpdateItem.CommonQueryObjectBean lItem : list) {
-                            if (lItem.getKey().equals("rjbbh")) {
+                            if ("rjbbh".equals(lItem.getKey())) {
                                 String lSvalue = lItem.getValue();
                                 mRemoteVersionName = lSvalue;
                                 mRemoteVersionCode = Integer.parseInt(lSvalue.replace(".", ""));
                             }
-                            if (lItem.getKey().equals("gxnr")) {
+                            if ("gxnr".equals(lItem.getKey())) {
                                 String lSvalue = lItem.getValue();
                                 mUpdateContent = lSvalue;
                             }
-                            if (lItem.getKey().equals("czrjidname")) {
+                            if ("czrjidname".equals(lItem.getKey())) {
                                 String lSvalue = lItem.getValue();
                                 mAppName = lSvalue;
                             }
-                            if (lItem.getKey().equals("appwj")) {
+                            if ("appwj".equals(lItem.getKey())) {
                                 String lSvalue = lItem.getValue();
                                 lSvalue.replace(";", "");
                                 mRemoteResourceName = lSvalue;
@@ -161,7 +161,7 @@ public class UpdateManager {
                     public void accept(Throwable throwable) throws Exception {
                         Timber.tag(TAG).e(throwable, "自动更新检查失败");
                         UIUtils.makeText(mContext, "检查更新失败");
-                        update.error();
+                        update.error(throwable);
                     }
                 });
 

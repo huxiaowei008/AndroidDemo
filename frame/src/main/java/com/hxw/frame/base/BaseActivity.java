@@ -1,12 +1,24 @@
 package com.hxw.frame.base;
 
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
+import com.hxw.frame.integration.lifecycle.ActivityLifecycleable;
+import com.trello.rxlifecycle2.LifecycleTransformer;
+import com.trello.rxlifecycle2.RxLifecycle;
+import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.trello.rxlifecycle2.android.RxLifecycleAndroid;
+
+import javax.annotation.Nonnull;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.Subject;
 
 
 /**
@@ -15,12 +27,39 @@ import butterknife.Unbinder;
  * Created by hxw on 2017/2/8.
  */
 
-public abstract class BaseActivity extends RxAppCompatActivity implements IActivity {
+public abstract class BaseActivity extends AppCompatActivity implements IActivity, ActivityLifecycleable {
     protected final String TAG = this.getClass().getSimpleName();
-
+    private final BehaviorSubject<ActivityEvent> lifecycleSubject = BehaviorSubject.create();
     private Unbinder mUnBinder;
 
-    @Nullable
+    @Nonnull
+    @Override
+    @CheckResult
+    public final Observable<ActivityEvent> lifecycle() {
+        return lifecycleSubject.hide();
+    }
+
+    @Nonnull
+    @Override
+    @CheckResult
+    public final <T> LifecycleTransformer<T> bindUntilEvent(@Nonnull ActivityEvent event) {
+        return RxLifecycle.bindUntilEvent(lifecycleSubject, event);
+    }
+
+    @Override
+    @NonNull
+    @CheckResult
+    public final <T> LifecycleTransformer<T> bindToLifecycle() {
+        return RxLifecycleAndroid.bindActivity(lifecycleSubject);
+    }
+
+    @NonNull
+    @Override
+    @CheckResult
+    public final Subject<ActivityEvent> provideLifecycleSubject() {
+        return lifecycleSubject;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

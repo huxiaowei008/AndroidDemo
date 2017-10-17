@@ -166,7 +166,7 @@ public final class GlobalConfiguration implements ConfigModule {
                 }
 
                 //安装leakCanary检测内存泄露
-                ((App) application).getAppComponent().extras().put(RefWatcher.class.getName(), BuildConfig.USE_CANARY ?
+                UIUtils.getAppComponentFromContext(application).extras().put(RefWatcher.class.getName(), BuildConfig.USE_CANARY ?
                         LeakCanary.install(application) : RefWatcher.DISABLED);
 
             }

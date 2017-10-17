@@ -63,7 +63,7 @@ public class BasePresenter<M extends IModel, V extends IView> implements IPresen
      *
      * @return
      */
-    protected boolean useEventBus() {
+    public boolean useEventBus() {
         return false;
     }
 
@@ -73,7 +73,7 @@ public class BasePresenter<M extends IModel, V extends IView> implements IPresen
      *
      * @param disposable
      */
-    protected void addDisposable(Disposable disposable) {
+    public void addDisposable(Disposable disposable) {
         if (mCompositeDisposable == null) {
             mCompositeDisposable = new CompositeDisposable();
         }
@@ -84,7 +84,7 @@ public class BasePresenter<M extends IModel, V extends IView> implements IPresen
     /**
      * rxJava取消订阅
      */
-    protected void dispose() {
+    public void dispose() {
         if (mCompositeDisposable != null) {
             //保证activity结束时取消所有正在执行的订阅
             mCompositeDisposable.clear();

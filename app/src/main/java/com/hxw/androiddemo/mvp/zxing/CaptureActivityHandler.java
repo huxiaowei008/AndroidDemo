@@ -23,7 +23,11 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.google.zxing.Result;
+import com.google.zxing.ResultPoint;
+import com.google.zxing.ResultPointCallback;
 import com.hxw.androiddemo.mvp.zxing.camera.CameraManager;
+
+import timber.log.Timber;
 
 /**
  * This class handles all the messaging which comprises the state machine for capture.
@@ -46,10 +50,15 @@ public final class CaptureActivityHandler extends Handler {
         DONE
     }
 
-    CaptureActivityHandler(ZxingView zxingView, CameraManager cameraManager) {
+    CaptureActivityHandler(final ZxingView zxingView, CameraManager cameraManager) {
         this.zxingView = zxingView;
         decodeThread = new DecodeThread(zxingView, null, null, null,
-                new ViewfinderResultPointCallback(zxingView.getViewfinderView()));
+                new ResultPointCallback() {
+                    @Override
+                    public void foundPossibleResultPoint(ResultPoint point) {
+                        zxingView.getViewfinderView().addPossibleResultPoint(point);
+                    }
+                });
         decodeThread.start();
         state = State.SUCCESS;
 
@@ -62,6 +71,7 @@ public final class CaptureActivityHandler extends Handler {
 
     @Override
     public void handleMessage(Message message) {
+        Timber.d("识别结果:" + message.what);
         switch (message.what) {
             case ZxingConstant.restart_preview:
                 restartPreviewAndDecode();

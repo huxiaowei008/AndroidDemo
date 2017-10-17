@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.hxw.frame.base.App;
 import com.hxw.frame.base.IActivity;
+import com.hxw.frame.utils.UIUtils;
 
 import org.simple.eventbus.EventBus;
 
@@ -29,7 +30,7 @@ public class ActivityDelegate implements IActivityDelegate {
         if (iActivity != null && iActivity.useEventBus()) {
             EventBus.getDefault().register(mActivity);//注册到事件主线
         }
-        iActivity.componentInject(((App) mActivity.getApplication()).getAppComponent());
+        iActivity.componentInject(UIUtils.getAppComponentFromContext(mActivity));
     }
 
     @Override

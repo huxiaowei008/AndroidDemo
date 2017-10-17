@@ -57,13 +57,10 @@ public final class ManifestParser {
         Object module;
         try {
             module = clazz.newInstance();
-        } catch (InstantiationException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new RuntimeException("Unable to instantiate ConfigModule implementation for " + clazz,
                     e);
             // These can't be combined until API minimum is 19.
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Unable to instantiate ConfigModule implementation for " + clazz,
-                    e);
         }
         if (!(module instanceof ConfigModule)) {
             throw new RuntimeException("Expected instanceof ConfigModule, but found: " + module);

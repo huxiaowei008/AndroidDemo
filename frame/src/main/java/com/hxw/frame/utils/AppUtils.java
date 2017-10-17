@@ -72,7 +72,9 @@ public class AppUtils {
      * @param file    文件
      */
     public static void installApp(Context context, File file) {
-        if (!FileUtils.isFileExists(file)) return;
+        if (!FileUtils.isFileExists(file)) {
+            return;
+        }
         context.startActivity(getInstallAppIntent(context, file));
     }
 
@@ -93,7 +95,9 @@ public class AppUtils {
      * @return intent
      */
     public static Intent getInstallAppIntent(Context context, File file) {
-        if (file == null) return null;
+        if (file == null) {
+            return null;
+        }
         Intent intent = new Intent(Intent.ACTION_VIEW);
 
         Uri data;

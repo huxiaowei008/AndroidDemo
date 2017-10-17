@@ -66,7 +66,7 @@ public class ImageLoader implements LoaderManager.LoaderCallbacks<Cursor> {
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] selectionArgs;
         String selection;
-        if (bucketId==null||bucketId.equals("")) {
+        if (bucketId==null|| "".equals(bucketId)) {
             selectionArgs = new String[]{//查询条件中问号对应的值
                     "image/jpeg", "image/png", "image/jpg", "image/gif"
             };
@@ -104,7 +104,9 @@ public class ImageLoader implements LoaderManager.LoaderCallbacks<Cursor> {
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if (data == null) return;
+        if (data == null) {
+            return;
+        }
         List<ImageMedia> result = new ArrayList<>();
 
         if (data.moveToFirst()) {

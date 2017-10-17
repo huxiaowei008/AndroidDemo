@@ -2,23 +2,29 @@ package com.hxw.androiddemo.mvp.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.hxw.androiddemo.R;
 import com.hxw.androiddemo.api.ComAPI;
 import com.hxw.androiddemo.base.Constant;
+import com.hxw.androiddemo.mvp.CDActivity;
 import com.hxw.androiddemo.mvp.CommonLayoutViewActivity;
+import com.hxw.androiddemo.mvp.DrawerActivity;
+import com.hxw.androiddemo.mvp.QRActivity;
+import com.hxw.androiddemo.mvp.ShareImageActivity;
 import com.hxw.androiddemo.mvp.StateActivity;
 import com.hxw.androiddemo.mvp.bottomnavigation.BottomNavigationActivity;
+import com.hxw.androiddemo.mvp.camera2.Camera2Activity;
 import com.hxw.androiddemo.mvp.guide.GuideActivity;
+import com.hxw.androiddemo.mvp.newzxing.NewZxingActivity;
 import com.hxw.androiddemo.mvp.photopicker.PhotoPickerActivity;
 import com.hxw.androiddemo.mvp.recyclerviewh.RecyclerVeiwHActivity;
 import com.hxw.androiddemo.mvp.zxing.ZxingActivity;
 import com.hxw.frame.base.BaseActivity;
 import com.hxw.frame.di.AppComponent;
 import com.hxw.frame.http.ErrorHandler;
-import com.hxw.frame.http.ErrorSubscriber;
-import com.hxw.frame.http.OnResponseErrorListener;
+import com.hxw.frame.http.AbstractErrorSubscriber;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.update.OnUpdateListener;
 import com.hxw.frame.update.UpdateManager;
@@ -75,7 +81,7 @@ public class MainActivity extends BaseActivity {
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(this.<String>bindToLifecycle())
-                .subscribe(new ErrorSubscriber<String>(handler) {
+                .subscribe(new AbstractErrorSubscriber<String>(handler) {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
 
@@ -83,7 +89,7 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void onNext(@NonNull String s) {
-                            UIUtils.makeText(MainActivity.this,"成功");
+                        UIUtils.makeText(MainActivity.this, "成功");
                     }
 
                     @Override
@@ -94,7 +100,8 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7,
-            R.id.btn_8, R.id.btn_9})
+            R.id.btn_8, R.id.btn_9, R.id.btn_10, R.id.btn_11, R.id.btn_12, R.id.btn_13, R.id.btn_14,
+            R.id.btn_15})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_1:
@@ -122,8 +129,8 @@ public class MainActivity extends BaseActivity {
                     }
 
                     @Override
-                    public void error() {
-
+                    public void error(Throwable throwable) {
+                        Log.e(TAG, "error: " + throwable.toString(), throwable);
                     }
                 });
                 break;
@@ -138,6 +145,24 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_9:
                 goTo(9, ZxingActivity.class);
+                break;
+            case R.id.btn_10:
+                goTo(10, CDActivity.class);
+                break;
+            case R.id.btn_11:
+                goTo(11, ShareImageActivity.class);
+                break;
+            case R.id.btn_12:
+                goTo(12, DrawerActivity.class);
+                break;
+            case R.id.btn_13:
+                goTo(13, QRActivity.class);
+                break;
+            case R.id.btn_14:
+                goTo(14, NewZxingActivity.class);
+                break;
+            case R.id.btn_15:
+                goTo(15, Camera2Activity.class);
                 break;
         }
     }

@@ -23,15 +23,16 @@ android {
     // Resolved versions for app (3.0.1) and test app (2.0.1) differ.
     // See http://g.co/androidstudio/app-test-app-conflict for details.
     //的问题引进的,这是测试包和RxLifecycle引入的jsr305的版本不一样，这里统一成3.0.1
-    configurations.all {
-        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
-    }
+//    configurations.all {
+//        resolutionStrategy.force 'com.google.code.findbugs:jsr305:3.0.1'
+//    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs'
     })
     compile rootProject.ext.dependencies["appcompat"]
     compile rootProject.ext.dependencies["design"]
@@ -63,6 +64,7 @@ dependencies {
 
 //glide图片加载 https://github.com/bumptech/glide
     compile rootProject.ext.dependencies["glide"]
+    annotationProcessor rootProject.ext.dependencies["glide.compiler"]
 
 /*有关rx的通常都有2两个版本，2个版本独立，规则略有不同，选择一个就行，下面是参考的文章2篇
 http://gank.io/post/560e15be2dca930e00da1083
@@ -90,11 +92,11 @@ http://blog.csdn.net/aiynmimi/article/details/53382567
 //    compile rootProject.ext.dependencies["rxlifecycle-components"]
 
     //2版本的
-    compile rootProject.ext.dependencies["rxlifecycle2"]
+//    compile rootProject.ext.dependencies["rxlifecycle2"]
     // If you want to bind to Android-specific lifecycles
-    compile rootProject.ext.dependencies["rxlifecycle-android2"]
+    compile rootProject.ext.dependencies["rxlifecycle2-android"]
     // If you want pre-written Activities and Fragments you can subclass as providers
-    compile rootProject.ext.dependencies["rxlifecycle-components2"]
+//    compile rootProject.ext.dependencies["rxlifecycle2-components"]
 
 //RxPermissions https://github.com/tbruyelle/RxPermissions/tree/2.x
     //1版本的

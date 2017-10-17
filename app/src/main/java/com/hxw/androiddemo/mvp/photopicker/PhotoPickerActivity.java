@@ -178,14 +178,17 @@ public class PhotoPickerActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_picker:
+                //方式一：
 //        BoxingConfig singleImgConfig = new BoxingConfig(BoxingConfig.Mode.SINGLE_IMG)//图片单选
 //                .needCamera(R.drawable.ic_photo_camera)
 //                .withMediaPlaceHolderRes(R.drawable.ic_crop_original);
 //        Boxing.of(singleImgConfig).withIntent(this, BoxingActivity.class)
 //                .start(this, COMPRESS_REQUEST_CODE);
-
-//        startActivityForResult(new Intent(this, PhotoPickActivity.class),MYDIY);
-
+                //方式二：
+//                startActivityForResult(new Intent(this, PhotoPickActivity.class), MYDIY);
+                //方式三：
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                //方式四：
                 //调用系统取选取,只能单张,属于是文件选取
                 // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
                 // browser.
@@ -200,7 +203,7 @@ public class PhotoPickerActivity extends BaseActivity {
                 // To search for all documents available via installed storage providers,
                 // it would be "*/*".
 
-                Intent intent = new Intent(Intent.ACTION_PICK);
+
                 intent.setType("image/*");
                 startActivityForResult(intent, READ_REQUEST_CODE);
                 break;
@@ -439,8 +442,9 @@ public class PhotoPickerActivity extends BaseActivity {
                 return cursor.getString(column_index);
             }
         } finally {
-            if (cursor != null)
+            if (cursor != null) {
                 cursor.close();
+            }
         }
         return null;
     }

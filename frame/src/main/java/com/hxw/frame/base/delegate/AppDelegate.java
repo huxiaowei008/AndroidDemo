@@ -32,13 +32,15 @@ public class AppDelegate implements App, AppLifecycles {
 
     //这个activity生命周期回调是本框架内部代码的实现,与外部无关
     @Inject
-    protected ActivityLifecycle mActivityLifecycle;
+    ActivityLifecycle mActivityLifecycle;
+    @Inject
+    AppComponent mAppComponent;
+
     private Application mApplication;
-    private AppComponent mAppComponent;
     private List<AppLifecycles> mAppLifecycles = new ArrayList<>();//application的生命内容外部拓展
     //这里的activity生命周期回调是给外面拓展用的,在外面写好逻辑后通过注册这个直接使用
     private List<Application.ActivityLifecycleCallbacks> mActivityLifecycles = new ArrayList<>();//activity的生命内容外部拓展
-    private final List<ConfigModule> mModules;
+    private List<ConfigModule> mModules;
     private ComponentCallbacks2 mComponentCallback;
 
     public AppDelegate(Context context) {
@@ -60,16 +62,16 @@ public class AppDelegate implements App, AppLifecycles {
     @Override
     public void onCreate(Application application) {
         this.mApplication = application;
-        mAppComponent = DaggerAppComponent
+         DaggerAppComponent
                 .builder()
                 .appModule(new AppModule(mApplication))////提供application
                 .clientModule(new ClientModule())//用于提供okhttp和retrofit的单例
                 .globalConfigModule(getGlobeConfigModule(mApplication, mModules))
-                .build();
-        mAppComponent.inject(this);
+                .build().inject(this);
 
         mAppComponent.extras().put(ConfigModule.class.getName(), mModules);
 
+        this.mModules = null;
         //注册activity生命周期的回调
         mApplication.registerActivityLifecycleCallbacks(mActivityLifecycle);
         //注册activity生命周期的回调
@@ -77,13 +79,13 @@ public class AppDelegate implements App, AppLifecycles {
             mApplication.registerActivityLifecycleCallbacks(lifecycle);
         }
 
-        for (AppLifecycles lifecycle : mAppLifecycles) {
-            lifecycle.onCreate(mApplication);
-        }
-
         mComponentCallback = new AppComponentCallbacks(mApplication, mAppComponent);
 
         mApplication.registerComponentCallbacks(mComponentCallback);
+
+        for (AppLifecycles lifecycle : mAppLifecycles) {
+            lifecycle.onCreate(mApplication);
+        }
     }
 
     @Override
