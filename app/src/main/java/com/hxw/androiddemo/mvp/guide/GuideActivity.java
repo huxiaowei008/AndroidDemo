@@ -2,11 +2,8 @@ package com.hxw.androiddemo.mvp.guide;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.hxw.androiddemo.R;
@@ -30,8 +27,6 @@ public class GuideActivity extends BaseActivity {
     TextView tvCd;
     @BindView(R.id.ultra_viewpager)
     UltraViewPager ultraViewpager;
-    @BindView(R.id.btn_guide)
-    Button btnGuide;
 
     private UltraPagerAdapter adapter;
 
@@ -85,12 +80,6 @@ public class GuideActivity extends BaseActivity {
                 break;
         }
 
-        btnGuide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
     }
 
@@ -112,18 +101,21 @@ public class GuideActivity extends BaseActivity {
                 .setMargin(0, 0, 0, 10)
                 .build();
         ultraViewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            boolean isEnd = false;
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                if (isEnd && position == 2) {
+                    finish();
+                    overridePendingTransition(R.anim.slide_right_entry,R.anim.slide_left_exit);
+                } else {
+                    isEnd = (position == 2);
+                }
             }
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 2) {
-                    btnGuide.setVisibility(View.VISIBLE);
-                } else {
-                    btnGuide.setVisibility(View.GONE);
-                }
+
             }
 
             @Override
