@@ -29,7 +29,10 @@ import com.hxw.frame.http.ErrorHandler;
 import com.hxw.frame.integration.IRepositoryManager;
 import com.hxw.frame.update.OnUpdateListener;
 import com.hxw.frame.update.UpdateManager;
+import com.hxw.frame.utils.StringUtils;
 import com.hxw.frame.utils.UIUtils;
+
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -76,28 +79,30 @@ public class MainActivity extends BaseActivity {
      */
     @Override
     public void init(Bundle savedInstanceState) {
-        repositoryManager.getRetrofitService(ComAPI.class)
-                .getSetMeal("00001903")
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(this.<String>bindToLifecycle())
-                .subscribe(new AbstractErrorSubscriber<String>(handler) {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
+//        repositoryManager.getRetrofitService(ComAPI.class)
+//                .getSetMeal("00001903")
+//                .subscribeOn(Schedulers.io())
+//                .unsubscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .compose(this.<String>bindToLifecycle())
+//                .subscribe(new AbstractErrorSubscriber<String>(handler) {
+//                    @Override
+//                    public void onSubscribe(@NonNull Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(@NonNull String s) {
+//                        UIUtils.makeText(MainActivity.this, "成功");
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
 
-                    }
-
-                    @Override
-                    public void onNext(@NonNull String s) {
-                        UIUtils.makeText(MainActivity.this, "成功");
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        Map<String,String> map= StringUtils.requestUrl("http://172.16.8.94:8080/GetNearByArea?token=195184551&lat=27.974277&lon=120.7336");
     }
 
     @OnClick({R.id.btn_1, R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7,

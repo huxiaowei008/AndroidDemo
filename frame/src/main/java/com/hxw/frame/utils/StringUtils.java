@@ -2,6 +2,7 @@ package com.hxw.frame.utils;
 
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,6 +10,9 @@ import org.json.JSONObject;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -181,5 +185,40 @@ public class StringUtils {
      */
     public static boolean isSpace(String s) {
         return (s == null || s.trim().length() == 0);
+    }
+
+    /**
+     * 解析url的参数
+     * @param s 完整的url Sting
+     * @return 存放参数键值对的map
+     */
+    public static Map<String, String> requestUrl(String s) {
+        Map<String, String> mapRequest = new HashMap<String, String>();
+        URL url = null;
+        String[] arrSplit = null;
+        String query = null;
+        try {
+            url = new URL(s);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        if (url != null) {
+            query = url.getQuery();
+        }
+        if (query == null) {
+            return mapRequest;
+        }
+        //每个键值为一组
+        arrSplit = query.split("[&]");
+        for (String strSplit : arrSplit) {
+            String[] arrSplitEqual = strSplit.split("[=]");
+            //解析出键值
+            if (!TextUtils.isEmpty(arrSplitEqual[0]) && !TextUtils.isEmpty(arrSplitEqual[1])) {
+                mapRequest.put(arrSplitEqual[0], arrSplitEqual[1]);
+            } else if (!TextUtils.isEmpty(arrSplitEqual[0])) {
+                mapRequest.put(arrSplitEqual[0], "");
+            }
+        }
+        return mapRequest;
     }
 }
