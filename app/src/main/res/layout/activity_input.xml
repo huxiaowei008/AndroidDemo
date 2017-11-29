@@ -11,11 +11,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@color/colorAccent"
+        android:background="#00000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:maxLength="8"
+        app:isConnect="true"
         app:textBackground="@color/cyan_500"
         app:textBackgroundSelected="@drawable/ic_crop_original" />
 

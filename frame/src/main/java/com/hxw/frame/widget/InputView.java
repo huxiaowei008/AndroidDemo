@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.AppCompatTextView;
@@ -29,6 +30,7 @@ public class InputView extends AppCompatTextView {
 
     private Context mContext;
     private ColorStateList textColor;
+    private ColorStateList lineColor;
 
     /**
      * 字体大小
@@ -49,9 +51,15 @@ public class InputView extends AppCompatTextView {
     private int currentTextLength;
     private String text;
     private TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+    private Paint paint;
+    private RectF rectF;
+    private int strokeWidth;
+    private int radius;//圆角矩形的圆角度
+
 
     private Drawable backgroundDrawable;
     private Drawable backgroundSelectedDrawable;
+    private boolean isConnect;
 
 
     public InputView(Context context) {
@@ -72,11 +80,16 @@ public class InputView extends AppCompatTextView {
             if (a.hasValue(R.styleable.InputView_textColor)) {
                 textColor = a.getColorStateList(R.styleable.InputView_textColor);
             }
+            if (a.hasValue(R.styleable.InputView_lineColor)) {
+                lineColor = a.getColorStateList(R.styleable.InputView_lineColor);
+            }
             backgroundDrawable = a.getDrawable(R.styleable.InputView_textBackground);
             backgroundSelectedDrawable = a.getDrawable(R.styleable.InputView_textBackgroundSelected);
             maxLength = a.getInt(R.styleable.InputView_maxLength, -1);
             boxMargin = a.getDimensionPixelOffset(R.styleable.InputView_boxMargin, dp2px(mContext, 4));
-
+            isConnect = a.getBoolean(R.styleable.InputView_isConnect, false);
+            strokeWidth = a.getDimensionPixelOffset(R.styleable.InputView_strokeWidth, dp2px(mContext, 1));
+            radius = a.getDimensionPixelOffset(R.styleable.InputView_radius, dp2px(mContext, 4));
         } finally {
             a.recycle();
         }
@@ -121,7 +134,8 @@ public class InputView extends AppCompatTextView {
         //获取宽高最小的一边调整,使宽度小于等于高度
         int min = Math.min(boxWidth, height);
         int dw = (boxWidth - min) / 2;
-        int bgSize = min - boxMargin * 2;//背景最小一边的大小
+        //背景最小一边的大小
+        int bgSize = min - boxMargin * 2;
         if (bgSize <= 0) {
             return;
         }
@@ -131,17 +145,46 @@ public class InputView extends AppCompatTextView {
 
         int baseline = (height - fontMetrics.bottom - fontMetrics.top) / 2;
 
-        for (int i = 0; i < maxLength; i++) {
-            Rect box = getBoxRect(boxWidth, height, dw, i);
-            if (i == currentTextLength) {
-                backgroundSelectedDrawable.setBounds(box);
-                backgroundSelectedDrawable.draw(canvas);
-            } else {
-                backgroundDrawable.setBounds(box);
-                backgroundDrawable.draw(canvas);
+        if (isConnect) {
+            if (paint == null) {
+                paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(strokeWidth);
+                if (lineColor != null) {
+                    paint.setColor(lineColor.getDefaultColor());
+                }
+                paint.setStrokeJoin(Paint.Join.ROUND);
             }
-            if (i < currentTextLength) {
-                canvas.drawText(text.substring(i, i + 1), box.centerX(), baseline, textPaint);
+            if (rectF == null) {
+                rectF = new RectF(strokeWidth / 2, strokeWidth / 2,
+                        width - strokeWidth / 2, height - strokeWidth / 2);
+            }
+
+            canvas.drawRoundRect(rectF, radius, radius, paint);
+            for (int i = 0; i < maxLength; i++) {
+                int bright = (i + 1) * boxWidth;
+                if (i < maxLength - 1) {
+                    //最后一条线不用画
+                    canvas.drawLine(bright, 0, bright, height, paint);
+                }
+                if (i < currentTextLength) {
+                    canvas.drawText(text.substring(i, i + 1), bright - boxWidth / 2, baseline, textPaint);
+                }
+            }
+
+        } else {
+            for (int i = 0; i < maxLength; i++) {
+                Rect box = getBoxRect(boxWidth, height, dw, i);
+                if (i == currentTextLength) {
+                    backgroundSelectedDrawable.setBounds(box);
+                    backgroundSelectedDrawable.draw(canvas);
+                } else {
+                    backgroundDrawable.setBounds(box);
+                    backgroundDrawable.draw(canvas);
+                }
+                if (i < currentTextLength) {
+                    canvas.drawText(text.substring(i, i + 1), box.centerX(), baseline, textPaint);
+                }
             }
         }
     }
@@ -189,4 +232,5 @@ public class InputView extends AppCompatTextView {
         final float density = context.getResources().getDisplayMetrics().density;
         return (int) (dp * density + 0.5);
     }
+
 }
