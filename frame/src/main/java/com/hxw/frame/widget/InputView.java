@@ -1,5 +1,6 @@
 package com.hxw.frame.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -10,10 +11,13 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.AppCompatEditText;
 import android.text.InputFilter;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.inputmethod.InputMethodManager;
 
 import com.hxw.frame.R;
 
@@ -26,7 +30,7 @@ import timber.log.Timber;
  * @date 2017/11/7
  */
 
-public class InputView extends AppCompatTextView {
+public class InputView extends AppCompatEditText {
 
     private Context mContext;
     private ColorStateList textColor;
@@ -49,7 +53,6 @@ public class InputView extends AppCompatTextView {
     private int boxMargin; //字符方块的margin
 
     private int currentTextLength;
-    private String text;
     private TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private Paint paint;
     private RectF rectF;
@@ -60,7 +63,13 @@ public class InputView extends AppCompatTextView {
     private Drawable backgroundDrawable;
     private Drawable backgroundSelectedDrawable;
     private boolean isConnect;
+    private boolean isFocused;
 
+    private int cursorPosition;//光标的位置
+    private String[] textArray;
+    private int boxWidth;
+
+    private InputMethodManager imm;//软键盘
 
     public InputView(Context context) {
         this(context, null);
@@ -85,7 +94,7 @@ public class InputView extends AppCompatTextView {
             }
             backgroundDrawable = a.getDrawable(R.styleable.InputView_textBackground);
             backgroundSelectedDrawable = a.getDrawable(R.styleable.InputView_textBackgroundSelected);
-            maxLength = a.getInt(R.styleable.InputView_maxLength, -1);
+            maxLength = a.getInt(R.styleable.InputView_maxLength, 4);
             boxMargin = a.getDimensionPixelOffset(R.styleable.InputView_boxMargin, dp2px(mContext, 4));
             isConnect = a.getBoolean(R.styleable.InputView_isConnect, false);
             strokeWidth = a.getDimensionPixelOffset(R.styleable.InputView_strokeWidth, dp2px(mContext, 1));
@@ -97,9 +106,8 @@ public class InputView extends AppCompatTextView {
         //设置光标不可见
         setCursorVisible(false);
         setMaxLines(1);
-        if (maxLength > 0) {
-            setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
-        }
+        setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+        textArray = new String[maxLength];
         if (backgroundDrawable == null) {
             backgroundDrawable = new ColorDrawable(Color.parseColor("#00000000"));
         }
@@ -116,26 +124,28 @@ public class InputView extends AppCompatTextView {
         textPaint.density = getResources().getDisplayMetrics().density;
         textPaint.setFakeBoldText(false);
         textPaint.setTextSkewX(0);
+        textPaint.setStrokeWidth(dp2px(mContext, 2));
         if (textColor != null) {
             textPaint.setColor(textColor.getColorForState(getDrawableState(), 0));
         }
 
         textPaint.setTextAlign(Paint.Align.CENTER);
+
+        imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Timber.tag("InputView").d("onDraw");
+        Timber.tag("InputView").d("onDraw select" + getSelectionStart());
         int width = getWidth();
         int height = getHeight();
 
         //大框的宽度,高度和控件一样
-        int boxWidth = width / maxLength;
+        boxWidth = width / maxLength;
         //获取宽高最小的一边调整,使宽度小于等于高度
         int min = Math.min(boxWidth, height);
         int dw = (boxWidth - min) / 2;
-        //背景最小一边的大小
-        int bgSize = min - boxMargin * 2;
+        int bgSize = min - boxMargin * 2;//背景最小一边的大小
         if (bgSize <= 0) {
             return;
         }
@@ -163,12 +173,15 @@ public class InputView extends AppCompatTextView {
             canvas.drawRoundRect(rectF, radius, radius, paint);
             for (int i = 0; i < maxLength; i++) {
                 int bright = (i + 1) * boxWidth;
-                if (i < maxLength - 1) {
-                    //最后一条线不用画
+                if (i < maxLength - 1) {//最后一条线不用画
                     canvas.drawLine(bright, 0, bright, height, paint);
                 }
                 if (i < currentTextLength) {
-                    canvas.drawText(text.substring(i, i + 1), bright - boxWidth / 2, baseline, textPaint);
+                    canvas.drawText(getText().toString().substring(i, i + 1), bright - boxWidth / 2, baseline, textPaint);
+                }
+                if (i == currentTextLength && isFocused) {
+                    canvas.drawLine(bright - boxWidth / 2, height / 2 - height / 4,
+                            bright - boxWidth / 2, height / 2 + height / 4, textPaint);
                 }
             }
 
@@ -183,7 +196,7 @@ public class InputView extends AppCompatTextView {
                     backgroundDrawable.draw(canvas);
                 }
                 if (i < currentTextLength) {
-                    canvas.drawText(text.substring(i, i + 1), box.centerX(), baseline, textPaint);
+                    canvas.drawText(getText().toString().substring(i, i + 1), box.centerX(), baseline, textPaint);
                 }
             }
         }
@@ -212,8 +225,21 @@ public class InputView extends AppCompatTextView {
     @Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
+        Timber.d("onTextChanged:text=" + text + "  start=" + start + "  lengthBefore=" + lengthBefore + "  lengthAfter=" + lengthAfter);
         this.currentTextLength = text.toString().length();
-        this.text = text.toString();
+        if (textArray == null) {
+            return;
+        }
+        cursorPosition = start + 1;
+        Timber.d("onTextChanged:select=" + getSelectionStart());
+        if (cursorPosition <= text.toString().length()) {
+            String s = text.toString().substring(start, start + 1);
+            Timber.d("s=" + s);
+            textArray[start] = s;
+            for (int i = 0; i < textArray.length; i++) {
+                Timber.d("textArray" + i + ":" + textArray[i]);
+            }
+        }
         invalidate();
     }
 
@@ -224,6 +250,7 @@ public class InputView extends AppCompatTextView {
 
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
+        textArray = new String[maxLength];
         setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
         invalidate();
     }
@@ -233,4 +260,41 @@ public class InputView extends AppCompatTextView {
         return (int) (dp * density + 0.5);
     }
 
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        isFocused = focused;
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            float x = event.getX();
+            int c = (int) x / boxWidth;
+            Timber.d("c=" + c);
+            for (int i = c; c < textArray.length; c++) {
+                if (!TextUtils.isEmpty(textArray[i])) {
+                    cursorPosition = c;
+                    invalidate();
+                    setSelection(cursorPosition);
+                    Timber.d("重绘");
+                    break;
+                }
+            }
+            if (imm != null) {
+                imm.viewClicked(this);
+                imm.showSoftInput(this, 0);
+            }
+        }
+        //这里不用返回super的方法,因为super方法里会按textView的逻辑重新设置光标位置,textView中内容的位置和现在展示的是不一样的,
+        //虽然没有显示出来,但textView中内容的位置依旧保留了
+        return true;
+    }
+
+    @Override
+    protected void onSelectionChanged(int selStart, int selEnd) {
+        super.onSelectionChanged(selStart, selEnd);
+        Timber.d("selectStart:" + selStart + "  selectEnd:" + selEnd);
+    }
 }

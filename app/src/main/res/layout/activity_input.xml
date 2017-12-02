@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:maxLength="8"
+        app:maxLength="6"
         app:isConnect="true"
         app:textBackground="@color/cyan_500"
         app:textBackgroundSelected="@drawable/ic_crop_original" />
