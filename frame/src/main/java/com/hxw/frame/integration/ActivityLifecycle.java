@@ -31,7 +31,9 @@ import io.reactivex.subjects.Subject;
 import timber.log.Timber;
 
 /**
- * Created by hxw on 2017/4/14.
+ *
+ * @author hxw
+ * @date 2017/4/14
  */
 @Singleton
 public class ActivityLifecycle implements Application.ActivityLifecycleCallbacks {

@@ -12,7 +12,9 @@ import com.hxw.frame.utils.UIUtils;
 import org.simple.eventbus.EventBus;
 
 /**
- * Created by hxw on 2017/5/3.
+ *
+ * @author hxw
+ * @date 2017/5/3
  */
 
 public class ActivityDelegate implements IActivityDelegate {
