@@ -12,6 +12,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +23,8 @@ import android.view.inputmethod.InputMethodManager;
 import com.hxw.frame.R;
 
 import timber.log.Timber;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * 类似密码框输入,适用于字数少的,行数为1,字体大小适配控件大小
@@ -63,7 +66,6 @@ public class InputView extends View {
     private Drawable backgroundDrawable;
     private Drawable backgroundSelectedDrawable;
     private boolean isConnect;
-    private boolean isFocused;
 
     private int cursorPosition;//画图光标的位置,不是text内部的光标
     private String[] textArray;
@@ -105,10 +107,6 @@ public class InputView extends View {
             a.recycle();
         }
 
-        //设置光标不可见
-//        setCursorVisible(false);
-//        setMaxLines(1);
-//        setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
         textArray = new String[maxLength];
         if (backgroundDrawable == null) {
             backgroundDrawable = new ColorDrawable(Color.parseColor("#00000000"));
@@ -134,6 +132,22 @@ public class InputView extends View {
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+        if (getLayoutParams().height == WRAP_CONTENT) {
+            height = Math.min(getMeasuredHeight(), dp2px(mContext, 24));
+        }
+        if (getLayoutParams().width == WRAP_CONTENT) {
+            width = Math.min(getMeasuredWidth(), dp2px(mContext, 192));
+        }
+        setMeasuredDimension(width, height);
     }
 
     @Override
@@ -177,26 +191,32 @@ public class InputView extends View {
                 if (i < maxLength - 1) {//最后一条线不用画
                     canvas.drawLine(bright, 0, bright, height, paint);
                 }
-                if (textArray[i] != null) {
+                if (!TextUtils.isEmpty(textArray[i])) {
                     canvas.drawText(textArray[i], bright - boxWidth / 2, baseline, textPaint);
                 }
-                if (i == cursorPosition && isFocused) {
-                    canvas.drawLine(bright - boxWidth / 2, height / 2 - height / 4,
-                            bright - boxWidth / 2, height / 2 + height / 4, textPaint);
+
+                if (i == cursorPosition && showcursor()) {
+                    if (TextUtils.isEmpty(textArray[i])) {
+                        canvas.drawLine(bright - boxWidth / 2, height / 2 - height / 4,
+                                bright - boxWidth / 2, height / 2 + height / 4, textPaint);
+                    } else {
+                        canvas.drawLine(bright - boxWidth / 2 + textSize / 2, height / 2 - height / 4,
+                                bright - boxWidth / 2 + textSize / 2, height / 2 + height / 4, textPaint);
+                    }
                 }
             }
 
         } else {
             for (int i = 0; i < maxLength; i++) {
                 Rect box = getBoxRect(boxWidth, height, dw, i);
-                if (i == cursorPosition) {
+                if (i == cursorPosition && showcursor()) {
                     backgroundSelectedDrawable.setBounds(box);
                     backgroundSelectedDrawable.draw(canvas);
                 } else {
                     backgroundDrawable.setBounds(box);
                     backgroundDrawable.draw(canvas);
                 }
-                if (textArray[i] != null) {
+                if (!TextUtils.isEmpty(textArray[i])) {
                     canvas.drawText(textArray[i], box.centerX(), baseline, textPaint);
                 }
             }
@@ -235,14 +255,29 @@ public class InputView extends View {
             return;
         }
         Timber.d("onTextChanged:positon=" + cursorPosition);
+
         if (isAdd) {
+            if (cursorPosition == maxLength) {
+                return;
+            }
             //增加了一个字符
             textArray[cursorPosition] = text.toString().substring(0, 1);
             cursorPosition++;
         } else {
+            if (cursorPosition == 0) {
+                return;
+            }
             //减少了一个字符
-            textArray[cursorPosition] = null;
-            cursorPosition--;
+            if (cursorPosition == maxLength) {
+                textArray[cursorPosition - 1] = null;
+                cursorPosition--;
+            } else if (TextUtils.isEmpty(textArray[cursorPosition])) {
+                textArray[cursorPosition - 1] = null;
+                cursorPosition--;
+            } else {
+                textArray[cursorPosition] = null;
+            }
+
         }
 //        {
 //            //多字符变换
@@ -262,7 +297,7 @@ public class InputView extends View {
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
         textArray = new String[maxLength];
-//        setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+        cursorPosition = 0;
         invalidate();
     }
 
@@ -276,31 +311,19 @@ public class InputView extends View {
         return (int) (dp * density + 0.5);
     }
 
-    @Override
-    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        isFocused = focused;
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            float x = event.getX();
-            int c = (int) x / boxWidth;
-            Timber.d("c=" + c);
-            cursorPosition = c;
-
-            invalidate();
-            Timber.d("重绘");
-
-            showSoftInput();
+        if (onCheckIsTextEditor()) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                float x = event.getX();
+                cursorPosition = (int) x / boxWidth;
+                invalidate();
+                showSoftInput();
+            }
         }
-        //这里不用返回super的方法,因为super方法里会按textView的逻辑重新设置光标位置,textView中内容的位置和现在展示的是不一样的,
-        //虽然没有显示出来,但textView中内容的位置依旧保留了
-        return true;
+
+        return super.onTouchEvent(event);
     }
 
     //让这个View变成文本可编辑的状态
@@ -352,4 +375,13 @@ public class InputView extends View {
             restartInput();
         }
     }
+
+    /**
+     * @return true 需要画 false 不需要画
+     */
+    private boolean showcursor() {
+        return isFocused() && onCheckIsTextEditor() && isEnabled();
+    }
+
+    // TODO: 2017/12/6 inputType 完善，多字符整体变换
 }
