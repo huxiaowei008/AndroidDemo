@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.InputFilter;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -74,6 +75,8 @@ public class InputView extends View {
     private InputMethodManager imm;//软键盘
     private int inputType;
 
+    private InputFilter mFilters ;//第一个控制长度,第二个控制内容
+
     public InputView(Context context) {
         this(context, null);
     }
@@ -132,7 +135,6 @@ public class InputView extends View {
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-
     }
 
     @Override
@@ -205,7 +207,6 @@ public class InputView extends View {
                     }
                 }
             }
-
         } else {
             for (int i = 0; i < maxLength; i++) {
                 Rect box = getBoxRect(boxWidth, height, dw, i);
@@ -279,18 +280,6 @@ public class InputView extends View {
             }
 
         }
-//        {
-//            //多字符变换
-//            textArray = new String[maxLength];
-//            for (int i = 0; i < currentTextLength; i++) {
-//                textArray[i] = text.toString().substring(i, i + 1);
-//            }
-//            cursorPosition = currentTextLength;
-//        }
-
-        for (int i = 0; i < textArray.length; i++) {
-            Timber.d("textArray" + i + ":" + textArray[i]);
-        }
         invalidate();
     }
 
@@ -299,11 +288,33 @@ public class InputView extends View {
         textArray = new String[maxLength];
         cursorPosition = 0;
         invalidate();
+
     }
 
     public void setInputType(int type) {
         this.inputType = type;
         restartInput();
+
+    }
+
+    public void setText(String text) {
+        for (int i = 0; i < maxLength; i++) {
+            if (i < text.length()) {
+                textArray[i] = text.substring(i, i + 1);
+            }
+        }
+        cursorPosition = text.length();
+        invalidate();
+    }
+
+    public String getText() {
+        StringBuilder builder = new StringBuilder();
+        for (String str : textArray) {
+            if (str != null) {
+                builder.append(str);
+            }
+        }
+        return builder.toString();
     }
 
     public static int dp2px(Context context, float dp) {
@@ -336,8 +347,17 @@ public class InputView extends View {
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
 
         outAttrs.inputType = inputType;
+
         if (onCheckIsTextEditor() && isEnabled()) {
-            return new EasyInputConnection(this);
+            if (focusSearch(FOCUS_DOWN) != null) {
+                outAttrs.imeOptions |= EditorInfo.IME_FLAG_NAVIGATE_NEXT;
+            }
+            if (focusSearch(FOCUS_UP) != null) {
+                outAttrs.imeOptions |= EditorInfo.IME_FLAG_NAVIGATE_PREVIOUS;
+            }
+            InputConnection ic = new EasyInputConnection(this);
+            outAttrs.initialCapsMode = ic.getCursorCapsMode(inputType);
+            return ic;
         }
         return null;
     }
@@ -383,5 +403,6 @@ public class InputView extends View {
         return isFocused() && onCheckIsTextEditor() && isEnabled();
     }
 
-    // TODO: 2017/12/6 inputType 完善，多字符整体变换
+    // TODO: 2017/12/6 inputType 完善
+
 }
