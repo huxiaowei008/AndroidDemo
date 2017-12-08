@@ -40,10 +40,11 @@ public class InputActivity extends BaseActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int max = Integer.valueOf(edtMax.getText().toString());
-                if (max > 0) {
-                    inputView.setMaxLength(max);
-                }
+//                int max = Integer.valueOf(edtMax.getText().toString());
+//                if (max > 0) {
+//                    inputView.setMaxLength(max);
+//                }
+                inputView.setText("adfasd");
             }
         });
 

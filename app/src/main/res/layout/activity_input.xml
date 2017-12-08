@@ -17,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:maxLength="6"
-        app:inputType="number"
         app:textBackground="@color/cyan_500"
         app:textBackgroundSelected="@drawable/ic_crop_original" />
 

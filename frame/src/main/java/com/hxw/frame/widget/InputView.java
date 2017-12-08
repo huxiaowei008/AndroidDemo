@@ -12,6 +12,8 @@ import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.SpannedString;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -22,8 +24,6 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
 import com.hxw.frame.R;
-
-import timber.log.Timber;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -36,6 +36,8 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class InputView extends View {
 
+    private static final Spanned EMPTY_SPANNED = new SpannedString("");
+
     private Context mContext;
     private ColorStateList textColor;
     private ColorStateList lineColor;
@@ -44,19 +46,9 @@ public class InputView extends View {
      * 字体大小
      */
     private float textSize;
-//    /**
-//     * 每个字的常态背景资源id
-//     */
-//    private int textBackgroundId;
-//    /**
-//     * 每个字的选中背景资源id
-//     */
-//    private int textBackgroundSelectedId;
-
     private int maxLength;//最大字符数
     private int boxMargin; //字符方块的margin
 
-    private int currentTextLength;
     private TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private Paint paint;
     private RectF rectF;
@@ -73,9 +65,9 @@ public class InputView extends View {
     private int boxWidth;
 
     private InputMethodManager imm;//软键盘
-    private int inputType;
 
-    private InputFilter mFilters ;//第一个控制长度,第二个控制内容
+
+    private InputFilter mFilter;//过滤器
 
     public InputView(Context context) {
         this(context, null);
@@ -88,7 +80,7 @@ public class InputView extends View {
     public InputView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-
+        String input;
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.InputView);
 
         try {
@@ -98,7 +90,7 @@ public class InputView extends View {
             if (a.hasValue(R.styleable.InputView_lineColor)) {
                 lineColor = a.getColorStateList(R.styleable.InputView_lineColor);
             }
-            inputType = a.getInt(R.styleable.InputView_inputType, EditorInfo.TYPE_CLASS_TEXT);
+            input = a.getString(R.styleable.InputView_input);
             backgroundDrawable = a.getDrawable(R.styleable.InputView_textBackground);
             backgroundSelectedDrawable = a.getDrawable(R.styleable.InputView_textBackgroundSelected);
             maxLength = a.getInt(R.styleable.InputView_maxLength, 4);
@@ -117,12 +109,6 @@ public class InputView extends View {
         if (backgroundSelectedDrawable == null) {
             backgroundSelectedDrawable = new ColorDrawable(Color.parseColor("#00000000"));
         }
-//        if (textBackgroundId != -1) {
-//            backgroundDrawable = AppCompatResources.getDrawable(mContext, textBackgroundId);
-//        }
-//        if (textBackgroundSelectedId != -1) {
-//            backgroundSelectedDrawable = AppCompatResources.getDrawable(mContext, textBackgroundSelectedId);
-//        }
 
         textPaint.density = getResources().getDisplayMetrics().density;
         textPaint.setFakeBoldText(false);
@@ -134,6 +120,9 @@ public class InputView extends View {
 
         textPaint.setTextAlign(Paint.Align.CENTER);
 
+        if (!TextUtils.isEmpty(input)) {
+            mFilter = new InputViewFilter(input);
+        }
         imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
@@ -251,34 +240,34 @@ public class InputView extends View {
      * @param text  变换的字符
      * @param isAdd true时增加一个字符,false时减少一个字符
      */
-    public void sendOnTextChanged(CharSequence text, boolean isAdd) {
+    void sendOnTextChanged(CharSequence text, boolean isAdd) {
+        CharSequence out;
         if (textArray == null) {
             return;
         }
-        Timber.d("onTextChanged:positon=" + cursorPosition);
-
         if (isAdd) {
-            if (cursorPosition == maxLength) {
-                return;
-            }
             //增加了一个字符
-            textArray[cursorPosition] = text.toString().substring(0, 1);
-            cursorPosition++;
-        } else {
-            if (cursorPosition == 0) {
-                return;
-            }
-            //减少了一个字符
-            if (cursorPosition == maxLength) {
-                textArray[cursorPosition - 1] = null;
-                cursorPosition--;
-            } else if (TextUtils.isEmpty(textArray[cursorPosition])) {
-                textArray[cursorPosition - 1] = null;
-                cursorPosition--;
+            if (mFilter != null) {
+                out = mFilter.filter(text, 0, text.length(), EMPTY_SPANNED, 0, 0);
             } else {
-                textArray[cursorPosition] = null;
+                out = text;
+            }
+            if (cursorPosition < maxLength && !TextUtils.isEmpty(out)) {
+                //增加了一个字符
+                textArray[cursorPosition] = out.toString().substring(0, 1);
+                cursorPosition++;
             }
 
+        } else {
+            //减少了一个字符
+            if (cursorPosition > 0) {
+                if (cursorPosition == maxLength || TextUtils.isEmpty(textArray[cursorPosition])) {
+                    textArray[cursorPosition - 1] = null;
+                    cursorPosition--;
+                } else {
+                    textArray[cursorPosition] = null;
+                }
+            }
         }
         invalidate();
     }
@@ -291,16 +280,26 @@ public class InputView extends View {
 
     }
 
-    public void setInputType(int type) {
-        this.inputType = type;
-        restartInput();
-
+    public void setFilter(InputFilter filter) {
+        mFilter = filter;
+        textArray = new String[maxLength];
+        cursorPosition = 0;
+        invalidate();
     }
 
-    public void setText(String text) {
+    public void setText(CharSequence text) {
+        CharSequence out;
+        if (mFilter != null) {
+            out = mFilter.filter(text, 0, text.length(), EMPTY_SPANNED, 0, 0);
+        } else {
+            out = text;
+        }
+        if (TextUtils.isEmpty(out)) {
+            return;
+        }
         for (int i = 0; i < maxLength; i++) {
-            if (i < text.length()) {
-                textArray[i] = text.substring(i, i + 1);
+            if (i < out.length()) {
+                textArray[i] = out.toString().substring(i, i + 1);
             }
         }
         cursorPosition = text.length();
@@ -340,13 +339,11 @@ public class InputView extends View {
     //让这个View变成文本可编辑的状态
     @Override
     public boolean onCheckIsTextEditor() {
-        return inputType != EditorInfo.TYPE_NULL;
+        return true;
     }
 
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-
-        outAttrs.inputType = inputType;
 
         if (onCheckIsTextEditor() && isEnabled()) {
             if (focusSearch(FOCUS_DOWN) != null) {
@@ -355,9 +352,7 @@ public class InputView extends View {
             if (focusSearch(FOCUS_UP) != null) {
                 outAttrs.imeOptions |= EditorInfo.IME_FLAG_NAVIGATE_PREVIOUS;
             }
-            InputConnection ic = new EasyInputConnection(this);
-            outAttrs.initialCapsMode = ic.getCursorCapsMode(inputType);
-            return ic;
+            return new EasyInputConnection(this);
         }
         return null;
     }
@@ -403,6 +398,5 @@ public class InputView extends View {
         return isFocused() && onCheckIsTextEditor() && isEnabled();
     }
 
-    // TODO: 2017/12/6 inputType 完善
 
 }
