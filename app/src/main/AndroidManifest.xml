@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:label,android:theme">
-        <activity android:name=".mvp.main.MainActivity">
+        <activity android:name=".mvp.InputActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,10 +39,11 @@
         <activity android:name=".mvp.CDActivity" />
         <activity android:name=".mvp.ShareImageActivity" />
         <activity android:name=".mvp.imagedetail.ImageDetailActivity" />
-        <activity android:name=".mvp.DrawerActivity"/>
-        <activity android:name=".mvp.QRActivity"/>
-        <activity android:name=".mvp.newzxing.NewZxingActivity"/>
-        <activity android:name=".mvp.camera2.Camera2Activity"/>
+        <activity android:name=".mvp.DrawerActivity" />
+        <activity android:name=".mvp.QRActivity" />
+        <activity android:name=".mvp.newzxing.NewZxingActivity" />
+        <activity android:name=".mvp.camera2.Camera2Activity" />
+        <!--<activity android:name=".mvp.InputActivity" />-->
         <!--glide配置-->
         <!--<meta-data-->
         <!--android:name="GlideConfiguration"-->

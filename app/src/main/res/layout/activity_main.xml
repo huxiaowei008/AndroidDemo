@@ -100,5 +100,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="camera2的扫描" />
+        <Button
+            android:id="@+id/btn_16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="类似密码的输入控件"/>
     </LinearLayout>
 </ScrollView>

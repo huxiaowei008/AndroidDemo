@@ -60,10 +60,10 @@
         <attr name="centerTopImgHeight" format="dimension" />
         <attr name="centerBottomImgHeight" format="dimension" />
 
-        <attr name="leftImgTint" format="reference"/>
-        <attr name="rightImgTint" format="reference"/>
-        <attr name="centerTopImgTint" format="reference"/>
-        <attr name="centerBottomImgTint" format="reference"/>
+        <attr name="leftImgTint" format="reference" />
+        <attr name="rightImgTint" format="reference" />
+        <attr name="centerTopImgTint" format="reference" />
+        <attr name="centerBottomImgTint" format="reference" />
 
         <attr name="isShowCheckBox" format="boolean" />
         <attr name="checkBoxRes" format="reference" />
@@ -87,11 +87,23 @@
         <attr name="topLineColor" format="color" />
         <attr name="bottomLineColor" format="color" />
 
-        <attr name="bottomMarginTop" format="dimension"/>
-        <attr name="topMarginBottom" format="dimension"/>
-        <attr name="marginLeft" format="dimension"/>
-        <attr name="marginRight" format="dimension"/>
-        <attr name="marginTop" format="dimension"/>
-        <attr name="marginBottom" format="dimension"/>
+        <attr name="bottomMarginTop" format="dimension" />
+        <attr name="topMarginBottom" format="dimension" />
+        <attr name="marginLeft" format="dimension" />
+        <attr name="marginRight" format="dimension" />
+        <attr name="marginTop" format="dimension" />
+        <attr name="marginBottom" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="InputView">
+        <attr name="textColor" format="reference|color" />
+        <attr name="textBackground" format="reference" />
+        <attr name="textBackgroundSelected" format="reference" />
+        <attr name="maxLength" format="integer" />
+        <attr name="boxMargin" format="dimension" />
+        <attr name="isConnect" format="boolean" />
+        <attr name="strokeWidth" format="dimension" />
+        <attr name="lineColor" format="reference|color" />
+        <attr name="radius" format="dimension" />
     </declare-styleable>
 </resources>

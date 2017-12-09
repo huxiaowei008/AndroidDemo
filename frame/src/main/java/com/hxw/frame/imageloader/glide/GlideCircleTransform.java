@@ -1,6 +1,5 @@
 package com.hxw.frame.imageloader.glide;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -53,6 +52,7 @@ public class GlideCircleTransform extends BitmapTransformation {
         paint.setAntiAlias(true);
         float r = size / 2f;
         canvas.drawCircle(r, r, r, paint);
+
         return result;
     }
 
