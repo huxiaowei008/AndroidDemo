@@ -11,17 +11,21 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.AppCompatEditText;
 import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.SpannedString;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
 import com.hxw.frame.R;
 
-import timber.log.Timber;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * 类似密码框输入,适用于字数少的,行数为1,字体大小适配控件大小
@@ -30,7 +34,9 @@ import timber.log.Timber;
  * @date 2017/11/7
  */
 
-public class InputView extends AppCompatEditText {
+public class InputView extends View {
+
+    private static final Spanned EMPTY_SPANNED = new SpannedString("");
 
     private Context mContext;
     private ColorStateList textColor;
@@ -40,19 +46,9 @@ public class InputView extends AppCompatEditText {
      * 字体大小
      */
     private float textSize;
-//    /**
-//     * 每个字的常态背景资源id
-//     */
-//    private int textBackgroundId;
-//    /**
-//     * 每个字的选中背景资源id
-//     */
-//    private int textBackgroundSelectedId;
-
     private int maxLength;//最大字符数
     private int boxMargin; //字符方块的margin
 
-    private int currentTextLength;
     private TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private Paint paint;
     private RectF rectF;
@@ -63,13 +59,15 @@ public class InputView extends AppCompatEditText {
     private Drawable backgroundDrawable;
     private Drawable backgroundSelectedDrawable;
     private boolean isConnect;
-    private boolean isFocused;
 
-    private int cursorPosition;//光标的位置
+    private int cursorPosition;//画图光标的位置,不是text内部的光标
     private String[] textArray;
     private int boxWidth;
 
     private InputMethodManager imm;//软键盘
+
+
+    private InputFilter mFilter;//过滤器
 
     public InputView(Context context) {
         this(context, null);
@@ -82,7 +80,7 @@ public class InputView extends AppCompatEditText {
     public InputView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-
+        String input;
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.InputView);
 
         try {
@@ -92,6 +90,7 @@ public class InputView extends AppCompatEditText {
             if (a.hasValue(R.styleable.InputView_lineColor)) {
                 lineColor = a.getColorStateList(R.styleable.InputView_lineColor);
             }
+            input = a.getString(R.styleable.InputView_input);
             backgroundDrawable = a.getDrawable(R.styleable.InputView_textBackground);
             backgroundSelectedDrawable = a.getDrawable(R.styleable.InputView_textBackgroundSelected);
             maxLength = a.getInt(R.styleable.InputView_maxLength, 4);
@@ -103,10 +102,6 @@ public class InputView extends AppCompatEditText {
             a.recycle();
         }
 
-        //设置光标不可见
-        setCursorVisible(false);
-        setMaxLines(1);
-        setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
         textArray = new String[maxLength];
         if (backgroundDrawable == null) {
             backgroundDrawable = new ColorDrawable(Color.parseColor("#00000000"));
@@ -114,12 +109,6 @@ public class InputView extends AppCompatEditText {
         if (backgroundSelectedDrawable == null) {
             backgroundSelectedDrawable = new ColorDrawable(Color.parseColor("#00000000"));
         }
-//        if (textBackgroundId != -1) {
-//            backgroundDrawable = AppCompatResources.getDrawable(mContext, textBackgroundId);
-//        }
-//        if (textBackgroundSelectedId != -1) {
-//            backgroundSelectedDrawable = AppCompatResources.getDrawable(mContext, textBackgroundSelectedId);
-//        }
 
         textPaint.density = getResources().getDisplayMetrics().density;
         textPaint.setFakeBoldText(false);
@@ -131,12 +120,29 @@ public class InputView extends AppCompatEditText {
 
         textPaint.setTextAlign(Paint.Align.CENTER);
 
+        if (!TextUtils.isEmpty(input)) {
+            mFilter = new InputViewFilter(input);
+        }
         imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+        if (getLayoutParams().height == WRAP_CONTENT) {
+            height = Math.min(getMeasuredHeight(), dp2px(mContext, 24));
+        }
+        if (getLayoutParams().width == WRAP_CONTENT) {
+            width = Math.min(getMeasuredWidth(), dp2px(mContext, 192));
+        }
+        setMeasuredDimension(width, height);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
-        Timber.tag("InputView").d("onDraw select" + getSelectionStart());
         int width = getWidth();
         int height = getHeight();
 
@@ -176,27 +182,32 @@ public class InputView extends AppCompatEditText {
                 if (i < maxLength - 1) {//最后一条线不用画
                     canvas.drawLine(bright, 0, bright, height, paint);
                 }
-                if (i < currentTextLength) {
-                    canvas.drawText(getText().toString().substring(i, i + 1), bright - boxWidth / 2, baseline, textPaint);
+                if (!TextUtils.isEmpty(textArray[i])) {
+                    canvas.drawText(textArray[i], bright - boxWidth / 2, baseline, textPaint);
                 }
-                if (i == currentTextLength && isFocused) {
-                    canvas.drawLine(bright - boxWidth / 2, height / 2 - height / 4,
-                            bright - boxWidth / 2, height / 2 + height / 4, textPaint);
+
+                if (i == cursorPosition && showcursor()) {
+                    if (TextUtils.isEmpty(textArray[i])) {
+                        canvas.drawLine(bright - boxWidth / 2, height / 2 - height / 4,
+                                bright - boxWidth / 2, height / 2 + height / 4, textPaint);
+                    } else {
+                        canvas.drawLine(bright - boxWidth / 2 + textSize / 2, height / 2 - height / 4,
+                                bright - boxWidth / 2 + textSize / 2, height / 2 + height / 4, textPaint);
+                    }
                 }
             }
-
         } else {
             for (int i = 0; i < maxLength; i++) {
                 Rect box = getBoxRect(boxWidth, height, dw, i);
-                if (i == currentTextLength) {
+                if (i == cursorPosition && showcursor()) {
                     backgroundSelectedDrawable.setBounds(box);
                     backgroundSelectedDrawable.draw(canvas);
                 } else {
                     backgroundDrawable.setBounds(box);
                     backgroundDrawable.draw(canvas);
                 }
-                if (i < currentTextLength) {
-                    canvas.drawText(getText().toString().substring(i, i + 1), box.centerX(), baseline, textPaint);
+                if (!TextUtils.isEmpty(textArray[i])) {
+                    canvas.drawText(textArray[i], box.centerX(), baseline, textPaint);
                 }
             }
         }
@@ -222,37 +233,87 @@ public class InputView extends AppCompatEditText {
         return new Rect(left, top, right, bottom);
     }
 
-    @Override
-    protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
-        super.onTextChanged(text, start, lengthBefore, lengthAfter);
-        Timber.d("onTextChanged:text=" + text + "  start=" + start + "  lengthBefore=" + lengthBefore + "  lengthAfter=" + lengthAfter);
-        this.currentTextLength = text.toString().length();
+
+    /**
+     * 发送字符变换
+     *
+     * @param text  变换的字符
+     * @param isAdd true时增加一个字符,false时减少一个字符
+     */
+    void sendOnTextChanged(CharSequence text, boolean isAdd) {
+        CharSequence out;
         if (textArray == null) {
             return;
         }
-        cursorPosition = start + 1;
-        Timber.d("onTextChanged:select=" + getSelectionStart());
-        if (cursorPosition <= text.toString().length()) {
-            String s = text.toString().substring(start, start + 1);
-            Timber.d("s=" + s);
-            textArray[start] = s;
-            for (int i = 0; i < textArray.length; i++) {
-                Timber.d("textArray" + i + ":" + textArray[i]);
+        if (isAdd) {
+            //增加了一个字符
+            if (mFilter != null) {
+                out = mFilter.filter(text, 0, text.length(), EMPTY_SPANNED, 0, 0);
+            } else {
+                out = text;
+            }
+            if (cursorPosition < maxLength && !TextUtils.isEmpty(out)) {
+                //增加了一个字符
+                textArray[cursorPosition] = out.toString().substring(0, 1);
+                cursorPosition++;
+            }
+
+        } else {
+            //减少了一个字符
+            if (cursorPosition > 0) {
+                if (cursorPosition == maxLength || TextUtils.isEmpty(textArray[cursorPosition])) {
+                    textArray[cursorPosition - 1] = null;
+                    cursorPosition--;
+                } else {
+                    textArray[cursorPosition] = null;
+                }
             }
         }
         invalidate();
     }
 
-    @Override
-    protected boolean getDefaultEditable() {
-        return true;
-    }
-
     public void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
         textArray = new String[maxLength];
-        setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+        cursorPosition = 0;
         invalidate();
+
+    }
+
+    public void setFilter(InputFilter filter) {
+        mFilter = filter;
+        textArray = new String[maxLength];
+        cursorPosition = 0;
+        invalidate();
+    }
+
+    public void setText(CharSequence text) {
+        CharSequence out;
+        if (mFilter != null) {
+            out = mFilter.filter(text, 0, text.length(), EMPTY_SPANNED, 0, 0);
+        } else {
+            out = text;
+        }
+        if (TextUtils.isEmpty(out)) {
+            return;
+        }
+        for (int i = 0; i < maxLength; i++) {
+            if (i < out.length()) {
+                textArray[i] = out.toString().substring(i, i + 1);
+            }
+        }
+        cursorPosition = text.length();
+        invalidate();
+    }
+
+    public String getText() {
+        StringBuilder builder = new StringBuilder();
+        for (String str : textArray) {
+            if (str != null) {
+                builder.append(str);
+            }
+        }
+        return builder.toString();
     }
 
     public static int dp2px(Context context, float dp) {
@@ -260,41 +321,82 @@ public class InputView extends AppCompatEditText {
         return (int) (dp * density + 0.5);
     }
 
-    @Override
-    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        isFocused = focused;
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            float x = event.getX();
-            int c = (int) x / boxWidth;
-            Timber.d("c=" + c);
-            for (int i = c; c < textArray.length; c++) {
-                if (!TextUtils.isEmpty(textArray[i])) {
-                    cursorPosition = c;
-                    invalidate();
-                    setSelection(cursorPosition);
-                    Timber.d("重绘");
-                    break;
-                }
-            }
-            if (imm != null) {
-                imm.viewClicked(this);
-                imm.showSoftInput(this, 0);
+        if (onCheckIsTextEditor()) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                float x = event.getX();
+                cursorPosition = (int) x / boxWidth;
+                invalidate();
+                showSoftInput();
             }
         }
-        //这里不用返回super的方法,因为super方法里会按textView的逻辑重新设置光标位置,textView中内容的位置和现在展示的是不一样的,
-        //虽然没有显示出来,但textView中内容的位置依旧保留了
+
+        return super.onTouchEvent(event);
+    }
+
+    //让这个View变成文本可编辑的状态
+    @Override
+    public boolean onCheckIsTextEditor() {
         return true;
     }
 
     @Override
-    protected void onSelectionChanged(int selStart, int selEnd) {
-        super.onSelectionChanged(selStart, selEnd);
-        Timber.d("selectStart:" + selStart + "  selectEnd:" + selEnd);
+    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+
+        if (onCheckIsTextEditor() && isEnabled()) {
+            if (focusSearch(FOCUS_DOWN) != null) {
+                outAttrs.imeOptions |= EditorInfo.IME_FLAG_NAVIGATE_NEXT;
+            }
+            if (focusSearch(FOCUS_UP) != null) {
+                outAttrs.imeOptions |= EditorInfo.IME_FLAG_NAVIGATE_PREVIOUS;
+            }
+            return new EasyInputConnection(this);
+        }
+        return null;
     }
+
+    private void showSoftInput() {
+        if (imm != null) {
+            imm.viewClicked(this);
+            imm.showSoftInput(this, 0);
+        }
+    }
+
+    private void hideSoftInput() {
+        if (imm != null && imm.isActive(this)) {
+            imm.hideSoftInputFromWindow(getWindowToken(), 0);
+        }
+    }
+
+    private void restartInput() {
+        if (imm != null) {
+            imm.restartInput(this);
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        if (enabled == isEnabled()) {
+            return;
+        }
+        if (!enabled) {
+            hideSoftInput();
+        }
+        super.setEnabled(enabled);
+
+        if (enabled) {
+            restartInput();
+        }
+    }
+
+    /**
+     * @return true 需要画 false 不需要画
+     */
+    private boolean showcursor() {
+        return isFocused() && onCheckIsTextEditor() && isEnabled();
+    }
+
+
 }
