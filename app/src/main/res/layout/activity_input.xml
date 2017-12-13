@@ -4,44 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.hxw.frame.widget.InputView
-        android:id="@+id/input"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+    <com.hxw.input.InputView
+        android:id="@+id/input1"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="#00000000"
-        app:isConnect="true"
+        android:background="#00ffffff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:maxLength="6"
-        app:textBackground="@color/cyan_500"
-        app:textBackgroundSelected="@drawable/ic_crop_original" />
+        app:lineColor="@color/colorAccent"
+        app:strokeWidth="3dp"
+        app:textColor="@color/colorPrimary" />
 
-    <EditText
-        android:id="@+id/edt_max"
+    <com.hxw.input.InputView
+        android:id="@+id/input2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_height="64dp"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="8dp"
-        android:hint="切输入最大数字"
-        android:inputType="number"
+        android:background="#00ffffff"
+        app:boxMargin="8dp"
+        app:isPassword="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input" />
+        app:layout_constraintTop_toBottomOf="@id/input1"
+        app:textBackground="@color/colorPrimaryDark"
+        app:textBackgroundSelected="@drawable/ic_launcher_background"
+        app:textColor="#ffffff" />
 
     <Button
-        android:id="@+id/btn_sure"
+        android:id="@+id/btn1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="确定"
+        android:text="改变输入限制为8"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input2" />
+
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="改变输入限制为6"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_max" />
+        app:layout_constraintTop_toBottomOf="@+id/input2" />
 </android.support.constraint.ConstraintLayout>
