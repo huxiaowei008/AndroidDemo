@@ -67,5 +67,5 @@ dependencies {
     //QRCodeReaderView https://github.com/dlazaro66/QRCodeReaderView
     compile rootProject.ext.dependencies["QRCodeReaderView"]
 
-    compile 'com.hxw.input:input:1.0.1'
+    compile 'com.hxw.input:input:1.0.3'
 }
