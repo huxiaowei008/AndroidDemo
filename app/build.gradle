@@ -68,4 +68,5 @@ dependencies {
     compile rootProject.ext.dependencies["QRCodeReaderView"]
 
     compile 'com.hxw.input:input:1.0.4'
+    compile 'com.hxw.elasticscroll:elasticscroll:1.0.0'
 }

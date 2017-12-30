@@ -7,7 +7,7 @@ ext {
     targetSdkVersion = 26
     versionCode = 1
     versionName = "1.0"
-    def supportVersion = "26.1.0"
+    def supportVersion = "27.0.2"
     def rxlifecycle2Version = "2.2.1"
     def rxbinding2Version = "2.0.0"
     def daggerVersion = "2.14.1"
