@@ -295,7 +295,7 @@ public final class CameraManager {
     /**
      * Allows third party apps to specify the scanning rectangle dimensions, rather than determine
      * them automatically based on screen resolution.
-     *
+     *  允许第三方应用程序指定扫描矩形尺寸，而不是根据屏幕分辨率自动确定它们。
      * @param width  The width in pixels to scan.
      * @param height The height in pixels to scan.
      */
