@@ -339,7 +339,7 @@ public final class CameraConfigurationUtils {
         if (defaultPreview == null) {
             throw new IllegalStateException("Parameters contained no preview size!");
         }
-        Point defaultSize = new Point(defaultPreview.width, defaultPreview.height);
+        Point defaultSize =  new Point(defaultPreview.width, defaultPreview.height);
         Log.i(TAG, "No suitable preview sizes, using default: " + defaultSize);
         return defaultSize;
     }
